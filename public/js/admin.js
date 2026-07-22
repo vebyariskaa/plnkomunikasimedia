@@ -191,45 +191,85 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Render Admin Table
+  // Render Admin Tables
   function renderAdminTable() {
-    adminRequestsTableBody.innerHTML = '';
+    const adminDokumentasiTableBody = document.getElementById('adminDokumentasiTableBody');
+    const adminRilisTableBody = document.getElementById('adminRilisTableBody');
+    
+    adminDokumentasiTableBody.innerHTML = '';
+    adminRilisTableBody.innerHTML = '';
 
-    if (requestsData.length === 0) {
-      adminRequestsTableBody.innerHTML = `
-        <tr>
-          <td colspan="8" class="text-center py-5 text-secondary">
-            Belum ada data permintaan kegiatan.
+    const dokumentasiData = requestsData.filter(req => req.tipePermohonan !== 'Rilis Berita');
+    const rilisData = requestsData.filter(req => req.tipePermohonan === 'Rilis Berita');
+
+    // ── Render Dokumentasi ──
+    if (dokumentasiData.length === 0) {
+      adminDokumentasiTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-5 text-secondary">Belum ada data permintaan dokumentasi.</td></tr>`;
+    } else {
+      dokumentasiData.forEach((req) => {
+        const tr = document.createElement('tr');
+        const typeBadge = '<span class="card-info-badge bg-primary-subtle text-primary border border-primary-subtle">Dokumentasi</span>';
+        const requestDetailsHtml = `<div class="text-wrap" style="max-width: 200px;"><span class="text-secondary small fw-semibold">Permintaan:</span> ${escapeHtml(req.permintaan)}</div>`;
+        
+        let photosGridHtml = req.hasilLinkDoc
+          ? `<a href="${req.hasilLinkDoc}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary px-2 py-1 rounded d-inline-flex align-items-center gap-1 shadow-sm" style="font-size: 11px;"><i class="bi bi-folder2-open"></i> Buka Drive</a>`
+          : '<span class="text-secondary small">Belum diisi admin</span>';
+          
+        let outcomeLinksHtml = '<div class="d-flex flex-column gap-1">';
+        let hasContent = false;
+        if (req.petugas) {
+          outcomeLinksHtml += `<div class="small mt-1 text-wrap" style="max-width: 140px;"><i class="bi bi-person-badge me-1 text-primary"></i>Petugas: <span class="fw-semibold text-primary">${escapeHtml(req.petugas)}</span></div>`;
+          hasContent = true;
+        }
+        outcomeLinksHtml += '</div>';
+        if (!hasContent) outcomeLinksHtml = '<span class="text-secondary small">Belum ditugaskan</span>';
+
+        const status = req.status || 'Disetujui';
+        let statusBadge = status === 'Disetujui' ? '<span class="badge bg-success">ACC</span>' : '<span class="badge bg-warning text-dark">Pending</span>';
+        if (status !== 'Disetujui' && req.alasanPending) statusBadge += `<div class="small text-danger mt-1 text-wrap" style="max-width: 100px;">Catatan: ${escapeHtml(req.alasanPending)}</div>`;
+        
+        const approveBtn = status === 'Pending' ? `<button class="btn btn-outline-success btn-sm rounded me-1 btn-approve" data-id="${req.id}" title="ACC"><i class="bi bi-check-lg"></i> ACC</button>` : '';
+
+        tr.innerHTML = `
+          <td class="fw-bold">${req.no}</td>
+          <td>
+            ${typeBadge}
+            <div class="fw-bold mt-1 text-truncate" style="max-width: 150px;">${escapeHtml(req.namaPemohon)}</div>
+            <div class="small text-secondary text-truncate" style="max-width: 150px;">${escapeHtml(req.bidang)}</div>
           </td>
-        </tr>
-      `;
-      return;
+          <td>
+            <div class="fw-bold text-primary text-wrap" style="max-width: 180px;">${escapeHtml(req.namaKegiatan)}</div>
+            <div class="small text-secondary mb-1"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}${req.tanggalSelesai ? ' - ' + formatDate(req.tanggalSelesai) : ''}</div>
+            <div class="small text-secondary"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(req.tempatKegiatan)}</div>
+          </td>
+          <td>${requestDetailsHtml}</td>
+          <td>${photosGridHtml}</td>
+          <td>${outcomeLinksHtml}</td>
+          <td>${statusBadge}</td>
+          <td class="text-center">
+            ${approveBtn}
+            <button class="btn btn-outline-primary btn-sm rounded me-1 btn-edit" data-id="${req.id}" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+            <button class="btn btn-outline-danger btn-sm rounded btn-delete" data-id="${req.id}" title="Hapus"><i class="bi bi-trash-fill"></i></button>
+          </td>
+        `;
+        bindActionButtons(tr, req.id);
+        adminDokumentasiTableBody.appendChild(tr);
+      });
     }
 
-    requestsData.forEach((req) => {
-      const tr = document.createElement('tr');
-
-      // Tipe Badge
-      const typeBadge = req.tipePermohonan === 'Rilis Berita' 
-        ? '<span class="card-info-badge bg-success-subtle text-success border border-success-subtle">Rilis Berita</span>'
-        : '<span class="card-info-badge bg-primary-subtle text-primary border border-primary-subtle">Dokumentasi</span>';
-
-      // Keterangan / Detail info based on Tipe
-      let requestDetailsHtml = '';
-      if (req.tipePermohonan === 'Rilis Berita') {
-        requestDetailsHtml = `
+    // ── Render Rilis Berita ──
+    if (rilisData.length === 0) {
+      adminRilisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-5 text-secondary">Belum ada data rilis berita.</td></tr>`;
+    } else {
+      rilisData.forEach((req) => {
+        const tr = document.createElement('tr');
+        
+        const requestDetailsHtml = `
           <div class="mb-1 text-wrap" style="max-width: 200px;"><span class="text-secondary small fw-semibold">Deskripsi:</span> ${escapeHtml(req.deskripsiKegiatan)}</div>
           <div class="text-wrap small text-secondary" style="max-width: 200px;"><span class="fw-semibold">Terlibat:</span> ${escapeHtml(req.siapaTerlibat)}</div>
         `;
-      } else {
-        requestDetailsHtml = `
-          <div class="text-wrap" style="max-width: 200px;"><span class="text-secondary small fw-semibold">Permintaan:</span> ${escapeHtml(req.permintaan)}</div>
-        `;
-      }
-
-      // Documentation / Drive Link Column
-      let photosGridHtml = '';
-      if (req.tipePermohonan === 'Rilis Berita') {
+        
+        let photosGridHtml = '';
         if (req.fotoPaths && req.fotoPaths.length > 0) {
           photosGridHtml = '<div class="img-grid">';
           req.fotoPaths.forEach((path) => {
@@ -237,151 +277,93 @@ document.addEventListener('DOMContentLoaded', () => {
           });
           photosGridHtml += '</div>';
         }
-        if (req.hasilLinkDoc) {
-          photosGridHtml += `
-            <div class="mt-2">
-              <a href="${req.hasilLinkDoc}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary px-2 py-1 rounded d-inline-flex align-items-center gap-1 shadow-sm" style="font-size: 11px;">
-                <i class="bi bi-folder2-open"></i> Link Drive
-              </a>
-            </div>
-          `;
-        }
         if (!req.fotoPaths || req.fotoPaths.length === 0) {
-          if (!req.hasilLinkDoc) photosGridHtml = '<span class="text-secondary small">Belum ada foto/link</span>';
+          photosGridHtml = '<span class="text-secondary small">Belum ada foto</span>';
         }
-      } else {
-        // Dokumentasi Kegiatan: link drive only
-        if (req.hasilLinkDoc) {
-          photosGridHtml = `
-            <a href="${req.hasilLinkDoc}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary px-2 py-1 rounded d-inline-flex align-items-center gap-1 shadow-sm" style="font-size: 11px;">
-              <i class="bi bi-folder2-open"></i> Buka Drive
-            </a>
-          `;
-        } else {
-          photosGridHtml = '<span class="text-secondary small">Belum diisi admin</span>';
-        }
-      }
 
-      // Outcomes & Petugas Column
-      let outcomeLinksHtml = '<div class="d-flex flex-column gap-1">';
-      let hasContent = false;
+        let linkBeritaHtml = req.hasilLinkBerita
+          ? `<a href="${req.hasilLinkBerita}" target="_blank" class="btn btn-outline-success btn-xs px-2 py-1 fs-8 rounded d-inline-flex align-items-center gap-1"><i class="bi bi-newspaper"></i> Link Berita</a>`
+          : '<span class="text-secondary small">Belum ada link</span>';
 
-      if (req.tipePermohonan === 'Rilis Berita' && req.hasilLinkBerita) {
-        outcomeLinksHtml += `<a href="${req.hasilLinkBerita}" target="_blank" class="btn btn-outline-success btn-xs px-2 py-1 fs-8 rounded d-inline-flex align-items-center gap-1"><i class="bi bi-newspaper"></i> Link Berita</a>`;
-        hasContent = true;
-      }
-      
-      if (req.petugas) {
-        outcomeLinksHtml += `<div class="small mt-1 text-wrap" style="max-width: 140px;"><i class="bi bi-person-badge me-1 text-primary"></i>Petugas: <span class="fw-semibold text-primary">${escapeHtml(req.petugas)}</span></div>`;
-        hasContent = true;
-      }
-      
-      outcomeLinksHtml += '</div>';
+        const status = req.status || 'Disetujui';
+        let statusBadge = status === 'Disetujui' ? '<span class="badge bg-success">ACC</span>' : '<span class="badge bg-warning text-dark">Pending</span>';
+        if (status !== 'Disetujui' && req.alasanPending) statusBadge += `<div class="small text-danger mt-1 text-wrap" style="max-width: 100px;">Catatan: ${escapeHtml(req.alasanPending)}</div>`;
+        
+        const approveBtn = status === 'Pending' ? `<button class="btn btn-outline-success btn-sm rounded me-1 btn-approve" data-id="${req.id}" title="ACC"><i class="bi bi-check-lg"></i> ACC</button>` : '';
 
-      if (!hasContent) {
-        outcomeLinksHtml = '<span class="text-secondary small">Belum ditugaskan</span>';
-      }
-
-      // Status Badge & Approve Button
-      const status = req.status || 'Disetujui';
-      let statusBadge = '';
-      let approveBtn = '';
-
-      statusBadge = status === 'Disetujui'
-        ? '<span class="badge bg-success">ACC</span>'
-        : '<span class="badge bg-warning text-dark">Pending</span>';
-
-      if (status !== 'Disetujui' && req.alasanPending) {
-        statusBadge += `<div class="small text-danger mt-1 text-wrap" style="max-width: 100px;">Catatan: ${escapeHtml(req.alasanPending)}</div>`;
-      }
-
-      if (status === 'Pending') {
-        approveBtn = `<button class="btn btn-outline-success btn-sm rounded me-1 btn-approve" data-id="${req.id}" title="ACC Permintaan"><i class="bi bi-check-lg"></i> ACC</button>`;
-      }
-
-      tr.innerHTML = `
-        <td class="fw-bold">${req.no}</td>
-        <td>
-          ${typeBadge}
-          <div class="fw-bold mt-1 text-truncate" style="max-width: 150px;">${escapeHtml(req.namaPemohon)}</div>
-          <div class="small text-secondary text-truncate" style="max-width: 150px;">${escapeHtml(req.bidang)}</div>
-        </td>
-        <td>
-          <div class="fw-bold text-primary text-wrap" style="max-width: 180px;">${escapeHtml(req.namaKegiatan)}</div>
-          <div class="small text-secondary mb-1"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}${req.tanggalSelesai ? ' - ' + formatDate(req.tanggalSelesai) : ''}</div>
-          <div class="small text-secondary"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(req.tempatKegiatan)}</div>
-        </td>
-        <td>${requestDetailsHtml}</td>
-        <td>${photosGridHtml}</td>
-        <td>${outcomeLinksHtml}</td>
-        <td>${statusBadge}</td>
-        <td class="text-center">
-          ${approveBtn}
-          <button class="btn btn-outline-primary btn-sm rounded me-1 btn-edit" data-id="${req.id}" title="Edit Permintaan">
-            <i class="bi bi-pencil-fill"></i>
-          </button>
-          <button class="btn btn-outline-danger btn-sm rounded btn-delete" data-id="${req.id}" title="Hapus Permintaan">
-            <i class="bi bi-trash-fill"></i>
-          </button>
-        </td>
-      `;
-
-      // Zoom preview handler for thumbnail click
-      tr.querySelectorAll('.img-thumbnail-preview').forEach((img) => {
-        img.addEventListener('click', (e) => {
-          modalPreviewImage.src = e.target.getAttribute('data-src');
-          imagePreviewModal.show();
+        tr.innerHTML = `
+          <td class="fw-bold">${req.no}</td>
+          <td>
+            <div class="fw-bold mt-1 text-truncate" style="max-width: 150px;">${escapeHtml(req.namaPemohon)}</div>
+            <div class="small text-secondary text-truncate" style="max-width: 150px;">${escapeHtml(req.bidang)}</div>
+          </td>
+          <td>
+            <div class="fw-bold text-primary text-wrap" style="max-width: 180px;">${escapeHtml(req.namaKegiatan)}</div>
+            <div class="small text-secondary mb-1"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}${req.tanggalSelesai ? ' - ' + formatDate(req.tanggalSelesai) : ''}</div>
+            <div class="small text-secondary"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(req.tempatKegiatan)}</div>
+          </td>
+          <td>${requestDetailsHtml}</td>
+          <td>${photosGridHtml}</td>
+          <td>${linkBeritaHtml}</td>
+          <td>${statusBadge}</td>
+          <td class="text-center">
+            ${approveBtn}
+            <button class="btn btn-outline-primary btn-sm rounded me-1 btn-edit" data-id="${req.id}" title="Edit/Tambah Link Berita"><i class="bi bi-pencil-fill"></i></button>
+            <button class="btn btn-outline-danger btn-sm rounded btn-delete" data-id="${req.id}" title="Hapus"><i class="bi bi-trash-fill"></i></button>
+          </td>
+        `;
+        
+        // Zoom preview handler for thumbnail click
+        tr.querySelectorAll('.img-thumbnail-preview').forEach((img) => {
+          img.addEventListener('click', (e) => {
+            modalPreviewImage.src = e.target.getAttribute('data-src');
+            imagePreviewModal.show();
+          });
         });
+        
+        bindActionButtons(tr, req.id);
+        adminRilisTableBody.appendChild(tr);
       });
+    }
+  }
 
-      // Approve click handler
-      const approveBtnEl = tr.querySelector('.btn-approve');
-      if (approveBtnEl) {
-        approveBtnEl.addEventListener('click', async (e) => {
-          const id = e.currentTarget.getAttribute('data-id');
-          if (confirm('Apakah Anda yakin ingin menyetujui (ACC) permintaan ini?')) {
-            await approveRequest(id);
-          }
-        });
-        // Add touch support for approve button
-        approveBtnEl.addEventListener('touchstart', (e) => {
-          e.preventDefault();
-          approveBtnEl.click();
-        });
-      }
-
-      // Edit click handler
-      const editBtnEl = tr.querySelector('.btn-edit');
-      if (editBtnEl) {
-        editBtnEl.addEventListener('click', (e) => {
-          const id = e.currentTarget.getAttribute('data-id');
-          openEditModal(id);
-        });
-        // Add touch support for edit button
-        editBtnEl.addEventListener('touchstart', (e) => {
-          e.preventDefault();
-          editBtnEl.click();
-        });
-      }
-
-      // Delete click handler
-      const deleteBtnEl = tr.querySelector('.btn-delete');
-      if (deleteBtnEl) {
-        deleteBtnEl.addEventListener('click', async (e) => {
-          const id = e.currentTarget.getAttribute('data-id');
-          if (confirm('Apakah Anda yakin ingin menghapus permintaan ini?')) {
-            await deleteRequest(id);
-          }
-        });
-        // Add touch support for delete button
-        deleteBtnEl.addEventListener('touchstart', (e) => {
-          e.preventDefault();
-          deleteBtnEl.click();
-        });
-      }
-
-      adminRequestsTableBody.appendChild(tr);
-    });
+  function bindActionButtons(tr, reqId) {
+    // Approve click handler
+    const approveBtnEl = tr.querySelector('.btn-approve');
+    if (approveBtnEl) {
+      const handler = async (e) => {
+        if (e.type === 'touchstart') e.preventDefault();
+        if (confirm('Apakah Anda yakin ingin menyetujui (ACC) permintaan ini?')) {
+          await approveRequest(reqId);
+        }
+      };
+      approveBtnEl.addEventListener('click', handler);
+      approveBtnEl.addEventListener('touchstart', handler);
+    }
+    
+    // Edit click handler
+    const editBtnEl = tr.querySelector('.btn-edit');
+    if (editBtnEl) {
+      const handler = (e) => {
+        if (e.type === 'touchstart') e.preventDefault();
+        openEditModal(reqId);
+      };
+      editBtnEl.addEventListener('click', handler);
+      editBtnEl.addEventListener('touchstart', handler);
+    }
+    
+    // Delete click handler
+    const deleteBtnEl = tr.querySelector('.btn-delete');
+    if (deleteBtnEl) {
+      const handler = async (e) => {
+        if (e.type === 'touchstart') e.preventDefault();
+        if (confirm('Apakah Anda yakin ingin menghapus permintaan ini?')) {
+          await deleteRequest(reqId);
+        }
+      };
+      deleteBtnEl.addEventListener('click', handler);
+      deleteBtnEl.addEventListener('touchstart', handler);
+    }
   }
 
   // Escape HTML
@@ -404,24 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
       editRequestId.value = '';
       requestModalLabel.textContent = 'Tambah Permintaan Dokumentasi';
       tipePermohonanSelect.value = 'Dokumentasi Kegiatan';
-      currentPhotosWrapper.classList.add('d-none');
-      currentPhotosList.innerHTML = '';
-      toggleInputs();
-      updateNextNoUrut();
-      requestModal.show();
-    });
-  }
-
-  // Open Modal preconfigured for Rilis Berita (Exact format)
-  const btnOpenAddRilisModal = document.getElementById('btnOpenAddRilisModal');
-  if (btnOpenAddRilisModal) {
-    btnOpenAddRilisModal.addEventListener('click', () => {
-      adminForm.reset();
-      adminForm.classList.remove('was-validated');
-      fileInput.classList.remove('is-invalid');
-      editRequestId.value = '';
-      requestModalLabel.textContent = 'Buat Rilis Berita Baru';
-      tipePermohonanSelect.value = 'Rilis Berita';
       currentPhotosWrapper.classList.add('d-none');
       currentPhotosList.innerHTML = '';
       toggleInputs();

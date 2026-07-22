@@ -455,14 +455,9 @@
     <div class="row mb-4 align-items-center">
       <div class="col-lg-5">
         <h3 class="fw-bold mb-1">Manajemen Permintaan & Rilis</h3>
-        <p class="text-secondary mb-0">Kelola requests, buat rilis berita, serta atur banner tampilan portal di sini.</p>
+        <p class="text-secondary mb-0">Kelola requests, setujui rilis berita, serta atur banner tampilan portal di sini.</p>
       </div>
       <div class="col-lg-7 text-lg-end mt-3 mt-lg-0 d-flex flex-wrap gap-2 justify-content-lg-end">
-        <!-- Button 1: Buat Rilis Berita -->
-        <button class="btn btn-success rounded-3 px-3.5 py-2.5 fw-semibold d-inline-flex align-items-center gap-2 shadow" id="btnOpenAddRilisModal">
-          <i class="bi bi-newspaper"></i> + Buat Rilis Berita
-        </button>
-
         <!-- Button 2: Tambah Permintaan Dokumentasi -->
         <button class="btn btn-primary rounded-3 px-3.5 py-2.5 fw-semibold d-inline-flex align-items-center gap-2 shadow" id="btnOpenAddModal">
           <i class="bi bi-plus-circle-fill"></i> + Permintaan Dokumentasi
@@ -475,29 +470,63 @@
       </div>
     </div>
 
-    <!-- Data Table Area -->
-    <div class="row">
+    <!-- Data Table Area: Permintaan Dokumentasi -->
+    <div class="row mb-5">
       <div class="col-12">
-        <div class="table-container">
+        <h5 class="fw-bold mb-3"><i class="bi bi-camera me-2 text-primary"></i>Tabel Permintaan Dokumentasi</h5>
+        <div class="table-container border-top border-primary border-4 rounded-4 shadow-sm">
           <div class="table-responsive">
-            <table class="table custom-table mb-0 text-nowrap" id="adminRequestsTable">
+            <table class="table custom-table mb-0 text-nowrap" id="adminDokumentasiTable">
               <thead>
                 <tr>
                   <th scope="col" style="width: 70px;">No</th>
                   <th scope="col">Tipe & Pemohon</th>
                   <th scope="col">Detail Kegiatan</th>
                   <th scope="col">Keterangan / Deskripsi</th>
-                  <th scope="col">Dokumentasi / Link Drive</th>
-                  <th scope="col">Petugas / Tautan</th>
+                  <th scope="col">Link Drive</th>
+                  <th scope="col">Petugas</th>
                   <th scope="col" style="width: 100px;">Status</th>
                   <th scope="col" style="width: 180px;" class="text-center">Aksi</th>
                 </tr>
               </thead>
-              <tbody id="adminRequestsTableBody" class="align-middle">
+              <tbody id="adminDokumentasiTableBody" class="align-middle">
                 <tr>
                   <td colspan="8" class="text-center py-5 text-secondary">
                     <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
-                    Memuat data permintaan kegiatan...
+                    Memuat data permintaan dokumentasi...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Table Area: Rilis Berita -->
+    <div class="row">
+      <div class="col-12">
+        <h5 class="fw-bold mb-3"><i class="bi bi-newspaper me-2 text-success"></i>Tabel Rilis Berita</h5>
+        <div class="table-container border-top border-success border-4 rounded-4 shadow-sm">
+          <div class="table-responsive">
+            <table class="table custom-table mb-0 text-nowrap" id="adminRilisTable">
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 70px;">No</th>
+                  <th scope="col">Pemohon</th>
+                  <th scope="col">Detail Kegiatan</th>
+                  <th scope="col">Deskripsi Singkat</th>
+                  <th scope="col">Dokumentasi (Foto)</th>
+                  <th scope="col">Link Berita</th>
+                  <th scope="col" style="width: 100px;">Status</th>
+                  <th scope="col" style="width: 180px;" class="text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="adminRilisTableBody" class="align-middle">
+                <tr>
+                  <td colspan="8" class="text-center py-5 text-secondary">
+                    <div class="spinner-border spinner-border-sm text-success me-2" role="status"></div>
+                    Memuat data rilis berita...
                   </td>
                 </tr>
               </tbody>

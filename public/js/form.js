@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </td>
         <td>
           <div class="fw-bold text-primary text-wrap" style="max-width: 180px;">${escapeHtml(req.namaKegiatan)}</div>
-          <div class="small text-secondary mb-1"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}</div>
+          <div class="small text-secondary mb-1"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}${req.tanggalSelesai ? ' - ' + formatDate(req.tanggalSelesai) : ''}</div>
           <div class="small text-secondary"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(req.tempatKegiatan)}</div>
         </td>
         <td>
@@ -244,6 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
       bidang: (document.getElementById('bidang') ? document.getElementById('bidang').value : '').trim(),
       namaKegiatan: (document.getElementById('namaKegiatan') ? document.getElementById('namaKegiatan').value : '').trim(),
       tanggalKegiatan: document.getElementById('tanggalKegiatan') ? document.getElementById('tanggalKegiatan').value : '',
+      tanggalSelesai: document.getElementById('tanggalSelesai') ? document.getElementById('tanggalSelesai').value : '',
       tempatKegiatan: (document.getElementById('tempatKegiatan') ? document.getElementById('tempatKegiatan').value : '').trim(),
       permintaan: (document.getElementById('permintaan') ? document.getElementById('permintaan').value : '').trim()
     };

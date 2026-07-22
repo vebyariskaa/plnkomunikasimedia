@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const bidangInput = document.getElementById('bidang');
   const namaKegiatanInput = document.getElementById('namaKegiatan');
   const tanggalKegiatanInput = document.getElementById('tanggalKegiatan');
+  const tanggalSelesaiInput = document.getElementById('tanggalSelesai');
   const tempatKegiatanInput = document.getElementById('tempatKegiatan');
   const permintaanInput = document.getElementById('permintaan');
   const siapaTerlibatInput = document.getElementById('siapaTerlibat');
@@ -312,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </td>
         <td>
           <div class="fw-bold text-primary text-wrap" style="max-width: 180px;">${escapeHtml(req.namaKegiatan)}</div>
-          <div class="small text-secondary mb-1"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}</div>
+          <div class="small text-secondary mb-1"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}${req.tanggalSelesai ? ' - ' + formatDate(req.tanggalSelesai) : ''}</div>
           <div class="small text-secondary"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(req.tempatKegiatan)}</div>
         </td>
         <td>${requestDetailsHtml}</td>
@@ -464,6 +465,9 @@ document.addEventListener('DOMContentLoaded', () => {
     bidangInput.value = req.bidang;
     namaKegiatanInput.value = req.namaKegiatan;
     tanggalKegiatanInput.value = req.tanggalKegiatan;
+    if (tanggalSelesaiInput) {
+      tanggalSelesaiInput.value = req.tanggalSelesai || '';
+    }
     tempatKegiatanInput.value = req.tempatKegiatan;
     
     permintaanInput.value = req.permintaan || '';
@@ -581,6 +585,9 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('bidang', bidangInput.value.trim());
     formData.append('namaKegiatan', namaKegiatanInput.value.trim());
     formData.append('tanggalKegiatan', tanggalKegiatanInput.value);
+    if (tanggalSelesaiInput && tanggalSelesaiInput.value) {
+      formData.append('tanggalSelesai', tanggalSelesaiInput.value);
+    }
     formData.append('tempatKegiatan', tempatKegiatanInput.value.trim());
     
     if (isRilisBerita) {

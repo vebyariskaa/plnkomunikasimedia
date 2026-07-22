@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </td>
         <td>
           <div class="fw-bold text-primary text-wrap" style="max-width: 180px;">${escapeHtml(req.namaKegiatan)}</div>
-          <div class="small text-secondary"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}</div>
+          <div class="small text-secondary"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}${req.tanggalSelesai ? ' - ' + formatDate(req.tanggalSelesai) : ''}</div>
         </td>
         <td>
           <div class="text-wrap" style="max-width: 160px;">${escapeHtml(req.siapaTerlibat)}</div>
@@ -299,6 +299,9 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('bidang', document.getElementById('bidang').value.trim());
     formData.append('namaKegiatan', document.getElementById('namaKegiatan').value.trim());
     formData.append('tanggalKegiatan', document.getElementById('tanggalKegiatan').value);
+    if (document.getElementById('tanggalSelesai') && document.getElementById('tanggalSelesai').value) {
+      formData.append('tanggalSelesai', document.getElementById('tanggalSelesai').value);
+    }
     formData.append('tempatKegiatan', '-'); // not used in this form but required by server
     formData.append('namaPemohon', document.getElementById('bidang').value.trim()); // use bidang as pemohon fallback
     formData.append('siapaTerlibat', document.getElementById('siapaTerlibat').value.trim());

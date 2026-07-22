@@ -52,33 +52,23 @@ async function readRequests() {
       return JSON.parse(data);
     }
     
-    // If not local, try fetching from Supabase Storage (permanent JSON store)
+    // Sync from Supabase DB if local doesn't exist
     if (supabase) {
       try {
-        const { data: storageData, error } = await supabase.storage.from('banners').download('requests.json');
-        if (!error && storageData) {
-          const text = await storageData.text();
-          const parsed = JSON.parse(text);
+        const { data: dbData, error: dbError } = await supabase
+          .from('requests')
+          .select('deskripsiKegiatan')
+          .eq('id', KV_ROW_ID)
+          .single();
+          
+        if (!dbError && dbData && dbData.deskripsiKegiatan) {
+          const parsed = JSON.parse(dbData.deskripsiKegiatan);
           fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
           fs.writeFileSync(DATA_FILE, JSON.stringify(parsed, null, 2));
           return parsed;
-        } else {
-          // STORAGE FAILED - Try Database Fallback!
-          const { data: dbData, error: dbError } = await supabase
-            .from('requests')
-            .select('deskripsiKegiatan')
-            .eq('id', KV_ROW_ID)
-            .single();
-            
-          if (!dbError && dbData && dbData.deskripsiKegiatan) {
-            const parsed = JSON.parse(dbData.deskripsiKegiatan);
-            fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-            fs.writeFileSync(DATA_FILE, JSON.stringify(parsed, null, 2));
-            return parsed;
-          }
         }
       } catch (e) {
-        console.error('Supabase storage download error:', e);
+        console.error('Supabase DB download error:', e);
       }
     }
 
@@ -104,29 +94,21 @@ async function writeRequests(requests) {
   try {
     fs.writeFileSync(DATA_FILE, JSON.stringify(requests, null, 2));
     
-    // Also sync to Supabase for permanence
+    // Also sync to Supabase Database for absolute permanence
     if (supabase) {
       try {
         const jsonStr = JSON.stringify(requests, null, 2);
-        const { error } = await supabase.storage.from('banners').upload('requests.json', jsonStr, {
-          contentType: 'application/json',
-          upsert: true
+        await supabase.from('requests').upsert({
+          id: KV_ROW_ID,
+          namaPemohon: 'SYSTEM_JSON_STORE',
+          bidang: 'SYSTEM',
+          namaKegiatan: 'SYSTEM',
+          tanggalKegiatan: '2099-12-31',
+          tempatKegiatan: 'SYSTEM',
+          deskripsiKegiatan: jsonStr
         });
-        
-        // STORAGE FAILED - Try Database Fallback!
-        if (error) {
-          await supabase.from('requests').upsert({
-            id: KV_ROW_ID,
-            namaPemohon: 'SYSTEM_JSON_STORE',
-            bidang: 'SYSTEM',
-            namaKegiatan: 'SYSTEM',
-            tanggalKegiatan: '2099-12-31',
-            tempatKegiatan: 'SYSTEM',
-            deskripsiKegiatan: jsonStr
-          });
-        }
       } catch (e) {
-        console.error('Supabase storage upload error:', e);
+        console.error('Supabase DB upload error:', e);
       }
     }
   } catch (error) {
@@ -159,37 +141,30 @@ async function readBannersStore() {
     if (fs.existsSync(BANNERS_FILE)) {
       return JSON.parse(fs.readFileSync(BANNERS_FILE, 'utf8'));
     }
-    // Sync from Supabase if local doesn't exist
+    // Sync from Supabase DB if local doesn't exist
     if (supabase) {
       try {
-        const { data: storageData, error } = await supabase.storage.from('banners').download('banners_store.json');
-        if (!error && storageData) {
-          const text = await storageData.text();
-          const parsed = JSON.parse(text);
+        const { data: dbData, error: dbError } = await supabase
+          .from('requests')
+          .select('deskripsiKegiatan')
+          .eq('id', BANNERS_KV_ROW_ID)
+          .single();
+          
+        if (!dbError && dbData && dbData.deskripsiKegiatan) {
+          const parsed = JSON.parse(dbData.deskripsiKegiatan);
           fs.mkdirSync(path.dirname(BANNERS_FILE), { recursive: true });
           fs.writeFileSync(BANNERS_FILE, JSON.stringify(parsed, null, 2));
           return parsed;
-        } else {
-          // STORAGE FAILED - Try Database Fallback!
-          const { data: dbData, error: dbError } = await supabase
-            .from('requests')
-            .select('deskripsiKegiatan')
-            .eq('id', BANNERS_KV_ROW_ID)
-            .single();
-            
-          if (!dbError && dbData && dbData.deskripsiKegiatan) {
-            const parsed = JSON.parse(dbData.deskripsiKegiatan);
-            fs.mkdirSync(path.dirname(BANNERS_FILE), { recursive: true });
-            fs.writeFileSync(BANNERS_FILE, JSON.stringify(parsed, null, 2));
-            return parsed;
-          }
         }
       } catch (e) {
-        console.error('Supabase banners download error:', e);
+        console.error('Supabase DB banners download error:', e);
       }
     }
-  } catch (e) {}
-  return {};
+    return {};
+  } catch (error) {
+    console.error('Error reading banners file:', error);
+    return {};
+  }
 }
 
 // Debug route to check Supabase status
@@ -233,29 +208,21 @@ async function writeBannersStore(bannersObj) {
     fs.mkdirSync(path.dirname(BANNERS_FILE), { recursive: true });
     fs.writeFileSync(BANNERS_FILE, JSON.stringify(bannersObj, null, 2));
     
-    // Sync to Supabase
+    // Sync to Supabase Database for absolute permanence
     if (supabase) {
       try {
         const jsonStr = JSON.stringify(bannersObj, null, 2);
-        const { error } = await supabase.storage.from('banners').upload('banners_store.json', jsonStr, {
-          contentType: 'application/json',
-          upsert: true
+        await supabase.from('requests').upsert({
+          id: BANNERS_KV_ROW_ID,
+          namaPemohon: 'SYSTEM_JSON_STORE',
+          bidang: 'SYSTEM',
+          namaKegiatan: 'SYSTEM',
+          tanggalKegiatan: '2099-12-31',
+          tempatKegiatan: 'SYSTEM',
+          deskripsiKegiatan: jsonStr
         });
-        
-        // STORAGE FAILED - Try Database Fallback!
-        if (error) {
-          await supabase.from('requests').upsert({
-            id: BANNERS_KV_ROW_ID,
-            namaPemohon: 'SYSTEM_JSON_STORE',
-            bidang: 'SYSTEM',
-            namaKegiatan: 'SYSTEM',
-            tanggalKegiatan: '2099-12-31',
-            tempatKegiatan: 'SYSTEM',
-            deskripsiKegiatan: jsonStr
-          });
-        }
       } catch (e) {
-        console.error('Supabase banners upload error:', e);
+        console.error('Supabase DB banners upload error:', e);
       }
     }
   } catch (e) {

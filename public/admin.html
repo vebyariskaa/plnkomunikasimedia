@@ -550,8 +550,17 @@
               </div>
               <div class="col-md-6 mb-3">
                 <label for="bidang" class="form-label">Bidang / Unit Kerja <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="bidang" placeholder="Bidang" required>
-                <div class="invalid-feedback">Bidang wajib diisi.</div>
+                <select class="form-select" id="bidang" required>
+                  <option value="" selected disabled>-- Pilih Bidang --</option>
+                  <option value="Keuangan / Umum">Keuangan / Umum</option>
+                  <option value="Perencanaan">Perencanaan</option>
+                  <option value="Jaringan dan Konstruksi">Jaringan dan Konstruksi</option>
+                  <option value="Transaksi Energi">Transaksi Energi</option>
+                  <option value="Niaga dan Pemasaran">Niaga dan Pemasaran</option>
+                  <option value="K3L KAM">K3L KAM</option>
+                  <option value="LUXDAN">LUXDAN</option>
+                </select>
+                <div class="invalid-feedback">Pilih bidang terlebih dahulu.</div>
               </div>
             </div>
 

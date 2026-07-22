@@ -1,0 +1,15 @@
+{
+  "name": "portal-informasi-digital-pln",
+  "version": "1.0.0",
+  "description": "Portal Informasi dan Promosi Digital PLN menggunakan HTML, CSS, JS, dan Express.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "multer": "^2.2.0"
+  },
+  "author": "PLN",
+  "license": "ISC"
+}

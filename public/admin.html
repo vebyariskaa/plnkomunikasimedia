@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin - Komunikasi PLN UP3 KOTAMOBAGU</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <style>
+    .admin-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+    }
+    
+    .table-container {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .custom-table th {
+      background-color: var(--primary-color);
+      color: #fff;
+      font-weight: 600;
+      padding: 12px 16px;
+    }
+    
+    [data-theme="dark"] .custom-table th {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+    
+    .custom-table td {
+      padding: 12px 16px;
+      vertical-align: middle;
+      color: var(--text-primary);
+      border-color: var(--border-color);
+    }
+    
+    .custom-table tbody tr:hover {
+      background-color: rgba(var(--primary-rgb), 0.04);
+    }
+    
+    .form-label {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    
+    .form-control, .form-select {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(var(--primary-rgb), 0.25);
+    }
+
+    .img-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+      gap: 4px;
+      max-width: 150px;
+    }
+
+    .img-thumbnail-preview {
+      width: 45px;
+      height: 45px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      transition: transform 0.2s;
+    }
+
+    .img-thumbnail-preview:hover {
+      transform: scale(1.15);
+    }
+
+    .card-info-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* Modal override for dark theme compatibility */
+    [data-theme="dark"] .modal-content {
+      background-color: var(--bg-secondary);
+      border-color: var(--border-color);
+      color: var(--text-primary);
+    }
+
+    [data-theme="dark"] .modal-header,
+    [data-theme="dark"] .modal-footer {
+      border-color: var(--border-color);
+    }
+
+    [data-theme="dark"] .btn-close {
+      filter: invert(1) grayscale(1) brightness(2);
+    }
+  </style>
+  
+  <script>
+    // Inline script to prevent flashing of unauthorized page
+    if (localStorage.getItem('adminToken') !== 'pln-admin-session-token-2026') {
+      window.location.href = 'login.html';
+    }
+  </script>
+</head>
+
+<body>
+
+  <!-- Loading Animation Overlay -->
+  <div id="loading-overlay">
+    <div class="custom-spinner"></div>
+    <h5 class="text-secondary fw-semibold">Memuat Dashboard Admin Komunikasi PLN UP3 KOTAMOBAGU...</h5>
+  </div>
+
+  <!-- Sticky Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-3">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <img src="img/logo.svg" alt="Logo PLN" height="40" class="d-inline-block align-top"
+          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
+        <span class="fw-bold fs-5 text-primary text-uppercase tracking-wider">PLN UP3 KOTAMOBAGU <span class="badge bg-danger ms-1 fs-8 text-white">ADMIN</span></span>
+      </a>
+
+      <!-- Navbar Action buttons -->
+      <div class="d-flex align-items-center ms-auto gap-2 gap-md-3">
+        <!-- Lihat Web Portal -->
+        <a href="index.html" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-1.5 fw-semibold border-2">
+          <i class="bi bi-globe"></i>
+          <span class="d-none d-md-inline">Buka Portal</span>
+        </a>
+
+        <!-- Logout Button -->
+        <button id="btnLogout" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-1.5 fw-semibold border-2">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Keluar</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+          <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dashboard Content -->
+  <main class="container my-5 flex-grow-1">
+    <div class="row mb-4 align-items-center">
+      <div class="col-md-6">
+        <h3 class="fw-bold mb-1">Manajemen Permintaan & Rilis</h3>
+        <p class="text-secondary mb-0">Kelola requests, tambah hasil/dokumentasi, serta atur tautan rilis berita di sini.</p>
+      </div>
+      <div class="col-md-6 text-md-end mt-3 mt-md-0">
+        <button class="btn btn-primary rounded-3 px-4 py-2.5 fw-semibold d-inline-flex align-items-center gap-2 shadow" data-bs-toggle="modal" data-bs-target="#requestModal" id="btnOpenAddModal">
+          <i class="bi bi-plus-circle-fill"></i> Tambah Data Baru
+        </button>
+      </div>
+    </div>
+
+    <!-- Data Table Area -->
+    <div class="row">
+      <div class="col-12">
+        <div class="table-container">
+          <div class="table-responsive">
+            <table class="table custom-table mb-0 text-nowrap" id="adminRequestsTable">
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 70px;">No</th>
+                  <th scope="col">Tipe & Pemohon</th>
+                  <th scope="col">Detail Kegiatan</th>
+                  <th scope="col">Keterangan / Deskripsi</th>
+                  <th scope="col">Dokumentasi / Link Drive</th>
+                  <th scope="col">Petugas / Tautan</th>
+                  <th scope="col" style="width: 100px;">Status</th>
+                  <th scope="col" style="width: 180px;" class="text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="adminRequestsTableBody" class="align-middle">
+                <tr>
+                  <td colspan="8" class="text-center py-5 text-secondary">
+                    <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                    Memuat data permintaan kegiatan...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Add/Edit Modal Form -->
+  <div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title fw-bold" id="requestModalLabel">Tambah Data Permintaan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="adminForm" class="needs-validation" novalidate enctype="multipart/form-data">
+          <div class="modal-body">
+            <!-- Hidden ID field for editing -->
+            <input type="hidden" id="editRequestId">
+
+            <!-- Tipe Permohonan Selector -->
+            <div class="mb-4">
+              <label for="tipePermohonan" class="form-label fw-bold text-primary">Tipe Permohonan <span class="text-danger">*</span></label>
+              <select class="form-select" id="tipePermohonan" required>
+                <option value="Dokumentasi Kegiatan">Dokumentasi Kegiatan (Foto / Video)</option>
+                <option value="Rilis Berita">Rilis Berita (Press Release)</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="noUrut" class="form-label">Nomor Urut</label>
+                <input type="text" class="form-control" id="noUrut" readonly value="Memuat...">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="tanggalKegiatan" class="form-label">Tanggal Kegiatan <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="tanggalKegiatan" required>
+                <div class="invalid-feedback">Tanggal kegiatan wajib diisi.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="namaPemohon" class="form-label">Nama Pemohon <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="namaPemohon" placeholder="Nama pemohon" required>
+                <div class="invalid-feedback">Nama pemohon wajib diisi.</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="bidang" class="form-label">Bidang / Unit Kerja <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="bidang" placeholder="Bidang" required>
+                <div class="invalid-feedback">Bidang wajib diisi.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="namaKegiatan" class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="namaKegiatan" placeholder="Nama kegiatan" required>
+                <div class="invalid-feedback">Nama kegiatan wajib diisi.</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="tempatKegiatan" class="form-label">Tempat Kegiatan <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="tempatKegiatan" placeholder="Tempat/Lokasi kegiatan" required>
+                <div class="invalid-feedback">Tempat kegiatan wajib diisi.</div>
+              </div>
+            </div>
+
+            <!-- TIPE 1: DOKUMENTASI KEGIATAN ONLY -->
+            <div id="wrapperDokumentasi">
+              <div class="mb-3">
+                <label for="permintaan" class="form-label">Permintaan Kebutuhan Dokumentasi <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="permintaan" rows="3" placeholder=" Liputan foto, video teaser, dll." required></textarea>
+                <div class="invalid-feedback">Detail permintaan wajib diisi.</div>
+              </div>
+            </div>
+
+            <!-- TIPE 2: RILIS BERITA ONLY -->
+            <div id="wrapperRilisBerita" class="d-none">
+              <div class="mb-3">
+                <label for="siapaTerlibat" class="form-label">Siapa yang Terlibat (PLN & Stakeholder) <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="siapaTerlibat" placeholder="GM, Walikota, dll.">
+                <div class="invalid-feedback">Field ini wajib diisi.</div>
+              </div>
+              <div class="mb-3">
+                <label for="deskripsiKegiatan" class="form-label">Deskripsi Singkat Mengenai Kegiatan <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="deskripsiKegiatan" rows="3" placeholder="Deskripsi jalannya acara..."></textarea>
+                <div class="invalid-feedback">Deskripsi kegiatan wajib diisi.</div>
+              </div>
+              
+              <!-- File Upload (Landscape) -->
+              <div class="card p-3 mb-3 bg-light-subtle border-dashed">
+                <h6 class="fw-bold mb-2 text-primary"><i class="bi bi-images"></i> Unggah Dokumentasi (Landscape) <span class="text-danger">*</span></h6>
+                <p class="small text-secondary mb-2">Unggah minimal 4 foto. File baru akan menimpa berkas foto sebelumnya.</p>
+                <input type="file" class="form-control" id="fotoDokumentasi" accept="image/*" multiple>
+                <div class="invalid-feedback" id="fileValidationError">Silakan unggah berkas gambar.</div>
+                
+                <!-- Photos preview list in Edit modal -->
+                <div class="mt-3 d-none" id="currentPhotosWrapper">
+                  <div class="small text-secondary mb-2">Foto Terunggah:</div>
+                  <div class="d-flex flex-wrap gap-2" id="currentPhotosList"></div>
+                  <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="keepExistingPhotos" value="true" checked>
+                    <label class="form-check-label small text-secondary" for="keepExistingPhotos">
+                      Pertahankan foto lama (gabung dengan foto yang baru diunggah)
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ADMIN OUTCOME FIELDS -->
+            <div class="card p-3 mb-3 bg-primary-subtle border border-primary-subtle">
+              <h6 class="fw-bold mb-3 text-primary"><i class="bi bi-check2-circle"></i> Hasil & Petugas (Diisi Oleh Admin)</h6>
+              <div class="row">
+                <div class="col-md-6 mb-3" id="wrapperHasilLinkDoc">
+                  <label for="hasilLinkDoc" class="form-label small">Tautan Hasil Dokumentasi / Flyer / Video</label>
+                  <input type="url" class="form-control form-control-sm" id="hasilLinkDoc" placeholder="https://drive.google.com/...">
+                </div>
+                <div class="col-md-6 mb-3" id="wrapperHasilLinkBerita">
+                  <label for="hasilLinkBerita" class="form-label small">Tautan Hasil Berita Wartawan</label>
+                  <input type="url" class="form-control form-control-sm" id="hasilLinkBerita" placeholder="https://pln.co.id/news/...">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-2">
+                  <label for="petugas" class="form-label small fw-bold">Petugas Pelaksana</label>
+                  <input type="text" class="form-control form-control-sm" id="petugas" placeholder="Nama petugas pelaksana">
+                </div>
+                <div class="col-md-6 mb-2">
+                  <label for="alasanPending" class="form-label small fw-bold text-danger">Catatan Pending / Kendala</label>
+                  <input type="text" class="form-control form-control-sm" id="alasanPending" placeholder="Misal: Kurang detail, foto blur">
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary" id="btnSubmitAdmin">Simpan Data</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Modal Preview -->
+  <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content bg-transparent border-0">
+        <div class="modal-body text-center p-0">
+          <img src="" id="modalPreviewImage" class="img-fluid rounded shadow-lg" alt="Preview" style="max-height: 85vh;">
+          <button type="button" class="btn btn-light rounded-circle position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <button id="scroll-to-top" title="Kembali ke atas">
+    <i class="bi bi-arrow-up-short fs-4"></i>
+  </button>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <i class="bi bi-info-circle-fill text-primary me-2" id="toastIcon"></i>
+        <strong class="me-auto" id="toastTitle">Sistem</strong>
+        <small class="text-muted">Baru saja</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" id="toastMessage">
+        Pesan notifikasi.
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-4 mt-auto">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="text-secondary mb-0">&copy; 2026 PLN Portal Digital. Hak Cipta Dilindungi.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
+          <span class="text-secondary small">Panel Admin Resmi PLN</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom Admin Dashboard JS -->
+  <script src="js/admin.js"></script>
+</body>
+
+</html>

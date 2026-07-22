@@ -1,0 +1,66 @@
+[
+  {
+    "judul": "Pendaftaran Layanan Pelanggan Baru",
+    "deskripsi": "Formulir pendaftaran online untuk pelanggan baru yang ingin mengaktifkan layanan digital kami dengan cepat dan mudah.",
+    "kategori": "Formulir",
+    "link": "https://google.com",
+    "icon": "bi-journal-check",
+    "thumbnail": "img/thumbnail/form_pendaftaran.jpg"
+  },
+  {
+    "judul": "Panduan Pengguna Portal Digital (PDF)",
+    "deskripsi": "Unduh dokumen PDF panduan lengkap penggunaan portal informasi digital untuk memaksimalkan seluruh fitur yang tersedia.",
+    "kategori": "Dokumen",
+    "link": "https://google.com",
+    "icon": "bi-file-earmark-pdf",
+    "thumbnail": "img/thumbnail/dokumen_panduan.jpg"
+  },
+  {
+    "judul": "Promo Spesial Hari Raya",
+    "deskripsi": "Dapatkan diskon hingga 50% untuk seluruh produk unggulan kami selama periode promo hari raya tahun ini. Jangan lewatkan!",
+    "kategori": "Promosi",
+    "link": "https://google.com",
+    "icon": "bi-tags",
+    "thumbnail": "img/thumbnail/promo_spesial.jpg"
+  },
+  {
+    "judul": "Company Profile & Overview",
+    "deskripsi": "Kunjungi website utama kami untuk mengetahui profil lengkap perusahaan, visi misi, serta tim di balik layar.",
+    "kategori": "Website",
+    "link": "https://google.com",
+    "icon": "bi-globe",
+    "thumbnail": "img/thumbnail/company_profile.jpg"
+  },
+  {
+    "judul": "Saluran Instagram Resmi",
+    "deskripsi": "Ikuti akun Instagram kami untuk mendapatkan update harian visual menarik dan berita terbaru seputar promo kami.",
+    "kategori": "Media Sosial",
+    "link": "https://instagram.com",
+    "icon": "bi-instagram",
+    "thumbnail": "img/thumbnail/instagram_feed.jpg"
+  },
+  {
+    "judul": "Video Tutorial Penggunaan Produk",
+    "deskripsi": "Tonton playlist video tutorial di YouTube untuk memahami cara kerja produk kami langkah demi langkah secara visual.",
+    "kategori": "Video",
+    "link": "https://youtube.com",
+    "icon": "bi-play-circle",
+    "thumbnail": "img/thumbnail/video_tutorial.jpg"
+  },
+  {
+    "judul": "Portal Layanan Mandiri Pelanggan",
+    "deskripsi": "Kelola akun Anda, cek tagihan, dan lakukan pembayaran secara mandiri melalui aplikasi web layanan digital kami.",
+    "kategori": "Layanan Digital",
+    "link": "https://google.com",
+    "icon": "bi-cpu",
+    "thumbnail": "img/thumbnail/layanan_mandiri.jpg"
+  },
+  {
+    "judul": "Pengumuman Jadwal Maintenance Sistem",
+    "deskripsi": "Informasi penting mengenai jadwal pemeliharaan server berkala demi meningkatkan performa dan keamanan layanan.",
+    "kategori": "Informasi",
+    "link": "https://google.com",
+    "icon": "bi-info-circle",
+    "thumbnail": "img/thumbnail/info_maintenance.jpg"
+  }
+]

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Rilis Berita - Komunikasi PLN UP3 KOTAMOBAGU</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Admin-only guard: redirect non-admins immediately -->
+  <script>
+    if (localStorage.getItem('adminToken') !== 'pln-admin-session-token-2026') {
+      window.location.replace('index.html');
+    }
+  </script>
+
+  <style>
+    .form-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .form-control,
+    .form-select {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: 8px;
+      padding: 10px 14px;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(var(--primary-rgb), 0.25);
+    }
+
+    .form-control[readonly] {
+      background-color: var(--bg-tertiary);
+      opacity: 0.8;
+      cursor: not-allowed;
+    }
+
+    .toast-container {
+      z-index: 1055;
+    }
+
+    .upload-zone {
+      border: 2px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      background-color: var(--bg-primary);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.drag-over {
+      border-color: var(--primary-color);
+      background-color: rgba(var(--primary-rgb), 0.05);
+    }
+
+    .upload-zone .upload-icon {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    .preview-item {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      border: 1px solid var(--border-color);
+    }
+
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-item .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(220, 53, 69, 0.9);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+
+    .preview-item .remove-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Loading Animation Overlay -->
+  <div id="loading-overlay">
+    <div class="custom-spinner"></div>
+    <h5 class="text-secondary fw-semibold">Memuat Form Rilis Berita...</h5>
+  </div>
+
+  <!-- Sticky Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-3">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <img src="img/logo.svg" alt="Logo PLN" height="40" class="d-inline-block align-top"
+          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
+        <span class="fw-bold fs-5 text-primary text-uppercase tracking-wider">Komunikasi PLN UP3 KOTAMOBAGU</span>
+      </a>
+
+      <!-- Theme & Action Buttons (aligned right) -->
+      <div class="d-flex align-items-center ms-auto gap-2 gap-md-3">
+        <!-- Back to Home Button -->
+        <a href="index.html"
+          class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-1.5 fw-semibold border-2">
+          <i class="bi bi-arrow-left"></i>
+          <span>Kembali</span>
+        </a>
+
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+          <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Form Section -->
+  <main class="container my-5 flex-grow-1">
+    <div class="row justify-content-center mb-5">
+      <div class="col-lg-9">
+        <div class="form-card p-4 p-md-5">
+          <div class="text-center mb-4">
+            <div
+              class="d-inline-flex align-items-center justify-content-center bg-success text-white rounded-circle mb-3"
+              style="width: 60px; height: 60px;">
+              <i class="bi bi-newspaper fs-3"></i>
+            </div>
+            <h3 class="fw-bold">Form Rilis Berita</h3>
+            <p class="text-secondary">Lengkapi formulir di bawah ini untuk mengajukan rilis berita kegiatan PLN.</p>
+          </div>
+
+          <form id="rilisForm" class="needs-validation" novalidate enctype="multipart/form-data">
+
+            <!-- Step 1: Identitas -->
+            <div class="mb-4">
+              <h6 class="fw-bold text-primary d-flex align-items-center mb-3">
+                <span class="step-number">1</span> Identitas Pemohon
+              </h6>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="namaPemohon" class="form-label">Nama <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="namaPemohon" placeholder="Nama lengkap Anda" required>
+                  <div class="invalid-feedback">Nama wajib diisi.</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="bidang" class="form-label">Bidang / Unit Kerja <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="bidang" placeholder="Misal: Kehumasan / SDM" required>
+                  <div class="invalid-feedback">Bidang wajib diisi.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Detail Kegiatan -->
+            <div class="mb-4">
+              <h6 class="fw-bold text-primary d-flex align-items-center mb-3">
+                <span class="step-number">2</span> Detail Kegiatan
+              </h6>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="namaKegiatan" class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="namaKegiatan" placeholder="Nama kegiatan" required>
+                  <div class="invalid-feedback">Nama kegiatan wajib diisi.</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="tanggalKegiatan" class="form-label">Tanggal Kegiatan <span
+                      class="text-danger">*</span></label>
+                  <input type="date" class="form-control" id="tanggalKegiatan" required>
+                  <div class="invalid-feedback">Tanggal kegiatan wajib diisi.</div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="tempatKegiatan" class="form-label">Tempat Kegiatan <span
+                    class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="tempatKegiatan" placeholder="Lokasi kegiatan" required>
+                <div class="invalid-feedback">Tempat kegiatan wajib diisi.</div>
+              </div>
+              <div class="mb-3">
+                <label for="siapaTerlibat" class="form-label">Siapa yang Terlibat (PLN & Stakeholder) <span
+                    class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="siapaTerlibat"
+                  placeholder="Misal: GM PLN UID, Walikota, Ketua Bawaslu, dll." required>
+                <div class="invalid-feedback">Field ini wajib diisi.</div>
+              </div>
+              <div class="mb-3">
+                <label for="deskripsiKegiatan" class="form-label">Deskripsi Singkat Mengenai Kegiatan <span
+                    class="text-danger">*</span></label>
+                <textarea class="form-control" id="deskripsiKegiatan" rows="4"
+                  placeholder="Uraikan jalannya acara secara singkat untuk bahan rilis berita..." required></textarea>
+                <div class="invalid-feedback">Deskripsi kegiatan wajib diisi.</div>
+              </div>
+            </div>
+
+            <!-- Step 3: Dokumentasi -->
+            <div class="mb-4">
+              <h6 class="fw-bold text-primary d-flex align-items-center mb-3">
+                <span class="step-number">3</span> Dokumentasi Kegiatan
+              </h6>
+              <p class="small text-secondary mb-3">Unggah foto-foto dokumentasi kegiatan (tanpa batasan jumlah file).
+                Disarankan menggunakan orientasi landscape.</p>
+
+              <div class="upload-zone" id="uploadZone">
+                <i class="bi bi-cloud-arrow-up upload-icon d-block"></i>
+                <h6 class="fw-semibold">Klik untuk memilih foto atau drag & drop</h6>
+                <p class="text-secondary small mb-0">Format: JPG, PNG, WEBP — Tidak ada batasan jumlah file</p>
+              </div>
+              <input type="file" class="d-none" id="fotoDokumentasi" accept="image/*" multiple>
+
+              <!-- Preview Grid -->
+              <div class="preview-grid" id="previewGrid"></div>
+              <div class="mt-2 small text-secondary" id="fileCountInfo"></div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button
+                class="btn btn-success py-2.5 fw-semibold rounded-3 d-flex align-items-center justify-content-center gap-2"
+                type="submit" id="btnSubmit">
+                <i class="bi bi-send-fill"></i> Kirim Rilis Berita
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Scroll to Top Button -->
+  <button id="scroll-to-top" title="Kembali ke atas">
+    <i class="bi bi-arrow-up-short fs-4"></i>
+  </button>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <i class="bi bi-info-circle-fill text-primary me-2" id="toastIcon"></i>
+        <strong class="me-auto" id="toastTitle">Sistem</strong>
+        <small class="text-muted">Baru saja</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" id="toastMessage">
+        Pesan notifikasi.
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-5 mt-5">
+    <div class="container">
+      <div class="row g-4 mb-4">
+        <div class="col-lg-5 col-md-12">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <img src="img/logo.svg" alt="Logo PLN" height="35"
+              onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
+            <span class="fw-bold fs-5 text-primary text-uppercase">Portal Digital</span>
+          </div>
+          <p class="text-secondary mb-0 pe-lg-5">Komunikasi PLN UP3 KOTAMOBAGU - Portal Layanan Permintaan Dokumentasi &
+            Rilis Berita Resmi.</p>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h5 class="fw-bold mb-3">Hubungi Kami</h5>
+          <ul class="list-unstyled text-secondary">
+            <li class="mb-2"><i class="bi bi-envelope-fill me-2 text-primary"></i> <a href="mailto:info@pln.co.id"
+                class="text-decoration-none text-secondary">info@pln.co.id</a></li>
+            <li class="mb-2"><i class="bi bi-telephone-fill me-2 text-primary"></i> 123</li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <h5 class="fw-bold mb-3">Media Sosial</h5>
+          <div class="d-flex gap-2">
+            <a href="https://www.instagram.com/plnup3kotamobagu_?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+              target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Instagram"
+              title="Instagram PLN UP3 Kotamobagu"><i class="bi bi-instagram"></i></a>
+            <a href="https://www.facebook.com/share/1BvqjLiMC1/?mibextid=wwXIfr" target="_blank"
+              rel="noopener noreferrer" class="footer-social-icon" aria-label="Facebook"
+              title="Facebook PLN UP3 Kotamobagu"><i class="bi bi-facebook"></i></a>
+            <a href="https://www.tiktok.com/@plnup3kotamobagu_?_r=1&_t=ZS-98EZsid2oYm" target="_blank"
+              rel="noopener noreferrer" class="footer-social-icon" aria-label="TikTok"
+              title="TikTok PLN UP3 Kotamobagu"><i class="bi bi-tiktok"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-4 text-secondary">
+
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="text-secondary mb-0">&copy; 2026 Komunikasi PLN UP3 KOTAMOBAGU. Hak Cipta Dilindungi.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
+          <a href="#" class="text-decoration-none text-secondary me-3">Kebijakan Privasi</a>
+          <a href="#" class="text-decoration-none text-secondary">Syarat & Ketentuan</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom Rilis JS -->
+  <script src="js/rilis.js"></script>
+</body>
+
+</html>

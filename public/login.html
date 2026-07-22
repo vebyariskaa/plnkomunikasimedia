@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Admin - Komunikasi PLN UP3 KOTAMOBAGU</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <style>
+    .login-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      transition: all 0.3s ease;
+    }
+    
+    .form-label {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    
+    .form-control {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: 8px;
+      padding: 12px 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(var(--primary-rgb), 0.25);
+    }
+  </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Sticky Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-3">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <img src="img/logo.svg" alt="Logo PLN" height="40" class="d-inline-block align-top"
+          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
+        <span class="fw-bold fs-5 text-primary text-uppercase tracking-wider">Komunikasi PLN UP3 KOTAMOBAGU</span>
+      </a>
+
+      <div class="d-flex align-items-center ms-auto gap-3">
+        <!-- Back to Home Button -->
+        <a href="index.html" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-1.5 fw-semibold border-2">
+          <i class="bi bi-arrow-left"></i>
+          <span>Kembali</span>
+        </a>
+
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+          <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Login Area -->
+  <main class="container my-auto py-5 flex-grow-1 d-flex align-items-center justify-content-center">
+    <div class="row justify-content-center w-100">
+      <div class="col-md-6 col-lg-5 col-xl-4">
+        <div class="login-card p-4 p-md-5">
+          <div class="text-center mb-4">
+            <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-circle mb-3" style="width: 60px; height: 60px;">
+              <i class="bi bi-shield-lock fs-3"></i>
+            </div>
+            <h3 class="fw-bold">Login Admin</h3>
+            <p class="text-secondary small">Masukkan kredensial admin Anda untuk mengelola portal data.</p>
+          </div>
+
+          <form id="loginForm">
+            <!-- Alert Box -->
+            <div class="alert alert-danger d-none" id="errorAlert" role="alert">
+              Username atau password salah.
+            </div>
+
+            <!-- Username -->
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" placeholder="Masukkan username" required autocomplete="username">
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+              <div class="d-flex justify-content-between">
+                <label for="password" class="form-label">Password</label>
+              </div>
+              <div class="input-group">
+                <input type="password" class="form-control" id="password" placeholder="Masukkan password" required autocomplete="current-password">
+                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button class="btn btn-primary py-2.5 fw-semibold rounded-3 d-flex align-items-center justify-content-center gap-2" type="submit" id="btnLogin">
+                <i class="bi bi-box-arrow-in-right"></i> Masuk Dashboard
+              </button>
+              <a href="form.html" class="btn btn-outline-secondary py-2.5 fw-semibold rounded-3 d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-person-fill"></i> Masuk sebagai User
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-4 mt-auto">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="text-secondary mb-0">&copy; 2026 PLN Portal Digital. Hak Cipta Dilindungi.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
+          <a href="#" class="text-decoration-none text-secondary">Kebijakan Privasi</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Login JS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginForm = document.getElementById('loginForm');
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+      const togglePasswordBtn = document.getElementById('togglePassword');
+      const btnLogin = document.getElementById('btnLogin');
+      const errorAlert = document.getElementById('errorAlert');
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+
+      // Check if already logged in
+      if (localStorage.getItem('adminToken') === 'pln-admin-session-token-2026') {
+        window.location.href = 'admin.html';
+      }
+
+      // Toggle password visibility
+      togglePasswordBtn.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        togglePasswordBtn.querySelector('i').className = type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
+      });
+
+      // Submit Form
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        btnLogin.disabled = true;
+        errorAlert.classList.add('d-none');
+
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+
+        try {
+          const response = await fetch('/api/admin/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            localStorage.setItem('adminToken', data.token);
+            window.location.href = 'admin.html';
+          } else {
+            errorAlert.textContent = data.error || 'Username atau password salah.';
+            errorAlert.classList.remove('d-none');
+          }
+        } catch (err) {
+          console.error(err);
+          errorAlert.textContent = 'Terjadi masalah jaringan ke server.';
+          errorAlert.classList.remove('d-none');
+        } finally {
+          btnLogin.disabled = false;
+        }
+      });
+
+      // Theme Sync
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+      });
+
+      function updateThemeIcon(theme) {
+        themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Permintaan - Komunikasi PLN UP3 KOTAMOBAGU</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <style>
+    .form-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+    }
+    
+    .table-container {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .custom-table th {
+      background-color: var(--primary-color);
+      color: #fff;
+      font-weight: 600;
+      padding: 12px 16px;
+    }
+    
+    [data-theme="dark"] .custom-table th {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+    
+    .custom-table td {
+      padding: 12px 16px;
+      vertical-align: middle;
+      color: var(--text-primary);
+      border-color: var(--border-color);
+    }
+    
+    .custom-table tbody tr {
+      transition: background-color 0.2s ease;
+    }
+    
+    .custom-table tbody tr:hover {
+      background-color: rgba(var(--primary-rgb), 0.04);
+    }
+    
+    .form-label {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    
+    .form-control, .form-select {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: 8px;
+      padding: 10px 14px;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(var(--primary-rgb), 0.25);
+    }
+    
+    .form-control[readonly] {
+      background-color: var(--bg-tertiary);
+      opacity: 0.8;
+      cursor: not-allowed;
+    }
+
+    .toast-container {
+      z-index: 1055;
+    }
+
+    .img-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+      gap: 4px;
+      max-width: 150px;
+    }
+
+    .img-thumbnail-preview {
+      width: 45px;
+      height: 45px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      transition: transform 0.2s;
+    }
+
+    .img-thumbnail-preview:hover {
+      transform: scale(1.15);
+    }
+
+    .card-info-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Loading Animation Overlay -->
+  <div id="loading-overlay">
+    <div class="custom-spinner"></div>
+    <h5 class="text-secondary fw-semibold">Memuat Komunikasi PLN UP3 KOTAMOBAGU...</h5>
+  </div>
+
+  <!-- Sticky Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-3">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <img src="img/logo.svg" alt="Logo PLN" height="40" class="d-inline-block align-top"
+          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
+        <span class="fw-bold fs-5 text-primary text-uppercase tracking-wider">Komunikasi PLN UP3 KOTAMOBAGU</span>
+      </a>
+
+      <!-- Theme & Action Buttons (aligned right) -->
+      <div class="d-flex align-items-center ms-auto gap-2 gap-md-3">
+        <!-- Back to Home Button -->
+        <a href="index.html" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-1.5 fw-semibold border-2">
+          <i class="bi bi-arrow-left"></i>
+          <span>Kembali</span>
+        </a>
+
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+          <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Form Section -->
+  <main class="container my-5 flex-grow-1">
+    <div class="row justify-content-center mb-5">
+      <div class="col-lg-9">
+        <div class="form-card p-4 p-md-5">
+          <div class="text-center mb-4">
+            <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-circle mb-3" style="width: 60px; height: 60px;">
+              <i class="bi bi-journal-plus fs-3"></i>
+            </div>
+            <h3 class="fw-bold">Form Permintaan Dokumentasi</h3>
+            <p class="text-secondary">Lengkapi formulir di bawah ini untuk mengajukan permintaan dokumentasi kegiatan.</p>
+          </div>
+
+          <form id="requestForm" class="needs-validation" novalidate>
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <!-- Nomor Urut (Readonly) -->
+                <label for="noUrut" class="form-label">Nomor Urut</label>
+                <input type="text" class="form-control" id="noUrut" readonly value="Memuat...">
+              </div>
+              <div class="col-md-6 mb-3">
+                <!-- Tanggal Kegiatan -->
+                <label for="tanggalKegiatan" class="form-label">Tanggal Kegiatan <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="tanggalKegiatan" required>
+                <div class="invalid-feedback">Tanggal kegiatan wajib diisi.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <!-- Nama Pemohon -->
+                <label for="namaPemohon" class="form-label">Nama Pemohon <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="namaPemohon" placeholder="Nama lengkap Anda" required>
+                <div class="invalid-feedback">Nama pemohon wajib diisi.</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <!-- Bidang -->
+                <label for="bidang" class="form-label">Bidang / Unit Kerja <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="bidang" placeholder="Misal: Kehumasan / SDM" required>
+                <div class="invalid-feedback">Bidang wajib diisi.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <!-- Nama Kegiatan -->
+                <label for="namaKegiatan" class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="namaKegiatan" placeholder="Nama kegiatan" required>
+                <div class="invalid-feedback">Nama kegiatan wajib diisi.</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <!-- Tempat Kegiatan -->
+                <label for="tempatKegiatan" class="form-label">Tempat Kegiatan <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="tempatKegiatan" placeholder="Lokasi kegiatan" required>
+                <div class="invalid-feedback">Tempat kegiatan wajib diisi.</div>
+              </div>
+            </div>
+
+            <!-- Permintaan Dokumentasi -->
+            <div class="mb-4">
+              <label for="permintaan" class="form-label">Permintaan Kebutuhan Dokumentasi <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="permintaan" rows="3" placeholder="Sebutkan kebutuhan dokumentasi (cth: Liputan foto pembukaan, video teaser 1 menit, desain flyer acara)" required></textarea>
+              <div class="invalid-feedback">Detail permintaan wajib diisi.</div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button class="btn btn-primary py-2.5 fw-semibold rounded-3 d-flex align-items-center justify-content-center gap-2" type="submit" id="btnSubmit">
+                <i class="bi bi-send-fill"></i> Kirim Permintaan
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Table Section -->
+    <div class="row">
+      <div class="col-12">
+        <h4 class="fw-bold mb-3 border-bottom pb-2 d-flex align-items-center justify-content-between">
+          <span>Daftar Permintaan Layanan & Hasil</span>
+          <span class="badge bg-primary fs-7" id="requestCounter">0 Data</span>
+        </h4>
+        
+        <div class="table-container">
+          <div class="table-responsive">
+            <table class="table custom-table mb-0 text-nowrap" id="requestsTable">
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 70px;">No</th>
+                  <th scope="col">Pemohon</th>
+                  <th scope="col">Detail Kegiatan</th>
+                  <th scope="col">Permintaan</th>
+                  <th scope="col">Link Drive</th>
+                  <th scope="col">Petugas</th>
+                  <th scope="col" style="width: 100px;">Status</th>
+                </tr>
+              </thead>
+              <tbody id="requestsTableBody" class="align-middle">
+                <tr>
+                  <td colspan="7" class="text-center py-4 text-secondary">
+                    <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                    Memuat data permintaan...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Image Modal Preview -->
+  <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content bg-transparent border-0">
+        <div class="modal-body text-center p-0">
+          <img src="" id="modalPreviewImage" class="img-fluid rounded shadow-lg" alt="Preview" style="max-height: 85vh;">
+          <button type="button" class="btn btn-light rounded-circle position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <button id="scroll-to-top" title="Kembali ke atas">
+    <i class="bi bi-arrow-up-short fs-4"></i>
+  </button>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <i class="bi bi-info-circle-fill text-primary me-2" id="toastIcon"></i>
+        <strong class="me-auto" id="toastTitle">Sistem</strong>
+        <small class="text-muted">Baru saja</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" id="toastMessage">
+        Pesan notifikasi.
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-5 mt-5">
+    <div class="container">
+      <div class="row g-4 mb-4">
+        <div class="col-lg-5 col-md-12">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <img src="img/logo.svg" alt="Logo PLN" height="35"
+              onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
+            <span class="fw-bold fs-5 text-primary text-uppercase">Portal Digital</span>
+          </div>
+          <p class="text-secondary mb-0 pe-lg-5">Komunikasi PLN UP3 KOTAMOBAGU - Portal Layanan Permintaan Dokumentasi Resmi.</p>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h5 class="fw-bold mb-3">Hubungi Kami</h5>
+          <ul class="list-unstyled text-secondary">
+            <li class="mb-2"><i class="bi bi-envelope-fill me-2 text-primary"></i> <a href="mailto:info@pln.co.id"
+                class="text-decoration-none text-secondary">info@pln.co.id</a></li>
+            <li class="mb-2"><i class="bi bi-telephone-fill me-2 text-primary"></i> 123</li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <h5 class="fw-bold mb-3">Media Sosial</h5>
+          <div class="d-flex gap-2">
+            <a href="https://www.instagram.com/plnup3kotamobagu_?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Instagram" title="Instagram PLN UP3 Kotamobagu"><i
+                class="bi bi-instagram"></i></a>
+            <a href="https://www.facebook.com/share/1BvqjLiMC1/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Facebook" title="Facebook PLN UP3 Kotamobagu"><i
+                class="bi bi-facebook"></i></a>
+            <a href="https://www.tiktok.com/@plnup3kotamobagu_?_r=1&_t=ZS-98EZsid2oYm" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="TikTok" title="TikTok PLN UP3 Kotamobagu"><i
+                class="bi bi-tiktok"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-4 text-secondary">
+
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="text-secondary mb-0">&copy; 2026 Komunikasi PLN UP3 KOTAMOBAGU. Hak Cipta Dilindungi.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
+          <a href="#" class="text-decoration-none text-secondary me-3">Kebijakan Privasi</a>
+          <a href="#" class="text-decoration-none text-secondary">Syarat & Ketentuan</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom Form JS -->
+  <script src="js/form.js"></script>
+</body>
+
+</html>

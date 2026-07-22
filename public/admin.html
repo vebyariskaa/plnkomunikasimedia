@@ -293,13 +293,24 @@
 
     <!-- ══ REQUESTS TABLE SECTION ══ -->
     <div class="row mb-4 align-items-center">
-      <div class="col-md-6">
+      <div class="col-lg-5">
         <h3 class="fw-bold mb-1">Manajemen Permintaan & Rilis</h3>
-        <p class="text-secondary mb-0">Kelola requests, tambah hasil/dokumentasi, serta atur tautan rilis berita di sini.</p>
+        <p class="text-secondary mb-0">Kelola requests, buat rilis berita, serta atur banner tampilan portal di sini.</p>
       </div>
-      <div class="col-md-6 text-md-end mt-3 mt-md-0">
-        <button class="btn btn-primary rounded-3 px-4 py-2.5 fw-semibold d-inline-flex align-items-center gap-2 shadow" data-bs-toggle="modal" data-bs-target="#requestModal" id="btnOpenAddModal">
-          <i class="bi bi-plus-circle-fill"></i> Tambah Data Baru
+      <div class="col-lg-7 text-lg-end mt-3 mt-lg-0 d-flex flex-wrap gap-2 justify-content-lg-end">
+        <!-- Button 1: Buat Rilis Berita -->
+        <button class="btn btn-success rounded-3 px-3.5 py-2.5 fw-semibold d-inline-flex align-items-center gap-2 shadow" id="btnOpenAddRilisModal">
+          <i class="bi bi-newspaper"></i> + Buat Rilis Berita
+        </button>
+
+        <!-- Button 2: Tambah Permintaan Dokumentasi -->
+        <button class="btn btn-primary rounded-3 px-3.5 py-2.5 fw-semibold d-inline-flex align-items-center gap-2 shadow" id="btnOpenAddModal">
+          <i class="bi bi-plus-circle-fill"></i> + Permintaan Dokumentasi
+        </button>
+
+        <!-- Button 3: Edit Banner Portal -->
+        <button class="btn btn-outline-primary rounded-3 px-3.5 py-2.5 fw-semibold d-inline-flex align-items-center gap-2 shadow border-2" id="btnQuickEditBanner">
+          <i class="bi bi-images"></i> Edit Banner Portal
         </button>
       </div>
     </div>

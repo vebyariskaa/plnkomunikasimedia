@@ -399,18 +399,54 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/'/g, '&#039;');
   }
 
-  // Reset form when clicking add new request button
-  btnOpenAddModal.addEventListener('click', () => {
-    adminForm.reset();
-    adminForm.classList.remove('was-validated');
-    fileInput.classList.remove('is-invalid');
-    editRequestId.value = '';
-    requestModalLabel.textContent = 'Tambah Data Permintaan';
-    currentPhotosWrapper.classList.add('d-none');
-    currentPhotosList.innerHTML = '';
-    toggleInputs();
-    updateNextNoUrut();
-  });
+  // Open Modal for Dokumentasi Kegiatan
+  if (btnOpenAddModal) {
+    btnOpenAddModal.addEventListener('click', () => {
+      adminForm.reset();
+      adminForm.classList.remove('was-validated');
+      fileInput.classList.remove('is-invalid');
+      editRequestId.value = '';
+      requestModalLabel.textContent = 'Tambah Permintaan Dokumentasi';
+      tipePermohonanSelect.value = 'Dokumentasi Kegiatan';
+      currentPhotosWrapper.classList.add('d-none');
+      currentPhotosList.innerHTML = '';
+      toggleInputs();
+      updateNextNoUrut();
+      requestModal.show();
+    });
+  }
+
+  // Open Modal preconfigured for Rilis Berita (Exact format)
+  const btnOpenAddRilisModal = document.getElementById('btnOpenAddRilisModal');
+  if (btnOpenAddRilisModal) {
+    btnOpenAddRilisModal.addEventListener('click', () => {
+      adminForm.reset();
+      adminForm.classList.remove('was-validated');
+      fileInput.classList.remove('is-invalid');
+      editRequestId.value = '';
+      requestModalLabel.textContent = 'Buat Rilis Berita Baru';
+      tipePermohonanSelect.value = 'Rilis Berita';
+      currentPhotosWrapper.classList.add('d-none');
+      currentPhotosList.innerHTML = '';
+      toggleInputs();
+      updateNextNoUrut();
+      requestModal.show();
+    });
+  }
+
+  // Quick button to edit banner / scroll to Banner Section
+  const btnQuickEditBanner = document.getElementById('btnQuickEditBanner');
+  if (btnQuickEditBanner) {
+    btnQuickEditBanner.addEventListener('click', () => {
+      const bannerCard = document.querySelector('.banner-mgmt-card');
+      if (bannerCard) {
+        bannerCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        bannerCard.style.transition = 'outline 0.3s, box-shadow 0.3s';
+        bannerCard.style.outline = '3px solid #0c4a6e';
+        setTimeout(() => { bannerCard.style.outline = 'none'; }, 2000);
+      }
+    });
+  }
 
   // Open Edit Modal & Bind Data
   function openEditModal(id) {

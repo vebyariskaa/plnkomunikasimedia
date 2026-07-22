@@ -222,22 +222,14 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.value = '';
   });
 
-  // Add files to the selected list (Maksimal 5 Foto)
+  // Add files to the selected list
   function addFiles(newFiles) {
-    let attemptedOverLimit = false;
     newFiles.forEach(file => {
-      if (selectedFiles.length >= 5) {
-        attemptedOverLimit = true;
-        return;
-      }
       const alreadyExists = selectedFiles.some(f => f.name === file.name && f.size === file.size);
       if (!alreadyExists) {
         selectedFiles.push(file);
       }
     });
-    if (attemptedOverLimit) {
-      showToast('Peringatan', 'Maksimal 5 foto dokumentasi yang dapat diunggah.', false);
-    }
     renderPreviews();
   }
 
@@ -296,23 +288,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create FormData payload
     const formData = new FormData();
     formData.append('tipePermohonan', 'Rilis Berita');
+    formData.append('namaPemohon', document.getElementById('namaPemohon').value.trim());
     formData.append('bidang', document.getElementById('bidang').value.trim());
     formData.append('namaKegiatan', document.getElementById('namaKegiatan').value.trim());
+    formData.append('tempatKegiatan', document.getElementById('tempatKegiatan').value.trim());
     formData.append('tanggalKegiatan', document.getElementById('tanggalKegiatan').value);
     if (document.getElementById('tanggalSelesai') && document.getElementById('tanggalSelesai').value) {
       formData.append('tanggalSelesai', document.getElementById('tanggalSelesai').value);
     }
-    formData.append('tempatKegiatan', '-'); // not used in this form but required by server
-    formData.append('namaPemohon', document.getElementById('bidang').value.trim()); // use bidang as pemohon fallback
     formData.append('siapaTerlibat', document.getElementById('siapaTerlibat').value.trim());
     formData.append('deskripsiKegiatan', document.getElementById('deskripsiKegiatan').value.trim());
-
-    // Link Berita
-    const linkBerita = document.getElementById('hasilLinkBerita').value.trim();
-    if (linkBerita) {
-      formData.append('hasilLinkBerita', linkBerita);
-    }
     
+    // Validate Photos
+    if (selectedFiles.length < 4) {
+      showToast('Peringatan', 'Harap unggah minimal 4 foto dokumentasi.', false);
+      btnSubmit.disabled = false;
+      btnSubmit.innerHTML = originalBtnText;
+      return;
+    }
+
     // Append all selected files
     selectedFiles.forEach(file => {
       formData.append('fotoDokumentasi', file);

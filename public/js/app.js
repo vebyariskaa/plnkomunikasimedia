@@ -215,8 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const rawData = await response.json();
       
-      // Filter ALL Rilis Berita (both approved and pending)
-      allNews = rawData.filter(item => item.tipePermohonan === 'Rilis Berita');
+      // Filter only approved Rilis Berita to display on portal
+      allNews = rawData.filter(item => item.tipePermohonan === 'Rilis Berita' && item.status === 'Disetujui');
       
       filterAndRenderCards();
     } catch (error) {

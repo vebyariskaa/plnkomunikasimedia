@@ -287,21 +287,16 @@ document.addEventListener('DOMContentLoaded', () => {
       let statusBadge = '';
       let approveBtn = '';
 
-      if (req.tipePermohonan === 'Rilis Berita') {
-        statusBadge = '<span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>Terpublikasi</span>';
-        approveBtn = ''; // Rilis Berita does NOT use ACC button
-      } else {
-        statusBadge = status === 'Disetujui'
-          ? '<span class="badge bg-success">ACC</span>'
-          : '<span class="badge bg-warning text-dark">Pending</span>';
+      statusBadge = status === 'Disetujui'
+        ? '<span class="badge bg-success">ACC</span>'
+        : '<span class="badge bg-warning text-dark">Pending</span>';
 
-        if (status !== 'Disetujui' && req.alasanPending) {
-          statusBadge += `<div class="small text-danger mt-1 text-wrap" style="max-width: 100px;">Catatan: ${escapeHtml(req.alasanPending)}</div>`;
-        }
+      if (status !== 'Disetujui' && req.alasanPending) {
+        statusBadge += `<div class="small text-danger mt-1 text-wrap" style="max-width: 100px;">Catatan: ${escapeHtml(req.alasanPending)}</div>`;
+      }
 
-        if (status === 'Pending') {
-          approveBtn = `<button class="btn btn-outline-success btn-sm rounded me-1 btn-approve" data-id="${req.id}" title="ACC Permintaan"><i class="bi bi-check-lg"></i> ACC</button>`;
-        }
+      if (status === 'Pending') {
+        approveBtn = `<button class="btn btn-outline-success btn-sm rounded me-1 btn-approve" data-id="${req.id}" title="ACC Permintaan"><i class="bi bi-check-lg"></i> ACC</button>`;
       }
 
       tr.innerHTML = `

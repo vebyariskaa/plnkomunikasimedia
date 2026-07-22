@@ -207,7 +207,7 @@
                   <option value="Transaksi Energi">Transaksi Energi</option>
                   <option value="Niaga dan Pemasaran">Niaga dan Pemasaran</option>
                   <option value="K3L KAM">K3L KAM</option>
-                  <option value="LUXDAN">LUXDAN</option>
+                  <option value="LAKSDAN">LAKSDAN</option>
                 </select>
                 <div class="invalid-feedback">Pilih bidang terlebih dahulu.</div>
               </div>
@@ -229,11 +229,16 @@
             </div>
 
             <!-- Permintaan Dokumentasi -->
-            <div class="mb-4">
-              <label for="permintaan" class="form-label">Permintaan Kebutuhan Dokumentasi <span class="text-danger">*</span></label>
-              <textarea class="form-control" id="permintaan" rows="3" placeholder="Sebutkan kebutuhan dokumentasi (cth: Liputan foto pembukaan, video teaser 1 menit, desain flyer acara)" required></textarea>
-              <div class="invalid-feedback">Detail permintaan wajib diisi.</div>
-            </div>
+              <div class="mb-3">
+                <label for="permintaan" class="form-label">Permintaan Kebutuhan Dokumentasi <span class="text-danger">*</span></label>
+                <select class="form-select" id="permintaan" required>
+                  <option value="" selected disabled>-- Pilih Kebutuhan Dokumentasi --</option>
+                  <option value="Foto">Foto</option>
+                  <option value="Video">Video</option>
+                  <option value="Foto & Video">Foto & Video</option>
+                </select>
+                <div class="invalid-feedback">Silakan pilih kebutuhan dokumentasi.</div>
+              </div>
 
             <div class="d-grid gap-2">
               <button class="btn btn-primary py-2.5 fw-semibold rounded-3 d-flex align-items-center justify-content-center gap-2" type="submit" id="btnSubmit">

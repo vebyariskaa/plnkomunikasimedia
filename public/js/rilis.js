@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Client-side image compression utility (Mobile-safe Blob approach)
+  // Client-side image compression utility (100% Mobile Compatible via toDataURL)
   function compressImage(file, maxWidth, maxHeight, quality) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -388,13 +388,26 @@ document.addEventListener('DOMContentLoaded', () => {
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
           
-          canvas.toBlob((blob) => {
-            if (blob) {
-              resolve({ blob: blob, name: file.name });
-            } else {
-              reject(new Error('Canvas toBlob failed'));
+          try {
+            // toDataURL is universally supported on all mobile devices
+            const dataUrl = canvas.toDataURL('image/jpeg', quality);
+            
+            // Convert base64 to Blob
+            const arr = dataUrl.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            
+            while(n--){
+              u8arr[n] = bstr.charCodeAt(n);
             }
-          }, 'image/jpeg', quality);
+            
+            const blob = new Blob([u8arr], {type: mime});
+            resolve({ blob: blob, name: file.name });
+          } catch (e) {
+            reject(new Error('Canvas toDataURL failed: ' + e.message));
+          }
         };
         img.onerror = function() {
           reject(new Error('Failed to load image'));

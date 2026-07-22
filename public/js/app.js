@@ -22,21 +22,55 @@ document.addEventListener('DOMContentLoaded', () => {
   const landingErrorAlert = document.getElementById('landingErrorAlert');
   const btnBackToOptions = document.getElementById('btnBackToOptions');
 
-  // ── Load Dynamic Banners from API ──────────────────────────────────────────
+  // ── Load Dynamic Banners from API (Up to 10 Banners) ─────────────────────────
   async function loadBanners() {
     try {
       const res = await fetch('/api/banners');
       if (!res.ok) return;
       const banners = await res.json();
-      banners.forEach(b => {
-        if (!b.url) return;
-        const img = document.getElementById(`heroBannerImg${b.slot}`);
-        if (img) {
-          img.src = b.url;
-        }
-      });
+      
+      const activeBanners = banners.filter(b => b.url);
+      if (activeBanners.length === 0) return;
+
+      const indicatorsContainer = document.querySelector('#promoCarousel .carousel-indicators');
+      const innerContainer = document.querySelector('#promoCarousel .carousel-inner');
+
+      if (indicatorsContainer && innerContainer) {
+        indicatorsContainer.innerHTML = '';
+        innerContainer.innerHTML = '';
+
+        activeBanners.forEach((b, index) => {
+          // Indicator
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.dataset.bsTarget = '#promoCarousel';
+          btn.dataset.bsSlideTo = index;
+          btn.setAttribute('aria-label', `Slide ${index + 1}`);
+          if (index === 0) btn.className = 'active';
+          indicatorsContainer.appendChild(btn);
+
+          // Item
+          const item = document.createElement('div');
+          item.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+          item.dataset.bsInterval = '5000';
+
+          const fallbackSrc = `https://picsum.photos/seed/pln${b.slot}/1200/420`;
+          
+          item.innerHTML = `
+            <img id="heroBannerImg${b.slot}" src="${b.url}" alt="Banner ${b.slot} PLN UP3 Kotamobagu"
+              loading="${index === 0 ? 'eager' : 'lazy'}"
+              onerror="this.onerror=null; this.src='${fallbackSrc}'; this.style.opacity='0.6'">
+            <div class="hero-caption">
+              <div class="hero-badge"><i class="bi bi-lightning-charge-fill"></i> Resmi PLN UP3 Kotamobagu</div>
+              <h2 class="hero-title">Komunikasi PLN UP3 KOTAMOBAGU</h2>
+              <p class="hero-desc">Akses seluruh rilis berita, dokumentasi kegiatan dan layanan informasi resmi.</p>
+            </div>
+          `;
+          innerContainer.appendChild(item);
+        });
+      }
     } catch (e) {
-      // Silent — carousel will show static fallback images
+      console.error('Error loading banners:', e);
     }
   }
   loadBanners();

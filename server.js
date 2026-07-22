@@ -88,42 +88,74 @@ const uploadBanner = multer({ storage: multer.memoryStorage(), limits: { fileSiz
 
 // API Routes
 
-// ── Banner Management ──────────────────────────────────────────────────────────
+// ── Banner Management (Up to 10 slots) ─────────────────────────────────────────
+const BANNERS_FILE = isVercel 
+  ? path.join('/tmp', 'banners.json') 
+  : path.join(__dirname, 'public', 'data', 'banners.json');
 
-// GET /api/banners — return current banner URLs (slot 1 & 2)
-app.get('/api/banners', (req, res) => {
-  const banners = [];
-  const baseUrl = (SUPABASE_URL && SUPABASE_KEY)
-    ? null
-    : (req.protocol + '://' + req.get('host'));
-
-  for (let i = 1; i <= 2; i++) {
-    const localPath = path.join(__dirname, 'public', 'img', `banner${i}.jpg`);
-    if (supabase) {
-      const { data } = supabase.storage.from('banners').getPublicUrl(`banner${i}.jpg`);
-      banners.push({ slot: i, url: data ? data.publicUrl + '?t=' + Date.now() : null });
-    } else {
-      banners.push({
-        slot: i,
-        url: fs.existsSync(localPath) ? `/img/banner${i}.jpg?t=${Date.now()}` : null
-      });
+function readBannersStore() {
+  try {
+    if (fs.existsSync(BANNERS_FILE)) {
+      return JSON.parse(fs.readFileSync(BANNERS_FILE, 'utf8'));
     }
+  } catch (e) {}
+  return {};
+}
+
+function writeBannersStore(bannersObj) {
+  try {
+    fs.mkdirSync(path.dirname(BANNERS_FILE), { recursive: true });
+    fs.writeFileSync(BANNERS_FILE, JSON.stringify(bannersObj, null, 2));
+  } catch (e) {
+    console.error('Error writing banners file:', e);
   }
+}
+
+// GET /api/banners — return current banner URLs (slot 1 s/d 10)
+app.get('/api/banners', async (req, res) => {
+  const store = readBannersStore();
+  const banners = [];
+
+  for (let i = 1; i <= 10; i++) {
+    let url = null;
+    const key = `banner${i}`;
+
+    if (store[key]) {
+      url = store[key];
+    } else if (supabase) {
+      const { data } = supabase.storage.from('banners').getPublicUrl(`${key}.jpg`);
+      url = data ? (data.publicUrl + '?t=' + Date.now()) : null;
+    } else {
+      const localPath = path.join(__dirname, 'public', 'img', `${key}.jpg`);
+      if (fs.existsSync(localPath)) {
+        url = `/img/${key}.jpg?t=${Date.now()}`;
+      }
+    }
+
+    // Default fallbacks for slots 1 and 2 if empty
+    if (!url && i === 1) url = '/img/banner1.jpg';
+    if (!url && i === 2) url = '/img/banner2.jpg';
+
+    banners.push({ slot: i, url });
+  }
+
   res.json(banners);
 });
 
-// POST /api/banners/:slot — upload a new banner image (admin only)
+// POST /api/banners/:slot — upload a new banner image (admin only, up to 10 slots)
 app.post('/api/banners/:slot', requireAdmin, uploadBanner.single('banner'), async (req, res) => {
   const slot = parseInt(req.params.slot);
-  if (slot !== 1 && slot !== 2) {
-    return res.status(400).json({ error: 'Slot banner harus 1 atau 2.' });
+  if (isNaN(slot) || slot < 1 || slot > 10) {
+    return res.status(400).json({ error: 'Slot banner harus bernilai antara 1 sampai 10.' });
   }
   if (!req.file) {
     return res.status(400).json({ error: 'File gambar banner wajib diupload.' });
   }
 
   const fileName = `banner${slot}.jpg`;
+  let bannerUrl = null;
 
+  // Try Supabase Storage first if available
   if (supabase) {
     try {
       const { error } = await supabase.storage
@@ -132,24 +164,31 @@ app.post('/api/banners/:slot', requireAdmin, uploadBanner.single('banner'), asyn
           contentType: req.file.mimetype,
           upsert: true
         });
-      if (error) throw error;
-      const { data: urlData } = supabase.storage.from('banners').getPublicUrl(fileName);
-      return res.json({ success: true, url: urlData.publicUrl, slot });
+
+      if (!error) {
+        const { data: urlData } = supabase.storage.from('banners').getPublicUrl(fileName);
+        if (urlData && urlData.publicUrl) {
+          bannerUrl = urlData.publicUrl + '?t=' + Date.now();
+        }
+      }
     } catch (err) {
       console.error('Supabase banner upload error:', err);
-      // fallback to local
     }
   }
 
-  // Local fallback
-  const destPath = path.join(__dirname, 'public', 'img', fileName);
-  try {
-    fs.writeFileSync(destPath, req.file.buffer);
-    return res.json({ success: true, url: `/img/${fileName}?t=${Date.now()}`, slot });
-  } catch (err) {
-    console.error('Local banner write error:', err);
-    return res.status(500).json({ error: 'Gagal menyimpan gambar banner.' });
+  // If Supabase not used or failed, convert buffer to Base64 Data URI (100% reliable everywhere)
+  if (!bannerUrl) {
+    const mime = req.file.mimetype || 'image/jpeg';
+    const base64Data = req.file.buffer.toString('base64');
+    bannerUrl = `data:${mime};base64,${base64Data}`;
   }
+
+  // Save to persistent banners store
+  const store = readBannersStore();
+  store[`banner${slot}`] = bannerUrl;
+  writeBannersStore(store);
+
+  return res.json({ success: true, url: bannerUrl, slot });
 });
 
 // Admin Login

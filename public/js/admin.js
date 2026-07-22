@@ -686,9 +686,16 @@ document.addEventListener('DOMContentLoaded', () => {
   function openBannerModal(slot) {
     bannerUploadSlot.value = slot;
     bannerModalSlotLabel.textContent = slot;
-    const currentSrc = document.getElementById(`bannerPreview${slot}`).src;
-    bannerModalCurrentImg.src = currentSrc;
-    bannerModalCurrentImg.onerror = () => { bannerModalCurrentImg.style.display = 'none'; };
+    const imgEl = document.getElementById(`bannerPreview${slot}`);
+    const currentSrc = (imgEl && imgEl.style.display !== 'none' && imgEl.src) ? imgEl.src : '';
+
+    if (currentSrc) {
+      bannerModalCurrentImg.src = currentSrc;
+      bannerModalCurrentImg.style.display = 'block';
+    } else {
+      bannerModalCurrentImg.style.display = 'none';
+    }
+
     // Reset state
     bannerSelectedFile = null;
     bannerUploadPreview.style.display = 'none';
@@ -700,16 +707,13 @@ document.addEventListener('DOMContentLoaded', () => {
     bannerModal.show();
   }
 
-  // Attach open modal buttons
-  const btn1 = document.getElementById('btnChangeBanner1');
-  const btn2 = document.getElementById('btnChangeBanner2');
-  if (btn1) {
-    btn1.addEventListener('click', () => openBannerModal(1));
-    btn1.addEventListener('touchend', (e) => { e.preventDefault(); openBannerModal(1); });
-  }
-  if (btn2) {
-    btn2.addEventListener('click', () => openBannerModal(2));
-    btn2.addEventListener('touchend', (e) => { e.preventDefault(); openBannerModal(2); });
+  // Attach open modal buttons for slots 1 to 10
+  for (let s = 1; s <= 10; s++) {
+    const btn = document.getElementById(`btnChangeBanner${s}`);
+    if (btn) {
+      btn.addEventListener('click', () => openBannerModal(s));
+      btn.addEventListener('touchend', (e) => { e.preventDefault(); openBannerModal(s); });
+    }
   }
 
   // Handle file selection (input or drag-drop)
@@ -771,7 +775,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const res = await fetch(`/api/banners/${slot}`, {
           method: 'POST',
-          headers: { 'admin-token': token },
+          headers: { 
+            'Authorization': 'Bearer ' + token,
+            'admin-token': token 
+          },
           body: formData
         });
         const result = await res.json();

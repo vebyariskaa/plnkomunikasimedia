@@ -307,16 +307,26 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Append all selected files
-    selectedFiles.forEach(file => {
-      formData.append('fotoDokumentasi', file);
-    });
+    // Append all selected files with client-side compression to prevent 413 Payload Too Large (Vercel limit 4.5MB)
+    for (const file of selectedFiles) {
+      if (file.type.startsWith('image/')) {
+        try {
+          const compressedFile = await compressImage(file, 1200, 1200, 0.7);
+          formData.append('fotoDokumentasi', compressedFile, file.name);
+        } catch (err) {
+          console.error("Compression failed for", file.name, err);
+          formData.append('fotoDokumentasi', file); // fallback to original if error
+        }
+      } else {
+        formData.append('fotoDokumentasi', file);
+      }
+    }
 
     try {
       const response = await fetch('/api/requests', {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+          'Authorization': 'Bearer ' + (localStorage.getItem('adminToken') || '')
         },
         body: formData
       });
@@ -336,12 +346,58 @@ document.addEventListener('DOMContentLoaded', () => {
       await loadRilisData();
     } catch (error) {
       console.error(error);
-      showToast('Error', error.message || 'Terjadi kesalahan saat mengirim rilis berita.', false);
+      showToast('Error', error.message || 'Terjadi kesalahan saat mengirim rilis berita. Pastikan koneksi stabil dan ukuran foto tidak terlalu besar.', false);
     } finally {
       btnSubmit.disabled = false;
       btnSubmit.innerHTML = originalBtnText;
     }
   });
+
+  // Client-side image compression utility
+  function compressImage(file, maxWidth, maxHeight, quality) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function(event) {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = function() {
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const compressedFile = new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() });
+              resolve(compressedFile);
+            } else {
+              reject(new Error('Canvas toBlob failed'));
+            }
+          }, 'image/jpeg', quality);
+        };
+        img.onerror = function() {
+          reject(new Error('Failed to load image'));
+        };
+      };
+      reader.onerror = function() {
+        reject(new Error('Failed to read file'));
+      };
+    });
+  }
 
   // Dark / Light Mode Sync
   const savedTheme = localStorage.getItem('theme') || 'light';

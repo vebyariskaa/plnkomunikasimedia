@@ -277,6 +277,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!rilisForm.checkValidity()) {
       e.stopPropagation();
       rilisForm.classList.add('was-validated');
+      showToast('Peringatan', 'Mohon lengkapi semua kolom yang ditandai bintang merah (*).', false);
+      
+      // Scroll to the first invalid element
+      const firstInvalid = rilisForm.querySelector(':invalid');
+      if (firstInvalid) {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
 
@@ -311,8 +318,9 @@ document.addEventListener('DOMContentLoaded', () => {
     for (const file of selectedFiles) {
       if (file.type.startsWith('image/')) {
         try {
-          const compressedFile = await compressImage(file, 1200, 1200, 0.7);
-          formData.append('fotoDokumentasi', compressedFile, file.name);
+          const compressed = await compressImage(file, 1200, 1200, 0.7);
+          // Directly append blob with the original filename (safer for older iOS/Android)
+          formData.append('fotoDokumentasi', compressed.blob, compressed.name);
         } catch (err) {
           console.error("Compression failed for", file.name, err);
           formData.append('fotoDokumentasi', file); // fallback to original if error
@@ -353,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Client-side image compression utility
+  // Client-side image compression utility (Mobile-safe Blob approach)
   function compressImage(file, maxWidth, maxHeight, quality) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -382,8 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
           
           canvas.toBlob((blob) => {
             if (blob) {
-              const compressedFile = new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() });
-              resolve(compressedFile);
+              resolve({ blob: blob, name: file.name });
             } else {
               reject(new Error('Canvas toBlob failed'));
             }

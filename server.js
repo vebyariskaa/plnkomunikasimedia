@@ -279,8 +279,13 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
     alasanPending
   } = req.body;
 
-  if (!tipePermohonan || !namaPemohon || !bidang || !namaKegiatan || !tanggalKegiatan || !tempatKegiatan) {
-    return res.status(400).json({ error: 'Field utama (Tipe, Pemohon, Bidang, Nama Kegiatan, Tanggal, Tempat) wajib diisi.' });
+  const finalNamaPemohon = (namaPemohon && namaPemohon.trim()) ? namaPemohon.trim() : (bidang || 'Pemohon');
+  const finalBidang = (bidang && bidang.trim()) ? bidang.trim() : 'Keuangan / Umum';
+  const finalTempat = (tempatKegiatan && tempatKegiatan.trim()) ? tempatKegiatan.trim() : '-';
+  const finalTipe = tipePermohonan || 'Dokumentasi Kegiatan';
+
+  if (!namaKegiatan || !tanggalKegiatan) {
+    return res.status(400).json({ error: 'Nama Kegiatan dan Tanggal Kegiatan wajib diisi.' });
   }
 
   const token = req.headers['authorization'] || req.headers['admin-token'];
@@ -312,12 +317,12 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
       const newRequest = {
         id,
         no: nextNo,
-        tipePermohonan,
-        namaPemohon,
-        bidang,
+        tipePermohonan: finalTipe,
+        namaPemohon: finalNamaPemohon,
+        bidang: finalBidang,
         namaKegiatan,
         tanggalKegiatan,
-        tempatKegiatan,
+        tempatKegiatan: finalTempat,
         permintaan: permintaan || '',
         siapaTerlibat: siapaTerlibat || '',
         deskripsiKegiatan: finalDeskripsi,
@@ -355,12 +360,12 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
   const newRequest = {
     id,
     no: nextNo,
-    tipePermohonan,
-    namaPemohon,
-    bidang,
+    tipePermohonan: finalTipe,
+    namaPemohon: finalNamaPemohon,
+    bidang: finalBidang,
     namaKegiatan,
     tanggalKegiatan,
-    tempatKegiatan,
+    tempatKegiatan: finalTempat,
     permintaan: permintaan || '',
     siapaTerlibat: siapaTerlibat || '',
     deskripsiKegiatan: finalDeskripsi,

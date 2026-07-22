@@ -324,9 +324,12 @@ document.addEventListener('DOMContentLoaded', () => {
         body: formData
       });
 
-      if (!response.ok) throw new Error('Gagal mengirim rilis berita.');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Gagal mengirim rilis berita.');
+      }
 
-      showToast('Berhasil!', 'Rilis berita berhasil dikirim. Status: Menunggu ACC Admin.');
+      showToast('Berhasil!', 'Rilis berita berhasil diterbitkan.');
       rilisForm.reset();
       rilisForm.classList.remove('was-validated');
       selectedFiles = [];
@@ -336,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
       await loadRilisData();
     } catch (error) {
       console.error(error);
-      showToast('Error', 'Terjadi kesalahan saat mengirim rilis berita.', false);
+      showToast('Error', error.message || 'Terjadi kesalahan saat mengirim rilis berita.', false);
     } finally {
       btnSubmit.disabled = false;
       btnSubmit.innerHTML = originalBtnText;

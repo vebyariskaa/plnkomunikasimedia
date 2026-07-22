@@ -240,12 +240,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create JSON payload (no file uploads for Dokumentasi requests)
     const payload = {
       tipePermohonan: 'Dokumentasi Kegiatan',
-      namaPemohon: namaPemohonInput.value.trim(),
-      bidang: bidangInput.value.trim(),
-      namaKegiatan: namaKegiatanInput.value.trim(),
-      tanggalKegiatan: tanggalKegiatanInput.value,
-      tempatKegiatan: tempatKegiatanInput.value.trim(),
-      permintaan: permintaanInput.value.trim()
+      namaPemohon: (document.getElementById('namaPemohon') ? document.getElementById('namaPemohon').value : '').trim(),
+      bidang: (document.getElementById('bidang') ? document.getElementById('bidang').value : '').trim(),
+      namaKegiatan: (document.getElementById('namaKegiatan') ? document.getElementById('namaKegiatan').value : '').trim(),
+      tanggalKegiatan: document.getElementById('tanggalKegiatan') ? document.getElementById('tanggalKegiatan').value : '',
+      tempatKegiatan: (document.getElementById('tempatKegiatan') ? document.getElementById('tempatKegiatan').value : '').trim(),
+      permintaan: (document.getElementById('permintaan') ? document.getElementById('permintaan').value : '').trim()
     };
 
     try {
@@ -255,7 +255,10 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(payload)
       });
 
-      if (!response.ok) throw new Error('Gagal mengirim data.');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Gagal mengirim data permintaan.');
+      }
 
       showToast('Berhasil', 'Permintaan dokumentasi kegiatan berhasil disimpan.');
       requestForm.reset();
@@ -264,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
       await loadRequests();
     } catch (error) {
       console.error(error);
-      showToast('Error', 'Terjadi kesalahan saat menyimpan data.', false);
+      showToast('Error', error.message || 'Terjadi kesalahan saat menyimpan data.', false);
     } finally {
       btnSubmit.disabled = false;
       btnSubmit.innerHTML = originalBtnText;

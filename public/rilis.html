@@ -15,6 +15,13 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css">
 
+  <!-- Admin-only guard script: only admin can access this page -->
+  <script>
+    if (localStorage.getItem('adminToken') !== 'pln-admin-session-token-2026') {
+      window.location.replace('index.html');
+    }
+  </script>
+
   <style>
     .form-card {
       background-color: var(--bg-secondary);

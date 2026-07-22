@@ -237,7 +237,13 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
 
   const token = req.headers['authorization'] || req.headers['admin-token'];
   const isAdmin = (token === 'Bearer pln-admin-session-token-2026' || token === 'pln-admin-session-token-2026');
-  const finalStatus = isAdmin ? (status || 'Disetujui') : 'Pending';
+
+  // Enforce rule: Rilis Berita CAN ONLY BE CREATED AND EDITED BY ADMIN
+  if (tipePermohonan === 'Rilis Berita' && !isAdmin) {
+    return res.status(403).json({ error: 'Akses ditolak. Pembuatan Rilis Berita hanya dapat dilakukan oleh Admin.' });
+  }
+
+  const finalStatus = (tipePermohonan === 'Rilis Berita' || isAdmin) ? (status || 'Disetujui') : 'Pending';
 
   const allowedFiles = req.files;
   const finalDeskripsi = deskripsiKegiatan || '';

@@ -318,6 +318,9 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const response = await fetch('/api/requests', {
         method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+        },
         body: formData
       });
 

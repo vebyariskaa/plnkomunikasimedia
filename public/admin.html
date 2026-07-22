@@ -16,6 +16,64 @@
   <link rel="stylesheet" href="css/style.css">
   
   <style>
+    /* ── BANNER MANAGEMENT ── */
+    .banner-mgmt-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    .banner-slot-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: box-shadow 0.25s;
+    }
+    .banner-slot-card:hover { box-shadow: 0 8px 24px rgba(12,74,110,0.12); }
+    .banner-preview-img {
+      width: 100%; height: 160px; object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .banner-slot-card:hover .banner-preview-img { transform: scale(1.04); }
+    .banner-slot-placeholder {
+      width: 100%; height: 160px;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 0.5rem;
+      color: rgba(255,255,255,0.45);
+    }
+    .banner-badge {
+      position: absolute; top: 10px; left: 10px;
+      background: rgba(12,74,110,0.85); color: #fff;
+      padding: 3px 12px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700;
+      backdrop-filter: blur(6px);
+    }
+    .btn-replace-banner {
+      width: 100%; border-radius: 0 0 14px 14px;
+      font-weight: 600; font-size: 0.85rem;
+      background: linear-gradient(135deg, #0c4a6e, #1a8fcc);
+      color: #fff; border: none; padding: 0.7rem;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all 0.25s;
+    }
+    .btn-replace-banner:hover { opacity: 0.88; transform: translateY(-1px); }
+    /* upload drag zone */
+    .banner-upload-drop {
+      border: 2px dashed var(--border-color);
+      border-radius: 12px; padding: 2rem 1rem;
+      text-align: center; cursor: pointer;
+      transition: all 0.2s; background: var(--bg-tertiary);
+    }
+    .banner-upload-drop.dragover {
+      border-color: #0c4a6e;
+      background: rgba(12,74,110,0.06);
+    }
+    .banner-upload-preview { width: 100%; max-height: 200px; object-fit: cover; border-radius: 10px; margin-top: 1rem; display: none; }
+
     .admin-card {
       background-color: var(--bg-secondary);
       border: 1px solid var(--border-color);
@@ -169,6 +227,71 @@
 
   <!-- Dashboard Content -->
   <main class="container my-5 flex-grow-1">
+
+    <!-- ══ BANNER MANAGEMENT SECTION ══ -->
+    <div class="banner-mgmt-card mb-5">
+      <div class="p-4 pb-3">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-1">
+          <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#0c4a6e,#1a8fcc);display:flex;align-items:center;justify-content:center;">
+              <i class="bi bi-image-fill text-white"></i>
+            </div>
+            <div>
+              <h5 class="fw-bold mb-0" style="font-size:1.05rem;">Manajemen Banner Halaman Utama</h5>
+              <p class="text-secondary mb-0" style="font-size:0.8rem;">Ganti gambar banner carousel yang tampil di halaman utama portal</p>
+            </div>
+          </div>
+          <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2" style="font-size:0.75rem;">
+            <i class="bi bi-display me-1"></i>Live di Portal
+          </span>
+        </div>
+        <hr class="mt-3 mb-4">
+        <div class="row g-3">
+          <!-- Banner Slot 1 -->
+          <div class="col-sm-6">
+            <div class="banner-slot-card position-relative">
+              <div class="position-relative overflow-hidden">
+                <img id="bannerPreview1" src="img/banner1.jpg" alt="Banner 1" class="banner-preview-img"
+                  onerror="this.style.display='none'; document.getElementById('bannerFallback1').style.display='flex';">
+                <div id="bannerFallback1" class="banner-slot-placeholder" style="display:none;">
+                  <i class="bi bi-image fs-1"></i>
+                  <span class="small fw-semibold">Belum ada gambar</span>
+                </div>
+                <span class="banner-badge">Banner 1</span>
+              </div>
+              <div class="p-3 pb-0">
+                <p class="small text-secondary mb-0"><i class="bi bi-info-circle me-1"></i>Slide pertama carousel halaman utama</p>
+              </div>
+              <button class="btn-replace-banner mt-3" id="btnChangeBanner1" data-slot="1">
+                <i class="bi bi-arrow-repeat"></i> Ganti Gambar Banner 1
+              </button>
+            </div>
+          </div>
+          <!-- Banner Slot 2 -->
+          <div class="col-sm-6">
+            <div class="banner-slot-card position-relative">
+              <div class="position-relative overflow-hidden">
+                <img id="bannerPreview2" src="img/banner2.jpg" alt="Banner 2" class="banner-preview-img"
+                  onerror="this.style.display='none'; document.getElementById('bannerFallback2').style.display='flex';">
+                <div id="bannerFallback2" class="banner-slot-placeholder" style="display:none;">
+                  <i class="bi bi-image fs-1"></i>
+                  <span class="small fw-semibold">Belum ada gambar</span>
+                </div>
+                <span class="banner-badge">Banner 2</span>
+              </div>
+              <div class="p-3 pb-0">
+                <p class="small text-secondary mb-0"><i class="bi bi-info-circle me-1"></i>Slide kedua carousel halaman utama</p>
+              </div>
+              <button class="btn-replace-banner mt-3" id="btnChangeBanner2" data-slot="2">
+                <i class="bi bi-arrow-repeat"></i> Ganti Gambar Banner 2
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ REQUESTS TABLE SECTION ══ -->
     <div class="row mb-4 align-items-center">
       <div class="col-md-6">
         <h3 class="fw-bold mb-1">Manajemen Permintaan & Rilis</h3>
@@ -360,6 +483,49 @@
           <img src="" id="modalPreviewImage" class="img-fluid rounded shadow-lg" alt="Preview" style="max-height: 85vh;">
           <button type="button" class="btn btn-light rounded-circle position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close">
             <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Banner Upload Modal ══ -->
+  <div class="modal fade" id="bannerModal" tabindex="-1" aria-labelledby="bannerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="background:linear-gradient(135deg,#0c4a6e,#1a8fcc);">
+          <h5 class="modal-title fw-bold text-white" id="bannerModalLabel">
+            <i class="bi bi-image-fill me-2"></i>Ganti Gambar Banner <span id="bannerModalSlotLabel">1</span>
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="bannerUploadSlot" value="1">
+
+          <!-- Current preview -->
+          <div class="mb-3">
+            <p class="small fw-semibold text-secondary mb-2">Gambar Saat Ini:</p>
+            <img id="bannerModalCurrentImg" src="" alt="Current Banner" class="img-fluid rounded-3 w-100" style="max-height:140px; object-fit:cover;">
+          </div>
+
+          <!-- Drop zone -->
+          <div class="banner-upload-drop" id="bannerDropZone">
+            <i class="bi bi-cloud-arrow-up fs-2 text-primary mb-2 d-block"></i>
+            <p class="fw-semibold mb-1">Klik atau seret gambar ke sini</p>
+            <p class="small text-secondary mb-3">Format: JPG, PNG, WEBP. Maksimal 10MB.<br>Disarankan ukuran lebar (landscape) 1200×420 px.</p>
+            <label class="btn btn-primary btn-sm rounded-pill px-4" for="bannerFileInput">
+              <i class="bi bi-folder2-open me-1"></i>Pilih File
+            </label>
+            <input type="file" id="bannerFileInput" accept="image/*" class="d-none">
+          </div>
+          <img id="bannerUploadPreview" class="banner-upload-preview w-100" alt="Preview">
+
+          <div id="bannerUploadMsg" class="mt-3 d-none small"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-primary fw-semibold px-4" id="btnUploadBanner" disabled>
+            <i class="bi bi-upload me-1"></i>Upload & Ganti Banner
           </button>
         </div>
       </div>

@@ -22,6 +22,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const landingErrorAlert = document.getElementById('landingErrorAlert');
   const btnBackToOptions = document.getElementById('btnBackToOptions');
 
+  // ── Load Dynamic Banners from API ──────────────────────────────────────────
+  async function loadBanners() {
+    try {
+      const res = await fetch('/api/banners');
+      if (!res.ok) return;
+      const banners = await res.json();
+      banners.forEach(b => {
+        if (!b.url) return;
+        const img = document.getElementById(`heroBannerImg${b.slot}`);
+        if (img) {
+          img.src = b.url;
+        }
+      });
+    } catch (e) {
+      // Silent — carousel will show static fallback images
+    }
+  }
+  loadBanners();
+
   // Screen routing check
   if (sessionStorage.getItem('enteredPortal') === 'true') {
     if (welcomeScreen) welcomeScreen.classList.add('d-none');

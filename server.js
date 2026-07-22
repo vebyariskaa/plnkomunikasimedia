@@ -83,7 +83,74 @@ function requireAdmin(req, res, next) {
   return res.status(401).json({ error: 'Akses ditolak. Silakan login sebagai admin.' });
 }
 
+// Multer for banners (single file, in-memory always for flexibility)
+const uploadBanner = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
+
 // API Routes
+
+// ── Banner Management ──────────────────────────────────────────────────────────
+
+// GET /api/banners — return current banner URLs (slot 1 & 2)
+app.get('/api/banners', (req, res) => {
+  const banners = [];
+  const baseUrl = (SUPABASE_URL && SUPABASE_KEY)
+    ? null
+    : (req.protocol + '://' + req.get('host'));
+
+  for (let i = 1; i <= 2; i++) {
+    const localPath = path.join(__dirname, 'public', 'img', `banner${i}.jpg`);
+    if (supabase) {
+      const { data } = supabase.storage.from('banners').getPublicUrl(`banner${i}.jpg`);
+      banners.push({ slot: i, url: data ? data.publicUrl + '?t=' + Date.now() : null });
+    } else {
+      banners.push({
+        slot: i,
+        url: fs.existsSync(localPath) ? `/img/banner${i}.jpg?t=${Date.now()}` : null
+      });
+    }
+  }
+  res.json(banners);
+});
+
+// POST /api/banners/:slot — upload a new banner image (admin only)
+app.post('/api/banners/:slot', requireAdmin, uploadBanner.single('banner'), async (req, res) => {
+  const slot = parseInt(req.params.slot);
+  if (slot !== 1 && slot !== 2) {
+    return res.status(400).json({ error: 'Slot banner harus 1 atau 2.' });
+  }
+  if (!req.file) {
+    return res.status(400).json({ error: 'File gambar banner wajib diupload.' });
+  }
+
+  const fileName = `banner${slot}.jpg`;
+
+  if (supabase) {
+    try {
+      const { error } = await supabase.storage
+        .from('banners')
+        .upload(fileName, req.file.buffer, {
+          contentType: req.file.mimetype,
+          upsert: true
+        });
+      if (error) throw error;
+      const { data: urlData } = supabase.storage.from('banners').getPublicUrl(fileName);
+      return res.json({ success: true, url: urlData.publicUrl, slot });
+    } catch (err) {
+      console.error('Supabase banner upload error:', err);
+      // fallback to local
+    }
+  }
+
+  // Local fallback
+  const destPath = path.join(__dirname, 'public', 'img', fileName);
+  try {
+    fs.writeFileSync(destPath, req.file.buffer);
+    return res.json({ success: true, url: `/img/${fileName}?t=${Date.now()}`, slot });
+  } catch (err) {
+    console.error('Local banner write error:', err);
+    return res.status(500).json({ error: 'Gagal menyimpan gambar banner.' });
+  }
+});
 
 // Admin Login
 app.post('/api/admin/login', (req, res) => {
@@ -172,6 +239,12 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
   const isAdmin = (token === 'Bearer pln-admin-session-token-2026' || token === 'pln-admin-session-token-2026');
   const finalStatus = (tipePermohonan === 'Rilis Berita') ? 'Disetujui' : (isAdmin ? (status || 'Disetujui') : 'Pending');
 
+  // SECURITY: For Rilis Berita from non-admins — strip photos and deskripsiKegiatan.
+  // Only admin can upload photos and set the description for Rilis Berita.
+  const allowedFiles = (tipePermohonan === 'Rilis Berita' && !isAdmin) ? [] : req.files;
+  const finalDeskripsi = (tipePermohonan === 'Rilis Berita' && !isAdmin) ? '' : (deskripsiKegiatan || '');
+
+
   if (supabase) {
     try {
       // Get highest sequence number
@@ -180,8 +253,8 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
       const id = Date.now().toString();
 
       let fotoPaths = [];
-      if (req.files && req.files.length > 0) {
-        fotoPaths = await uploadFilesToSupabase(req.files);
+      if (allowedFiles && allowedFiles.length > 0) {
+        fotoPaths = await uploadFilesToSupabase(allowedFiles);
       }
 
       const newRequest = {
@@ -195,7 +268,7 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
         tempatKegiatan,
         permintaan: permintaan || '',
         siapaTerlibat: siapaTerlibat || '',
-        deskripsiKegiatan: deskripsiKegiatan || '',
+        deskripsiKegiatan: finalDeskripsi,
         fotoPaths,
         hasilLinkDoc: hasilLinkDoc || '',
         hasilLinkBerita: hasilLinkBerita || '',
@@ -223,8 +296,8 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
   const id = Date.now().toString();
 
   let fotoPaths = [];
-  if (req.files && req.files.length > 0) {
-    fotoPaths = req.files.map(f => `/uploads/${f.filename}`);
+  if (allowedFiles && allowedFiles.length > 0) {
+    fotoPaths = allowedFiles.map(f => `/uploads/${f.filename}`);
   }
 
   const newRequest = {
@@ -238,7 +311,7 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
     tempatKegiatan,
     permintaan: permintaan || '',
     siapaTerlibat: siapaTerlibat || '',
-    deskripsiKegiatan: deskripsiKegiatan || '',
+    deskripsiKegiatan: finalDeskripsi,
     fotoPaths,
     hasilLinkDoc: hasilLinkDoc || '',
     hasilLinkBerita: hasilLinkBerita || '',

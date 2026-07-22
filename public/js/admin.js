@@ -616,6 +616,170 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // ══════════════════════════════════════════════════════
+  // BANNER MANAGEMENT
+  // ══════════════════════════════════════════════════════
+  const bannerModal = new bootstrap.Modal(document.getElementById('bannerModal'));
+  const bannerUploadSlot = document.getElementById('bannerUploadSlot');
+  const bannerModalSlotLabel = document.getElementById('bannerModalSlotLabel');
+  const bannerModalCurrentImg = document.getElementById('bannerModalCurrentImg');
+  const bannerDropZone = document.getElementById('bannerDropZone');
+  const bannerFileInput = document.getElementById('bannerFileInput');
+  const bannerUploadPreview = document.getElementById('bannerUploadPreview');
+  const bannerUploadMsg = document.getElementById('bannerUploadMsg');
+  const btnUploadBanner = document.getElementById('btnUploadBanner');
+
+  let bannerSelectedFile = null;
+
+  // Open banner modal for a given slot
+  function openBannerModal(slot) {
+    bannerUploadSlot.value = slot;
+    bannerModalSlotLabel.textContent = slot;
+    const currentSrc = document.getElementById(`bannerPreview${slot}`).src;
+    bannerModalCurrentImg.src = currentSrc;
+    bannerModalCurrentImg.onerror = () => { bannerModalCurrentImg.style.display = 'none'; };
+    // Reset state
+    bannerSelectedFile = null;
+    bannerUploadPreview.style.display = 'none';
+    bannerUploadPreview.src = '';
+    bannerUploadMsg.classList.add('d-none');
+    bannerUploadMsg.textContent = '';
+    btnUploadBanner.disabled = true;
+    if (bannerFileInput) bannerFileInput.value = '';
+    bannerModal.show();
+  }
+
+  // Attach open modal buttons
+  const btn1 = document.getElementById('btnChangeBanner1');
+  const btn2 = document.getElementById('btnChangeBanner2');
+  if (btn1) {
+    btn1.addEventListener('click', () => openBannerModal(1));
+    btn1.addEventListener('touchend', (e) => { e.preventDefault(); openBannerModal(1); });
+  }
+  if (btn2) {
+    btn2.addEventListener('click', () => openBannerModal(2));
+    btn2.addEventListener('touchend', (e) => { e.preventDefault(); openBannerModal(2); });
+  }
+
+  // Handle file selection (input or drag-drop)
+  function handleBannerFile(file) {
+    if (!file || !file.type.startsWith('image/')) {
+      bannerUploadMsg.textContent = 'File harus berupa gambar (JPG, PNG, WEBP).';
+      bannerUploadMsg.className = 'mt-3 small text-danger';
+      bannerUploadMsg.classList.remove('d-none');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      bannerUploadMsg.textContent = 'Ukuran file terlalu besar. Maksimal 10MB.';
+      bannerUploadMsg.className = 'mt-3 small text-danger';
+      bannerUploadMsg.classList.remove('d-none');
+      return;
+    }
+    bannerSelectedFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      bannerUploadPreview.src = e.target.result;
+      bannerUploadPreview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+    bannerUploadMsg.textContent = `File dipilih: ${file.name} (${(file.size / 1024).toFixed(0)} KB)`;
+    bannerUploadMsg.className = 'mt-3 small text-success';
+    bannerUploadMsg.classList.remove('d-none');
+    btnUploadBanner.disabled = false;
+  }
+
+  if (bannerFileInput) {
+    bannerFileInput.addEventListener('change', () => {
+      if (bannerFileInput.files.length > 0) handleBannerFile(bannerFileInput.files[0]);
+    });
+  }
+
+  if (bannerDropZone) {
+    bannerDropZone.addEventListener('click', () => bannerFileInput && bannerFileInput.click());
+    bannerDropZone.addEventListener('dragover', (e) => { e.preventDefault(); bannerDropZone.classList.add('dragover'); });
+    bannerDropZone.addEventListener('dragleave', () => bannerDropZone.classList.remove('dragover'));
+    bannerDropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      bannerDropZone.classList.remove('dragover');
+      if (e.dataTransfer.files.length > 0) handleBannerFile(e.dataTransfer.files[0]);
+    });
+  }
+
+  // Upload banner to API
+  if (btnUploadBanner) {
+    btnUploadBanner.addEventListener('click', async () => {
+      if (!bannerSelectedFile) return;
+      const slot = bannerUploadSlot.value;
+      const originalText = btnUploadBanner.innerHTML;
+      btnUploadBanner.disabled = true;
+      btnUploadBanner.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span>Mengupload...`;
+
+      try {
+        const formData = new FormData();
+        formData.append('banner', bannerSelectedFile);
+
+        const res = await fetch(`/api/banners/${slot}`, {
+          method: 'POST',
+          headers: { 'admin-token': token },
+          body: formData
+        });
+        const result = await res.json();
+
+        if (!res.ok) throw new Error(result.error || 'Gagal upload banner.');
+
+        // Update preview in card
+        const previewImg = document.getElementById(`bannerPreview${slot}`);
+        const fallback = document.getElementById(`bannerFallback${slot}`);
+        if (previewImg) {
+          previewImg.src = result.url || bannerUploadPreview.src;
+          previewImg.style.display = 'block';
+          if (fallback) fallback.style.display = 'none';
+        }
+
+        bannerUploadMsg.textContent = `✅ Banner ${slot} berhasil diperbarui! Perubahan tampil di halaman utama.`;
+        bannerUploadMsg.className = 'mt-3 small text-success fw-semibold';
+        bannerUploadMsg.classList.remove('d-none');
+        showToast('Berhasil', `Gambar Banner ${slot} berhasil diperbarui dan aktif di portal.`);
+
+        setTimeout(() => bannerModal.hide(), 1800);
+      } catch (err) {
+        console.error(err);
+        bannerUploadMsg.textContent = `❌ ${err.message}`;
+        bannerUploadMsg.className = 'mt-3 small text-danger';
+        bannerUploadMsg.classList.remove('d-none');
+        btnUploadBanner.disabled = false;
+        btnUploadBanner.innerHTML = originalText;
+      }
+    });
+  }
+
+  // Fetch live banner URLs and update previews
+  async function loadBannerPreviews() {
+    try {
+      const res = await fetch('/api/banners');
+      if (!res.ok) return;
+      const banners = await res.json();
+      banners.forEach(b => {
+        if (!b.url) return;
+        const img = document.getElementById(`bannerPreview${b.slot}`);
+        const fallback = document.getElementById(`bannerFallback${b.slot}`);
+        if (img) {
+          img.src = b.url;
+          img.style.display = 'block';
+          img.onerror = () => {
+            img.style.display = 'none';
+            if (fallback) fallback.style.display = 'flex';
+          };
+          if (fallback) fallback.style.display = 'none';
+        }
+      });
+    } catch (e) {
+      // Silent fail — defaults show local images
+    }
+  }
+
   // Run initialization
   loadRequests();
+  loadBannerPreviews();
 });
+

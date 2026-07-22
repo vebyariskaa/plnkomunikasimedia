@@ -45,29 +45,26 @@ const DATA_FILE = isVercel
 // Helper function to read requests
 function readRequests() {
   try {
+    // If DATA_FILE already exists, always read from it (preserves runtime data)
+    if (fs.existsSync(DATA_FILE)) {
+      const data = fs.readFileSync(DATA_FILE, 'utf8');
+      return JSON.parse(data);
+    }
+
+    // DATA_FILE doesn't exist yet — seed from public/data/requests.json if available
     const publicDataFile = path.join(__dirname, 'public', 'data', 'requests.json');
+    fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
+
     if (fs.existsSync(publicDataFile)) {
-      const publicData = fs.readFileSync(publicDataFile, 'utf8');
-      if (publicData.trim() === '[]' || publicData.trim() === '') {
-        // Sync empty state to DATA_FILE
-        fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-        fs.writeFileSync(DATA_FILE, '[]');
-        return [];
-      }
+      const initialData = fs.readFileSync(publicDataFile, 'utf8');
+      const parsed = JSON.parse(initialData);
+      fs.writeFileSync(DATA_FILE, JSON.stringify(parsed, null, 2));
+      return parsed;
     }
-    if (!fs.existsSync(DATA_FILE)) {
-      if (fs.existsSync(publicDataFile)) {
-        const initialData = fs.readFileSync(publicDataFile, 'utf8');
-        fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-        fs.writeFileSync(DATA_FILE, initialData);
-        return JSON.parse(initialData);
-      }
-      fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-      fs.writeFileSync(DATA_FILE, JSON.stringify([], null, 2));
-      return [];
-    }
-    const data = fs.readFileSync(DATA_FILE, 'utf8');
-    return JSON.parse(data);
+
+    // No seed file either — start fresh
+    fs.writeFileSync(DATA_FILE, '[]');
+    return [];
   } catch (error) {
     console.error('Error reading requests file:', error);
     return [];

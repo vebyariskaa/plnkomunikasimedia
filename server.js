@@ -441,7 +441,11 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
   const id = Date.now().toString();
 
   if (fotoPaths.length === 0 && allowedFiles && allowedFiles.length > 0) {
-    fotoPaths = allowedFiles.map(f => `/uploads/${f.filename}`);
+    fotoPaths = allowedFiles.map(f => {
+      const mime = f.mimetype || 'image/jpeg';
+      const base64Data = f.buffer.toString('base64');
+      return `data:${mime};base64,${base64Data}`;
+    });
   }
 
   const newRequest = {
@@ -528,7 +532,11 @@ app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), 
     if (newSupabaseUrls.length > 0) {
       fotoPaths = fotoPaths.concat(newSupabaseUrls);
     } else {
-      const newPaths = req.files.map(f => `/uploads/${f.filename}`);
+      const newPaths = req.files.map(f => {
+        const mime = f.mimetype || 'image/jpeg';
+        const base64Data = f.buffer.toString('base64');
+        return `data:${mime};base64,${base64Data}`;
+      });
       fotoPaths = fotoPaths.concat(newPaths);
     }
   }

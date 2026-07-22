@@ -1,3 +1,7 @@
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 const { createClient } = require('@supabase/supabase-js');
 const app = express();
 

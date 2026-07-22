@@ -290,20 +290,6 @@ async function uploadFilesToSupabase(files) {
 
 // Get Requests List
 app.get('/api/requests', async (req, res) => {
-  if (supabase) {
-    try {
-      const { data, error } = await supabase
-        .from('requests')
-        .select('*')
-        .order('no', { ascending: true });
-
-      if (error) throw error;
-      return res.json(data || []);
-    } catch (error) {
-      console.error('Error reading from Supabase:', error);
-      // Fallback to local
-    }
-  }
   const requests = await readRequests();
   res.json(requests);
 });
@@ -350,49 +336,12 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
   const finalDeskripsi = deskripsiKegiatan || '';
 
 
-  if (supabase) {
+  let fotoPaths = [];
+  if (supabase && allowedFiles && allowedFiles.length > 0) {
     try {
-      // Get highest sequence number
-      const { data: existingData } = await supabase.from('requests').select('no').order('no', { ascending: false }).limit(1);
-      const nextNo = existingData && existingData.length > 0 ? (existingData[0].no || 0) + 1 : 1;
-      const id = Date.now().toString();
-
-      let fotoPaths = [];
-      if (allowedFiles && allowedFiles.length > 0) {
-        fotoPaths = await uploadFilesToSupabase(allowedFiles);
-      }
-
-      const newRequest = {
-        id,
-        no: nextNo,
-        tipePermohonan: finalTipe,
-        namaPemohon: finalNamaPemohon,
-        bidang: finalBidang,
-        namaKegiatan,
-        tanggalKegiatan,
-        tempatKegiatan: finalTempat,
-        permintaan: permintaan || '',
-        siapaTerlibat: siapaTerlibat || '',
-        deskripsiKegiatan: finalDeskripsi,
-        fotoPaths,
-        hasilLinkDoc: hasilLinkDoc || '',
-        hasilLinkBerita: hasilLinkBerita || '',
-        status: finalStatus,
-        petugas: petugas || '',
-        alasanPending: alasanPending || ''
-      };
-
-      const { data: insertedData, error: insertError } = await supabase
-        .from('requests')
-        .insert([newRequest])
-        .select()
-        .single();
-
-      if (insertError) throw insertError;
-      return res.status(201).json(insertedData || newRequest);
-    } catch (error) {
-      console.error('Error inserting to Supabase:', error);
-      // Fallback to local write
+      fotoPaths = await uploadFilesToSupabase(allowedFiles);
+    } catch (e) {
+      console.error('Error uploading files to Supabase:', e);
     }
   }
 
@@ -400,8 +349,7 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
   const nextNo = requests.length > 0 ? Math.max(...requests.map(r => r.no || 0)) + 1 : 1;
   const id = Date.now().toString();
 
-  let fotoPaths = [];
-  if (allowedFiles && allowedFiles.length > 0) {
+  if (fotoPaths.length === 0 && allowedFiles && allowedFiles.length > 0) {
     fotoPaths = allowedFiles.map(f => `/uploads/${f.filename}`);
   }
 
@@ -456,50 +404,12 @@ app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), 
     return res.status(400).json({ error: 'Field utama wajib diisi.' });
   }
 
-  if (supabase) {
+  let newSupabaseUrls = [];
+  if (supabase && req.files && req.files.length > 0) {
     try {
-      const { data: targetReq } = await supabase.from('requests').select('*').eq('id', id).single();
-      if (!targetReq) return res.status(404).json({ error: 'Data tidak ditemukan.' });
-
-      let fotoPaths = targetReq.fotoPaths || [];
-
-      if (req.files && req.files.length > 0) {
-        if (keepExistingPhotos !== 'true') {
-          fotoPaths = [];
-        }
-        const newUploadedUrls = await uploadFilesToSupabase(req.files);
-        fotoPaths = fotoPaths.concat(newUploadedUrls);
-      }
-
-      const updateData = {
-        tipePermohonan,
-        namaPemohon,
-        bidang,
-        namaKegiatan,
-        tanggalKegiatan,
-        tempatKegiatan,
-        permintaan: permintaan || '',
-        siapaTerlibat: siapaTerlibat || '',
-        deskripsiKegiatan: deskripsiKegiatan || '',
-        fotoPaths,
-        hasilLinkDoc: hasilLinkDoc || '',
-        hasilLinkBerita: hasilLinkBerita || '',
-        status: status || targetReq.status || 'Disetujui',
-        petugas: petugas || '',
-        alasanPending: alasanPending || ''
-      };
-
-      const { data: updatedRecord, error: updateError } = await supabase
-        .from('requests')
-        .update(updateData)
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (updateError) throw updateError;
-      return res.json(updatedRecord);
-    } catch (error) {
-      console.error('Error updating in Supabase:', error);
+      newSupabaseUrls = await uploadFilesToSupabase(req.files);
+    } catch (e) {
+      console.error('Error uploading files to Supabase:', e);
     }
   }
 
@@ -522,8 +432,12 @@ app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), 
       });
       fotoPaths = [];
     }
-    const newPaths = req.files.map(f => `/uploads/${f.filename}`);
-    fotoPaths = fotoPaths.concat(newPaths);
+    if (newSupabaseUrls.length > 0) {
+      fotoPaths = fotoPaths.concat(newSupabaseUrls);
+    } else {
+      const newPaths = req.files.map(f => `/uploads/${f.filename}`);
+      fotoPaths = fotoPaths.concat(newPaths);
+    }
   }
 
   requests[idx] = {
@@ -553,22 +467,6 @@ app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), 
 app.post('/api/requests/:id/approve', requireAdmin, async (req, res) => {
   const { id } = req.params;
 
-  if (supabase) {
-    try {
-      const { data, error } = await supabase
-        .from('requests')
-        .update({ status: 'Disetujui' })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return res.json(data);
-    } catch (error) {
-      console.error('Error approving in Supabase:', error);
-    }
-  }
-
   const requests = await readRequests();
   const idx = requests.findIndex(r => r.id === id);
 
@@ -584,20 +482,6 @@ app.post('/api/requests/:id/approve', requireAdmin, async (req, res) => {
 // Delete Request (Admin only)
 app.delete('/api/requests/:id', requireAdmin, async (req, res) => {
   const { id } = req.params;
-
-  if (supabase) {
-    try {
-      const { error } = await supabase
-        .from('requests')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-      return res.json({ message: 'Data berhasil dihapus dari Supabase.' });
-    } catch (error) {
-      console.error('Error deleting from Supabase:', error);
-    }
-  }
 
   let requests = await readRequests();
   const initialLength = requests.length;
@@ -628,15 +512,7 @@ app.delete('/api/requests/:id', requireAdmin, async (req, res) => {
 
 // Clear all requests (Admin only)
 app.delete('/api/requests/clear-all', requireAdmin, async (req, res) => {
-  if (supabase) {
-    try {
-      await supabase.from('requests').delete().neq('id', '0');
-    } catch (e) {
-      console.error('Error clearing Supabase requests:', e);
-    }
-  }
-
-  writeRequests([]);
+  await writeRequests([]);
   return res.json({ message: 'Seluruh data permohonan & rilis berita telah berhasil dikosongkan.' });
 });
 

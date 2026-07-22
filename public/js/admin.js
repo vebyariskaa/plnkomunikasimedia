@@ -109,6 +109,23 @@ document.addEventListener('DOMContentLoaded', () => {
     toast.show();
   }
 
+    // Add touch support for buttons
+    // Logout button
+    btnLogout.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      btnLogout.click();
+    });
+    // Theme toggle button
+    themeToggle.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      themeToggle.click();
+    });
+    // Open Add Modal button
+    btnOpenAddModal.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      btnOpenAddModal.click();
+    });
+
   // Logout
   btnLogout.addEventListener('click', () => {
     localStorage.removeItem('adminToken');
@@ -330,21 +347,42 @@ document.addEventListener('DOMContentLoaded', () => {
             await approveRequest(id);
           }
         });
+        // Add touch support for approve button
+        approveBtnEl.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          approveBtnEl.click();
+        });
       }
 
       // Edit click handler
-      tr.querySelector('.btn-edit').addEventListener('click', (e) => {
-        const id = e.currentTarget.getAttribute('data-id');
-        openEditModal(id);
-      });
+      const editBtnEl = tr.querySelector('.btn-edit');
+      if (editBtnEl) {
+        editBtnEl.addEventListener('click', (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          openEditModal(id);
+        });
+        // Add touch support for edit button
+        editBtnEl.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          editBtnEl.click();
+        });
+      }
 
       // Delete click handler
-      tr.querySelector('.btn-delete').addEventListener('click', async (e) => {
-        const id = e.currentTarget.getAttribute('data-id');
-        if (confirm('Apakah Anda yakin ingin menghapus permintaan ini?')) {
-          await deleteRequest(id);
-        }
-      });
+      const deleteBtnEl = tr.querySelector('.btn-delete');
+      if (deleteBtnEl) {
+        deleteBtnEl.addEventListener('click', async (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          if (confirm('Apakah Anda yakin ingin menghapus permintaan ini?')) {
+            await deleteRequest(id);
+          }
+        });
+        // Add touch support for delete button
+        deleteBtnEl.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          deleteBtnEl.click();
+        });
+      }
 
       adminRequestsTableBody.appendChild(tr);
     });

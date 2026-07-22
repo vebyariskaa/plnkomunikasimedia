@@ -42,19 +42,32 @@ const DATA_FILE = isVercel
   ? path.join('/tmp', 'requests.json') 
   : path.join(__dirname, 'public', 'data', 'requests.json');
 
-// Helper function to read requests
-function readRequests() {
+// Helper function to read requests (async)
+async function readRequests() {
   try {
-    // If DATA_FILE already exists, always read from it (preserves runtime data)
     if (fs.existsSync(DATA_FILE)) {
       const data = fs.readFileSync(DATA_FILE, 'utf8');
       return JSON.parse(data);
     }
+    
+    // If not local, try fetching from Supabase Storage (permanent JSON store)
+    if (supabase) {
+      try {
+        const { data: storageData, error } = await supabase.storage.from('banners').download('requests.json');
+        if (!error && storageData) {
+          const text = await storageData.text();
+          const parsed = JSON.parse(text);
+          fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
+          fs.writeFileSync(DATA_FILE, JSON.stringify(parsed, null, 2));
+          return parsed;
+        }
+      } catch (e) {
+        console.error('Supabase storage download error:', e);
+      }
+    }
 
-    // DATA_FILE doesn't exist yet — seed from public/data/requests.json if available
     const publicDataFile = path.join(__dirname, 'public', 'data', 'requests.json');
     fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-
     if (fs.existsSync(publicDataFile)) {
       const initialData = fs.readFileSync(publicDataFile, 'utf8');
       const parsed = JSON.parse(initialData);
@@ -62,7 +75,6 @@ function readRequests() {
       return parsed;
     }
 
-    // No seed file either — start fresh
     fs.writeFileSync(DATA_FILE, '[]');
     return [];
   } catch (error) {
@@ -71,10 +83,22 @@ function readRequests() {
   }
 }
 
-// Helper function to write requests
-function writeRequests(requests) {
+// Helper function to write requests (async)
+async function writeRequests(requests) {
   try {
     fs.writeFileSync(DATA_FILE, JSON.stringify(requests, null, 2));
+    
+    // Also sync to Supabase Storage for permanence
+    if (supabase) {
+      try {
+        await supabase.storage.from('banners').upload('requests.json', JSON.stringify(requests, null, 2), {
+          contentType: 'application/json',
+          upsert: true
+        });
+      } catch (e) {
+        console.error('Supabase storage upload error:', e);
+      }
+    }
   } catch (error) {
     console.error('Error writing requests file:', error);
   }
@@ -99,19 +123,46 @@ const BANNERS_FILE = isVercel
   ? path.join('/tmp', 'banners.json') 
   : path.join(__dirname, 'public', 'data', 'banners.json');
 
-function readBannersStore() {
+async function readBannersStore() {
   try {
     if (fs.existsSync(BANNERS_FILE)) {
       return JSON.parse(fs.readFileSync(BANNERS_FILE, 'utf8'));
+    }
+    // Sync from Supabase if local doesn't exist
+    if (supabase) {
+      try {
+        const { data: storageData, error } = await supabase.storage.from('banners').download('banners_store.json');
+        if (!error && storageData) {
+          const text = await storageData.text();
+          const parsed = JSON.parse(text);
+          fs.mkdirSync(path.dirname(BANNERS_FILE), { recursive: true });
+          fs.writeFileSync(BANNERS_FILE, JSON.stringify(parsed, null, 2));
+          return parsed;
+        }
+      } catch (e) {
+        console.error('Supabase banners download error:', e);
+      }
     }
   } catch (e) {}
   return {};
 }
 
-function writeBannersStore(bannersObj) {
+async function writeBannersStore(bannersObj) {
   try {
     fs.mkdirSync(path.dirname(BANNERS_FILE), { recursive: true });
     fs.writeFileSync(BANNERS_FILE, JSON.stringify(bannersObj, null, 2));
+    
+    // Sync to Supabase
+    if (supabase) {
+      try {
+        await supabase.storage.from('banners').upload('banners_store.json', JSON.stringify(bannersObj, null, 2), {
+          contentType: 'application/json',
+          upsert: true
+        });
+      } catch (e) {
+        console.error('Supabase banners upload error:', e);
+      }
+    }
   } catch (e) {
     console.error('Error writing banners file:', e);
   }
@@ -119,7 +170,7 @@ function writeBannersStore(bannersObj) {
 
 // GET /api/banners — return current banner URLs (slot 1 s/d 10)
 app.get('/api/banners', async (req, res) => {
-  const store = readBannersStore();
+  const store = await readBannersStore();
   const banners = [];
 
   for (let i = 1; i <= 10; i++) {
@@ -190,9 +241,9 @@ app.post('/api/banners/:slot', requireAdmin, uploadBanner.single('banner'), asyn
   }
 
   // Save to persistent banners store
-  const store = readBannersStore();
+  const store = await readBannersStore();
   store[`banner${slot}`] = bannerUrl;
-  writeBannersStore(store);
+  await writeBannersStore(store);
 
   return res.json({ success: true, url: bannerUrl, slot });
 });
@@ -253,7 +304,7 @@ app.get('/api/requests', async (req, res) => {
       // Fallback to local
     }
   }
-  const requests = readRequests();
+  const requests = await readRequests();
   res.json(requests);
 });
 
@@ -345,7 +396,7 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
     }
   }
 
-  const requests = readRequests();
+  const requests = await readRequests();
   const nextNo = requests.length > 0 ? Math.max(...requests.map(r => r.no || 0)) + 1 : 1;
   const id = Date.now().toString();
 
@@ -375,7 +426,7 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
   };
 
   requests.push(newRequest);
-  writeRequests(requests);
+  await writeRequests(requests);
 
   res.status(201).json(newRequest);
 });
@@ -452,7 +503,7 @@ app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), 
     }
   }
 
-  const requests = readRequests();
+  const requests = await readRequests();
   const idx = requests.findIndex(r => r.id === id);
 
   if (idx === -1) {
@@ -494,7 +545,7 @@ app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), 
     alasanPending: alasanPending || ''
   };
 
-  writeRequests(requests);
+  await writeRequests(requests);
   res.json(requests[idx]);
 });
 
@@ -518,7 +569,7 @@ app.post('/api/requests/:id/approve', requireAdmin, async (req, res) => {
     }
   }
 
-  const requests = readRequests();
+  const requests = await readRequests();
   const idx = requests.findIndex(r => r.id === id);
 
   if (idx === -1) {
@@ -526,7 +577,7 @@ app.post('/api/requests/:id/approve', requireAdmin, async (req, res) => {
   }
 
   requests[idx].status = 'Disetujui';
-  writeRequests(requests);
+  await writeRequests(requests);
   res.json(requests[idx]);
 });
 
@@ -548,7 +599,7 @@ app.delete('/api/requests/:id', requireAdmin, async (req, res) => {
     }
   }
 
-  let requests = readRequests();
+  let requests = await readRequests();
   const initialLength = requests.length;
   const targetReq = requests.find(r => r.id === id);
   
@@ -571,7 +622,7 @@ app.delete('/api/requests/:id', requireAdmin, async (req, res) => {
     reqItem.no = idx + 1;
   });
 
-  writeRequests(requests);
+  await writeRequests(requests);
   res.json({ message: 'Data berhasil dihapus.' });
 });
 

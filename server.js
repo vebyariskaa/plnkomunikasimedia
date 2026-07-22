@@ -45,8 +45,17 @@ const DATA_FILE = isVercel
 // Helper function to read requests
 function readRequests() {
   try {
+    const publicDataFile = path.join(__dirname, 'public', 'data', 'requests.json');
+    if (fs.existsSync(publicDataFile)) {
+      const publicData = fs.readFileSync(publicDataFile, 'utf8');
+      if (publicData.trim() === '[]' || publicData.trim() === '') {
+        // Sync empty state to DATA_FILE
+        fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
+        fs.writeFileSync(DATA_FILE, '[]');
+        return [];
+      }
+    }
     if (!fs.existsSync(DATA_FILE)) {
-      const publicDataFile = path.join(__dirname, 'public', 'data', 'requests.json');
       if (fs.existsSync(publicDataFile)) {
         const initialData = fs.readFileSync(publicDataFile, 'utf8');
         fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
@@ -562,6 +571,20 @@ app.delete('/api/requests/:id', requireAdmin, async (req, res) => {
 
   writeRequests(requests);
   res.json({ message: 'Data berhasil dihapus.' });
+});
+
+// Clear all requests (Admin only)
+app.delete('/api/requests/clear-all', requireAdmin, async (req, res) => {
+  if (supabase) {
+    try {
+      await supabase.from('requests').delete().neq('id', '0');
+    } catch (e) {
+      console.error('Error clearing Supabase requests:', e);
+    }
+  }
+
+  writeRequests([]);
+  return res.json({ message: 'Seluruh data permohonan & rilis berita telah berhasil dikosongkan.' });
 });
 
 // Fallback to index.html for single-page style app

@@ -49,28 +49,49 @@ document.addEventListener('DOMContentLoaded', () => {
     toast.show();
   }
 
+  let lastStatusMap = {};
+
   // Load Requests (only Dokumentasi Kegiatan type)
-  async function loadRequests() {
+  async function loadRequests(isSilent = false) {
     try {
       const response = await fetch('/api/requests');
       if (!response.ok) throw new Error('Gagal mengambil data permintaan.');
       
       const allData = await response.json();
-      // Only show Dokumentasi Kegiatan requests
-      requestsData = allData.filter(r => r.tipePermohonan === 'Dokumentasi Kegiatan');
+      const newFiltered = allData.filter(r => r.tipePermohonan === 'Dokumentasi Kegiatan');
+
+      // Check if any status changed to notify user with Toast
+      if (isSilent && Object.keys(lastStatusMap).length > 0) {
+        newFiltered.forEach(req => {
+          const oldStatus = lastStatusMap[req.id];
+          if (oldStatus && oldStatus !== req.status && req.status === 'Disetujui') {
+            showToast('✅ Status Berubah!', `Permintaan #${req.no} ("${req.namaKegiatan}") telah DISETUJUI (ACC) oleh Admin!`);
+          }
+        });
+      }
+
+      // Update status map
+      lastStatusMap = {};
+      newFiltered.forEach(req => { lastStatusMap[req.id] = req.status; });
+
+      requestsData = newFiltered;
       renderRequestsTable();
       updateNextNoUrut(allData);
     } catch (error) {
       console.error(error);
-      requestsTableBody.innerHTML = `
-        <tr>
-          <td colspan="7" class="text-center py-4 text-danger">
-            <i class="bi bi-x-circle-fill me-2"></i> Gagal memuat data dari server.
-          </td>
-        </tr>
-      `;
+      if (!isSilent) {
+        requestsTableBody.innerHTML = `
+          <tr>
+            <td colspan="7" class="text-center py-4 text-danger">
+              <i class="bi bi-x-circle-fill me-2"></i> Gagal memuat data dari server.
+            </td>
+          </tr>
+        `;
+      }
     } finally {
-      setTimeout(hideLoader, 500);
+      if (!isSilent) {
+        setTimeout(hideLoader, 500);
+      }
     }
   }
 
@@ -108,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Render requests table
+  // Render requests table with interactive badges
   function renderRequestsTable() {
     requestsTableBody.innerHTML = '';
     requestCounter.textContent = `${requestsData.length} Data`;
@@ -131,30 +152,33 @@ document.addEventListener('DOMContentLoaded', () => {
       let linkDriveHtml = '';
       if (req.hasilLinkDoc) {
         linkDriveHtml = `
-          <a href="${req.hasilLinkDoc}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary px-2 py-1 rounded d-inline-flex align-items-center gap-1 shadow-sm" style="font-size: 11px;">
-            <i class="bi bi-folder2-open"></i> Buka Drive
+          <a href="${req.hasilLinkDoc}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-success px-2.5 py-1 rounded-pill d-inline-flex align-items-center gap-1 shadow-sm fw-semibold" style="font-size: 11px;">
+            <i class="bi bi-folder2-open"></i> Buka Drive Hasil
           </a>
         `;
       } else {
-        linkDriveHtml = '<span class="text-secondary small">Belum diisi</span>';
+        linkDriveHtml = '<span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle small px-2 py-1">Belum Ada Tautan</span>';
       }
 
       // Petugas column
       let petugasHtml = '';
       if (req.petugas) {
-        petugasHtml = `<div class="text-wrap" style="max-width: 140px;"><i class="bi bi-person-badge me-1 text-primary"></i><span class="fw-semibold">${escapeHtml(req.petugas)}</span></div>`;
+        petugasHtml = `<div class="text-wrap" style="max-width: 140px;"><i class="bi bi-person-badge-fill me-1 text-primary"></i><span class="fw-semibold">${escapeHtml(req.petugas)}</span></div>`;
       } else {
-        petugasHtml = '<span class="text-secondary small">Belum ditugaskan</span>';
+        petugasHtml = '<span class="text-secondary small italic">Menunggu Petugas</span>';
       }
 
-      // Status Badge
+      // Interactive Status Badge
       const status = req.status || 'Pending';
-      let statusBadge = status === 'Disetujui'
-        ? '<span class="badge bg-success">ACC</span>'
-        : '<span class="badge bg-warning text-dark">Pending</span>';
+      let statusBadge = '';
+      if (status === 'Disetujui') {
+        statusBadge = `<span class="badge status-badge-acc px-3 py-1.5 rounded-pill d-inline-flex align-items-center gap-1.5 fw-bold"><i class="bi bi-check-circle-fill"></i> ✅ Disetujui (ACC)</span>`;
+      } else {
+        statusBadge = `<span class="badge status-badge-pending px-3 py-1.5 rounded-pill d-inline-flex align-items-center gap-1.5 fw-bold"><span class="spinner-grow spinner-grow-sm text-warning me-0.5" style="width:0.45rem;height:0.45rem;" role="status"></span> ⏳ Menunggu ACC Admin</span>`;
+      }
 
       if (status !== 'Disetujui' && req.alasanPending) {
-        statusBadge += `<div class="small text-danger mt-1 text-wrap" style="max-width: 100px;">Catatan: ${escapeHtml(req.alasanPending)}</div>`;
+        statusBadge += `<div class="small text-danger mt-1 text-wrap fw-semibold" style="max-width: 130px;"><i class="bi bi-info-circle me-1"></i>Catatan: ${escapeHtml(req.alasanPending)}</div>`;
       }
 
       tr.innerHTML = `
@@ -169,20 +193,12 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="small text-secondary"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(req.tempatKegiatan)}</div>
         </td>
         <td>
-          <div class="text-wrap" style="max-width: 250px;">${escapeHtml(req.permintaan)}</div>
+          <div class="text-wrap" style="max-width: 230px;">${escapeHtml(req.permintaan)}</div>
         </td>
         <td>${linkDriveHtml}</td>
         <td>${petugasHtml}</td>
         <td>${statusBadge}</td>
       `;
-
-      // Zoom preview handler for thumbnail click
-      tr.querySelectorAll('.img-thumbnail-preview').forEach((img) => {
-        img.addEventListener('click', (e) => {
-          modalPreviewImage.src = e.target.getAttribute('data-src');
-          imagePreviewModal.show();
-        });
-      });
 
       requestsTableBody.appendChild(tr);
     });
@@ -290,4 +306,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Run initialization
   loadRequests();
+
+  // Interactive Live Connection: poll every 3.5 seconds silently
+  setInterval(() => {
+    loadRequests(true);
+  }, 3500);
 });
+

@@ -233,10 +233,16 @@
     <!-- Data Table Section -->
     <div class="row">
       <div class="col-12">
-        <h4 class="fw-bold mb-3 border-bottom pb-2 d-flex align-items-center justify-content-between">
-          <span>Daftar Permintaan Layanan & Hasil</span>
-          <span class="badge bg-primary fs-7" id="requestCounter">0 Data</span>
-        </h4>
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3 border-bottom pb-2">
+          <div class="d-flex align-items-center gap-2">
+            <h4 class="fw-bold mb-0">Daftar Permintaan Layanan & Hasil</h4>
+            <span class="badge bg-primary fs-7" id="requestCounter">0 Data</span>
+          </div>
+          <div class="live-status-indicator">
+            <span class="pulse-dot-green"></span>
+            <span>Live System: Terkoneksi dengan Admin (Update Otomatis)</span>
+          </div>
+        </div>
         
         <div class="table-container">
           <div class="table-responsive">

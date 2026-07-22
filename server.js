@@ -1,15 +1,20 @@
-const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const multer = require('multer');
+const { createClient } = require('@supabase/supabase-js');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-// Configure Multer storage for documentation photos
-const storage = multer.diskStorage({
+// Supabase Setup
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+let supabase = null;
+if (SUPABASE_URL && SUPABASE_KEY) {
+  supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+}
+
+// Configure Multer storage for documentation photos (in-memory for Supabase, disk for fallback)
+const storage = supabase ? multer.memoryStorage() : multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = path.join(__dirname, 'public', 'uploads');
+    const uploadDir = isVercel ? path.join('/tmp', 'uploads') : path.join(__dirname, 'public', 'uploads');
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -28,13 +33,22 @@ app.use(express.json());
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-const DATA_FILE = path.join(__dirname, 'public', 'data', 'requests.json');
+const isVercel = process.env.VERCEL || process.env.AWS_REGION;
+const DATA_FILE = isVercel 
+  ? path.join('/tmp', 'requests.json') 
+  : path.join(__dirname, 'public', 'data', 'requests.json');
 
 // Helper function to read requests
 function readRequests() {
   try {
     if (!fs.existsSync(DATA_FILE)) {
-      // Ensure directory exists
+      const publicDataFile = path.join(__dirname, 'public', 'data', 'requests.json');
+      if (fs.existsSync(publicDataFile)) {
+        const initialData = fs.readFileSync(publicDataFile, 'utf8');
+        fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
+        fs.writeFileSync(DATA_FILE, initialData);
+        return JSON.parse(initialData);
+      }
       fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
       fs.writeFileSync(DATA_FILE, JSON.stringify([], null, 2));
       return [];
@@ -77,14 +91,58 @@ app.post('/api/admin/login', (req, res) => {
   }
 });
 
+// Helper function to upload files to Supabase Storage bucket 'photos'
+async function uploadFilesToSupabase(files) {
+  if (!supabase || !files || files.length === 0) return [];
+  const uploadedUrls = [];
+  for (const file of files) {
+    const fileExt = path.extname(file.originalname);
+    const fileName = `${Date.now()}-${Math.round(Math.random() * 1E9)}${fileExt}`;
+    const { data, error } = await supabase.storage
+      .from('photos')
+      .upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        upsert: true
+      });
+
+    if (error) {
+      console.error('Supabase upload error:', error);
+      continue;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from('photos')
+      .getPublicUrl(fileName);
+
+    if (publicUrlData && publicUrlData.publicUrl) {
+      uploadedUrls.push(publicUrlData.publicUrl);
+    }
+  }
+  return uploadedUrls;
+}
+
 // Get Requests List
-app.get('/api/requests', (req, res) => {
+app.get('/api/requests', async (req, res) => {
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('requests')
+        .select('*')
+        .order('no', { ascending: true });
+
+      if (error) throw error;
+      return res.json(data || []);
+    } catch (error) {
+      console.error('Error reading from Supabase:', error);
+      // Fallback to local
+    }
+  }
   const requests = readRequests();
   res.json(requests);
 });
 
 // Submit New Request (Public or Admin)
-app.post('/api/requests', upload.array('fotoDokumentasi', 50), (req, res) => {
+app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) => {
   const {
     tipePermohonan,
     namaPemohon,
@@ -106,20 +164,64 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), (req, res) => {
     return res.status(400).json({ error: 'Field utama (Tipe, Pemohon, Bidang, Nama Kegiatan, Tanggal, Tempat) wajib diisi.' });
   }
 
+  const token = req.headers['authorization'] || req.headers['admin-token'];
+  const isAdmin = (token === 'Bearer pln-admin-session-token-2026' || token === 'pln-admin-session-token-2026');
+  const finalStatus = (tipePermohonan === 'Rilis Berita') ? 'Disetujui' : (isAdmin ? (status || 'Disetujui') : 'Pending');
+
+  if (supabase) {
+    try {
+      // Get highest sequence number
+      const { data: existingData } = await supabase.from('requests').select('no').order('no', { ascending: false }).limit(1);
+      const nextNo = existingData && existingData.length > 0 ? (existingData[0].no || 0) + 1 : 1;
+      const id = Date.now().toString();
+
+      let fotoPaths = [];
+      if (req.files && req.files.length > 0) {
+        fotoPaths = await uploadFilesToSupabase(req.files);
+      }
+
+      const newRequest = {
+        id,
+        no: nextNo,
+        tipePermohonan,
+        namaPemohon,
+        bidang,
+        namaKegiatan,
+        tanggalKegiatan,
+        tempatKegiatan,
+        permintaan: permintaan || '',
+        siapaTerlibat: siapaTerlibat || '',
+        deskripsiKegiatan: deskripsiKegiatan || '',
+        fotoPaths,
+        hasilLinkDoc: hasilLinkDoc || '',
+        hasilLinkBerita: hasilLinkBerita || '',
+        status: finalStatus,
+        petugas: petugas || '',
+        alasanPending: alasanPending || ''
+      };
+
+      const { data: insertedData, error: insertError } = await supabase
+        .from('requests')
+        .insert([newRequest])
+        .select()
+        .single();
+
+      if (insertError) throw insertError;
+      return res.status(201).json(insertedData || newRequest);
+    } catch (error) {
+      console.error('Error inserting to Supabase:', error);
+      // Fallback to local write
+    }
+  }
+
   const requests = readRequests();
   const nextNo = requests.length > 0 ? Math.max(...requests.map(r => r.no || 0)) + 1 : 1;
   const id = Date.now().toString();
 
-  // Process uploaded files
   let fotoPaths = [];
   if (req.files && req.files.length > 0) {
     fotoPaths = req.files.map(f => `/uploads/${f.filename}`);
   }
-
-  // Determine status (Rilis Berita is directly published without ACC button)
-  const token = req.headers['authorization'] || req.headers['admin-token'];
-  const isAdmin = (token === 'Bearer pln-admin-session-token-2026' || token === 'pln-admin-session-token-2026');
-  const finalStatus = (tipePermohonan === 'Rilis Berita') ? 'Disetujui' : (isAdmin ? (status || 'Disetujui') : 'Pending');
 
   const newRequest = {
     id,
@@ -148,7 +250,7 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), (req, res) => {
 });
 
 // Update Request (Admin only)
-app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), (req, res) => {
+app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), async (req, res) => {
   const { id } = req.params;
   const {
     tipePermohonan,
@@ -172,6 +274,53 @@ app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), 
     return res.status(400).json({ error: 'Field utama wajib diisi.' });
   }
 
+  if (supabase) {
+    try {
+      const { data: targetReq } = await supabase.from('requests').select('*').eq('id', id).single();
+      if (!targetReq) return res.status(404).json({ error: 'Data tidak ditemukan.' });
+
+      let fotoPaths = targetReq.fotoPaths || [];
+
+      if (req.files && req.files.length > 0) {
+        if (keepExistingPhotos !== 'true') {
+          fotoPaths = [];
+        }
+        const newUploadedUrls = await uploadFilesToSupabase(req.files);
+        fotoPaths = fotoPaths.concat(newUploadedUrls);
+      }
+
+      const updateData = {
+        tipePermohonan,
+        namaPemohon,
+        bidang,
+        namaKegiatan,
+        tanggalKegiatan,
+        tempatKegiatan,
+        permintaan: permintaan || '',
+        siapaTerlibat: siapaTerlibat || '',
+        deskripsiKegiatan: deskripsiKegiatan || '',
+        fotoPaths,
+        hasilLinkDoc: hasilLinkDoc || '',
+        hasilLinkBerita: hasilLinkBerita || '',
+        status: status || targetReq.status || 'Disetujui',
+        petugas: petugas || '',
+        alasanPending: alasanPending || ''
+      };
+
+      const { data: updatedRecord, error: updateError } = await supabase
+        .from('requests')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (updateError) throw updateError;
+      return res.json(updatedRecord);
+    } catch (error) {
+      console.error('Error updating in Supabase:', error);
+    }
+  }
+
   const requests = readRequests();
   const idx = requests.findIndex(r => r.id === id);
 
@@ -181,9 +330,7 @@ app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), 
 
   let fotoPaths = requests[idx].fotoPaths || [];
 
-  // If there are new files uploaded
   if (req.files && req.files.length > 0) {
-    // Delete old files if keepExistingPhotos is false/unset
     if (keepExistingPhotos !== 'true') {
       fotoPaths.forEach(p => {
         const oldPath = path.join(__dirname, 'public', p);
@@ -221,8 +368,25 @@ app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), 
 });
 
 // Approve Request (Admin only)
-app.post('/api/requests/:id/approve', requireAdmin, (req, res) => {
+app.post('/api/requests/:id/approve', requireAdmin, async (req, res) => {
   const { id } = req.params;
+
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('requests')
+        .update({ status: 'Disetujui' })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return res.json(data);
+    } catch (error) {
+      console.error('Error approving in Supabase:', error);
+    }
+  }
+
   const requests = readRequests();
   const idx = requests.findIndex(r => r.id === id);
 
@@ -236,10 +400,24 @@ app.post('/api/requests/:id/approve', requireAdmin, (req, res) => {
 });
 
 // Delete Request (Admin only)
-app.delete('/api/requests/:id', requireAdmin, (req, res) => {
+app.delete('/api/requests/:id', requireAdmin, async (req, res) => {
   const { id } = req.params;
+
+  if (supabase) {
+    try {
+      const { error } = await supabase
+        .from('requests')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      return res.json({ message: 'Data berhasil dihapus dari Supabase.' });
+    } catch (error) {
+      console.error('Error deleting from Supabase:', error);
+    }
+  }
+
   let requests = readRequests();
-  
   const initialLength = requests.length;
   const targetReq = requests.find(r => r.id === id);
   
@@ -249,7 +427,6 @@ app.delete('/api/requests/:id', requireAdmin, (req, res) => {
     return res.status(404).json({ error: 'Data tidak ditemukan.' });
   }
 
-  // Delete all uploaded files for this request
   if (targetReq && targetReq.fotoPaths && targetReq.fotoPaths.length > 0) {
     targetReq.fotoPaths.forEach(p => {
       const oldPath = path.join(__dirname, 'public', p);
@@ -259,7 +436,6 @@ app.delete('/api/requests/:id', requireAdmin, (req, res) => {
     });
   }
 
-  // Re-index the sequence numbers (No. Urut) so they are sequential after deletion
   requests.forEach((reqItem, idx) => {
     reqItem.no = idx + 1;
   });

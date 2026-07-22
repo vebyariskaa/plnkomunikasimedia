@@ -200,6 +200,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Submit Request Form
+  const btnSubmitEl = document.getElementById('btnSubmit');
+  if (btnSubmitEl) {
+    btnSubmitEl.addEventListener('touchstart', (e) => {
+      // Allow touch on mobile submit button
+    });
+  }
+
   requestForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 

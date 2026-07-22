@@ -175,29 +175,6 @@
                 <input type="text" class="form-control" id="noUrut" readonly value="Memuat...">
               </div>
               <div class="col-md-6 mb-3">
-                <!-- Tanggal Kegiatan -->
-                <label for="tanggalKegiatan" class="form-label">Tanggal Kegiatan <span class="text-danger">*</span></label>
-                <input type="date" class="form-control" id="tanggalKegiatan" required>
-                <div class="invalid-feedback">Tanggal kegiatan wajib diisi.</div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6 mb-3 offset-md-6">
-                <!-- Tanggal Selesai -->
-                <label for="tanggalSelesai" class="form-label">Tanggal Selesai (Opsional)</label>
-                <input type="date" class="form-control" id="tanggalSelesai">
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <!-- Nama Pemohon -->
-                <label for="namaPemohon" class="form-label">Nama Pemohon <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="namaPemohon" placeholder="Nama lengkap Anda" required>
-                <div class="invalid-feedback">Nama pemohon wajib diisi.</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <!-- Bidang -->
                 <label for="bidang" class="form-label">Bidang / Unit Kerja <span class="text-danger">*</span></label>
                 <select class="form-select" id="bidang" required>
                   <option value="" selected disabled>-- Pilih Bidang --</option>
@@ -215,30 +192,46 @@
 
             <div class="row">
               <div class="col-md-6 mb-3">
-                <!-- Nama Kegiatan -->
+                <label for="namaPemohon" class="form-label">Nama Pemohon <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="namaPemohon" placeholder="Nama lengkap Anda" required>
+                <div class="invalid-feedback">Nama pemohon wajib diisi.</div>
+              </div>
+              <div class="col-md-6 mb-3">
                 <label for="namaKegiatan" class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="namaKegiatan" placeholder="Nama kegiatan" required>
                 <div class="invalid-feedback">Nama kegiatan wajib diisi.</div>
               </div>
+            </div>
+
+            <div class="row">
               <div class="col-md-6 mb-3">
-                <!-- Tempat Kegiatan -->
+                <label for="tanggalKegiatan" class="form-label">Tanggal Mulai Kegiatan <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="tanggalKegiatan" required>
+                <div class="invalid-feedback">Tanggal kegiatan wajib diisi.</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="tanggalSelesai" class="form-label">Tanggal Selesai (Opsional)</label>
+                <input type="date" class="form-control" id="tanggalSelesai">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
                 <label for="tempatKegiatan" class="form-label">Tempat Kegiatan <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="tempatKegiatan" placeholder="Lokasi kegiatan" required>
                 <div class="invalid-feedback">Tempat kegiatan wajib diisi.</div>
               </div>
-            </div>
-
-            <!-- Permintaan Dokumentasi -->
-              <div class="mb-3">
+              <div class="col-md-6 mb-3">
                 <label for="permintaan" class="form-label">Permintaan Kebutuhan Dokumentasi <span class="text-danger">*</span></label>
                 <select class="form-select" id="permintaan" required>
-                  <option value="" selected disabled>-- Pilih Kebutuhan Dokumentasi --</option>
+                  <option value="" selected disabled>-- Pilih Kebutuhan --</option>
                   <option value="Foto">Foto</option>
                   <option value="Video">Video</option>
                   <option value="Foto & Video">Foto & Video</option>
                 </select>
                 <div class="invalid-feedback">Silakan pilih kebutuhan dokumentasi.</div>
               </div>
+            </div>
 
             <div class="d-grid gap-2">
               <button class="btn btn-primary py-2.5 fw-semibold rounded-3 d-flex align-items-center justify-content-center gap-2" type="submit" id="btnSubmit">

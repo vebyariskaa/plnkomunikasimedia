@@ -15,13 +15,6 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Admin-only guard: redirect non-admins immediately -->
-  <script>
-    if (localStorage.getItem('adminToken') !== 'pln-admin-session-token-2026') {
-      window.location.replace('index.html');
-    }
-  </script>
-
   <style>
     .form-card {
       background-color: var(--bg-secondary);
@@ -143,6 +136,111 @@
       margin-right: 8px;
       flex-shrink: 0;
     }
+
+    /* ── Live Connection Bar ── */
+    .live-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(5, 150, 105, 0.12) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #059669;
+      margin-bottom: 1rem;
+    }
+
+    [data-theme="dark"] .live-bar {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.18) 100%);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: #34d399;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: livePulse 1.5s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+      50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    }
+
+    /* ── Status Table Styles ── */
+    .status-table-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .status-table-card .table {
+      margin-bottom: 0;
+      color: var(--text-primary);
+    }
+
+    .status-table-card .table thead th {
+      background-color: var(--bg-tertiary);
+      border-bottom: 2px solid var(--border-color);
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      padding: 12px 14px;
+      white-space: nowrap;
+    }
+
+    .status-table-card .table td {
+      padding: 12px 14px;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .status-table-card .table tbody tr:hover {
+      background-color: rgba(var(--primary-rgb), 0.04);
+    }
+
+    /* ── Status Badges ── */
+    .status-badge-pending {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #92400e;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      font-size: 0.75rem;
+    }
+
+    [data-theme="dark"] .status-badge-pending {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.25) 100%);
+      color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .status-badge-acc {
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      color: #065f46;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      font-size: 0.75rem;
+    }
+
+    [data-theme="dark"] .status-badge-acc {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.25) 100%);
+      color: #34d399;
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    /* ── Mobile responsive table ── */
+    @media (max-width: 768px) {
+      .status-table-card .table-responsive {
+        font-size: 0.85rem;
+      }
+    }
   </style>
 </head>
 
@@ -197,20 +295,19 @@
 
           <form id="rilisForm" class="needs-validation" novalidate enctype="multipart/form-data">
 
-            <!-- Step 1: Identitas -->
+            <!-- Step 1: Tipe & Bidang -->
             <div class="mb-4">
               <h6 class="fw-bold text-primary d-flex align-items-center mb-3">
-                <span class="step-number">1</span> Identitas Pemohon
+                <span class="step-number">1</span> Tipe & Bidang
               </h6>
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="namaPemohon" class="form-label">Nama <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="namaPemohon" placeholder="Nama lengkap Anda" required>
-                  <div class="invalid-feedback">Nama wajib diisi.</div>
+                  <label for="tipePermohonan" class="form-label">Tipe <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="tipePermohonan" value="Rilis Berita" readonly>
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label for="bidang" class="form-label">Bidang / Unit Kerja <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="bidang" placeholder="Misal: Kehumasan / SDM" required>
+                  <label for="bidang" class="form-label">Bidang <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="bidang" placeholder="Misal: Kehumasan / SDM / Distribusi" required>
                   <div class="invalid-feedback">Bidang wajib diisi.</div>
                 </div>
               </div>
@@ -235,20 +332,14 @@
                 </div>
               </div>
               <div class="mb-3">
-                <label for="tempatKegiatan" class="form-label">Tempat Kegiatan <span
-                    class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="tempatKegiatan" placeholder="Lokasi kegiatan" required>
-                <div class="invalid-feedback">Tempat kegiatan wajib diisi.</div>
-              </div>
-              <div class="mb-3">
-                <label for="siapaTerlibat" class="form-label">Siapa yang Terlibat (PLN & Stakeholder) <span
+                <label for="siapaTerlibat" class="form-label">Siapa yang Terlibat <span
                     class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="siapaTerlibat"
                   placeholder="Misal: GM PLN UID, Walikota, Ketua Bawaslu, dll." required>
                 <div class="invalid-feedback">Field ini wajib diisi.</div>
               </div>
               <div class="mb-3">
-                <label for="deskripsiKegiatan" class="form-label">Deskripsi Singkat Mengenai Kegiatan <span
+                <label for="deskripsiKegiatan" class="form-label">Deskripsi Singkat <span
                     class="text-danger">*</span></label>
                 <textarea class="form-control" id="deskripsiKegiatan" rows="4"
                   placeholder="Uraikan jalannya acara secara singkat untuk bahan rilis berita..." required></textarea>
@@ -256,24 +347,32 @@
               </div>
             </div>
 
-            <!-- Step 3: Dokumentasi -->
+            <!-- Step 3: Dokumentasi & Link Berita -->
             <div class="mb-4">
               <h6 class="fw-bold text-primary d-flex align-items-center mb-3">
-                <span class="step-number">3</span> Dokumentasi Kegiatan
+                <span class="step-number">3</span> Dokumentasi & Link Berita
               </h6>
-              <p class="small text-secondary mb-3">Unggah foto-foto dokumentasi kegiatan (tanpa batasan jumlah file).
-                Disarankan menggunakan orientasi landscape.</p>
+              <p class="small text-secondary mb-3">Unggah foto-foto dokumentasi kegiatan (Maksimal 5 Foto). Orientasi landscape disarankan.</p>
 
-              <div class="upload-zone" id="uploadZone">
+              <div class="upload-zone mb-3" id="uploadZone">
                 <i class="bi bi-cloud-arrow-up upload-icon d-block"></i>
                 <h6 class="fw-semibold">Klik untuk memilih foto atau drag & drop</h6>
-                <p class="text-secondary small mb-0">Format: JPG, PNG, WEBP — Tidak ada batasan jumlah file</p>
+                <p class="text-secondary small mb-0">Format: JPG, PNG, WEBP — Maksimal 5 Foto</p>
               </div>
               <input type="file" class="d-none" id="fotoDokumentasi" accept="image/*" multiple>
 
               <!-- Preview Grid -->
-              <div class="preview-grid" id="previewGrid"></div>
-              <div class="mt-2 small text-secondary" id="fileCountInfo"></div>
+              <div class="preview-grid mb-3" id="previewGrid"></div>
+              <div class="mt-1 small text-secondary mb-4" id="fileCountInfo"></div>
+
+              <!-- Hasilnya = Link Berita -->
+              <div class="card p-3 bg-success-subtle border border-success-subtle">
+                <label for="hasilLinkBerita" class="form-label fw-bold text-success small mb-1">
+                  <i class="bi bi-newspaper me-1"></i> Hasilnya = Link Berita (Wartawan / Media)
+                </label>
+                <input type="url" class="form-control" id="hasilLinkBerita" placeholder="https://pln.co.id/news/... atau link berita wartawan">
+                <div class="form-text text-secondary small">Masukkan tautan rilis berita jika sudah dipublikasikan di media wartawan.</div>
+              </div>
             </div>
 
             <div class="d-grid gap-2">
@@ -284,6 +383,51 @@
               </button>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Status Permintaan Rilis Berita ── -->
+    <div class="row justify-content-center">
+      <div class="col-lg-11">
+        <!-- Live Connection Bar -->
+        <div class="live-bar">
+          <span class="live-dot"></span>
+          <span>🟢 Sistem Live — Terkoneksi dengan Admin (Update Otomatis)</span>
+        </div>
+
+        <div class="status-table-card">
+          <div class="p-3 p-md-4">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+              <h5 class="fw-bold mb-0">
+                <i class="bi bi-list-check text-success me-2"></i>Status Permintaan Rilis Berita
+              </h5>
+              <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill fw-bold" id="rilisCounter">0 Data</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">No</th>
+                    <th>Bidang</th>
+                    <th>Kegiatan</th>
+                    <th>Siapa Terlibat</th>
+                    <th>Deskripsi</th>
+                    <th>Link Berita</th>
+                    <th style="width: 180px;">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="rilisTableBody">
+                  <tr>
+                    <td colspan="7" class="text-center py-4 text-secondary">
+                      Memuat data...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>

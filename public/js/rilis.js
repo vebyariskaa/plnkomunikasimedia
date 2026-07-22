@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeIcon = document.getElementById('theme-icon');
   const scrollToTopBtn = document.getElementById('scroll-to-top');
 
+  // Status table elements
+  const rilisTableBody = document.getElementById('rilisTableBody');
+  const rilisCounter = document.getElementById('rilisCounter');
+
   // Toast elements
   const toastEl = document.getElementById('liveToast');
   const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
@@ -18,6 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Track selected files (since we allow adding/removing)
   let selectedFiles = [];
+  let lastStatusMap = {};
+  let rilisData = [];
 
   // Hide loader
   function hideLoader() {
@@ -25,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
       loadingOverlay.classList.add('fade-out');
     }
   }
-  setTimeout(hideLoader, 500);
 
   // Toast helper
   function showToast(title, message, isSuccess = true) {
@@ -39,7 +44,155 @@ document.addEventListener('DOMContentLoaded', () => {
     toast.show();
   }
 
-  // Upload Zone Click
+  // Escape HTML
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  // Format Date to Local String
+  function formatDate(dateStr) {
+    if (!dateStr) return '-';
+    try {
+      const parts = dateStr.split('-');
+      if (parts.length === 3 && parts[0].length === 4) {
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const day = parseInt(parts[2], 10);
+        const date = new Date(year, month, day);
+        return date.toLocaleDateString('id-ID', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        });
+      }
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
+  // ── Load Rilis Berita Data (with live polling) ──
+  async function loadRilisData(isSilent = false) {
+    try {
+      const response = await fetch('/api/requests');
+      if (!response.ok) throw new Error('Gagal mengambil data.');
+
+      const allData = await response.json();
+      const filtered = allData.filter(r => r.tipePermohonan === 'Rilis Berita');
+
+      // Check for status changes → show toast
+      if (isSilent && Object.keys(lastStatusMap).length > 0) {
+        filtered.forEach(req => {
+          const oldStatus = lastStatusMap[req.id];
+          if (oldStatus && oldStatus !== req.status && req.status === 'Disetujui') {
+            showToast('✅ Status Berubah!', `Rilis Berita "${req.namaKegiatan}" telah DISETUJUI (ACC) oleh Admin!`);
+          }
+        });
+      }
+
+      // Update status map
+      lastStatusMap = {};
+      filtered.forEach(req => { lastStatusMap[req.id] = req.status; });
+
+      rilisData = filtered;
+      renderRilisTable();
+    } catch (error) {
+      console.error(error);
+      if (!isSilent) {
+        rilisTableBody.innerHTML = `
+          <tr>
+            <td colspan="7" class="text-center py-4 text-danger">
+              <i class="bi bi-x-circle-fill me-2"></i> Gagal memuat data dari server.
+            </td>
+          </tr>
+        `;
+      }
+    } finally {
+      if (!isSilent) {
+        setTimeout(hideLoader, 500);
+      }
+    }
+  }
+
+  // ── Render Rilis Table ──
+  function renderRilisTable() {
+    rilisTableBody.innerHTML = '';
+    rilisCounter.textContent = `${rilisData.length} Data`;
+
+    if (rilisData.length === 0) {
+      rilisTableBody.innerHTML = `
+        <tr>
+          <td colspan="7" class="text-center py-4 text-secondary">
+            <i class="bi bi-inbox me-2"></i> Belum ada data permintaan rilis berita.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    rilisData.forEach((req) => {
+      const tr = document.createElement('tr');
+
+      // Link Berita column
+      let linkBeritaHtml = '';
+      if (req.hasilLinkBerita) {
+        linkBeritaHtml = `
+          <a href="${escapeHtml(req.hasilLinkBerita)}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-success px-2.5 py-1 rounded-pill d-inline-flex align-items-center gap-1 shadow-sm fw-semibold" style="font-size: 11px;">
+            <i class="bi bi-link-45deg"></i> Buka Link
+          </a>
+        `;
+      } else {
+        linkBeritaHtml = '<span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle small px-2 py-1">Belum Ada</span>';
+      }
+
+      // Interactive Status Badge
+      const status = req.status || 'Pending';
+      let statusBadge = '';
+      if (status === 'Disetujui') {
+        statusBadge = `<span class="badge status-badge-acc px-3 py-1.5 rounded-pill d-inline-flex align-items-center gap-1.5 fw-bold"><i class="bi bi-check-circle-fill"></i> ✅ Disetujui (ACC)</span>`;
+      } else {
+        statusBadge = `<span class="badge status-badge-pending px-3 py-1.5 rounded-pill d-inline-flex align-items-center gap-1.5 fw-bold"><span class="spinner-grow spinner-grow-sm text-warning me-0.5" style="width:0.45rem;height:0.45rem;" role="status"></span> ⏳ Menunggu ACC Admin</span>`;
+      }
+
+      if (status !== 'Disetujui' && req.alasanPending) {
+        statusBadge += `<div class="small text-danger mt-1 text-wrap fw-semibold" style="max-width: 130px;"><i class="bi bi-info-circle me-1"></i>Catatan: ${escapeHtml(req.alasanPending)}</div>`;
+      }
+
+      tr.innerHTML = `
+        <td class="fw-bold">${req.no}</td>
+        <td>
+          <div class="fw-semibold text-truncate" style="max-width: 120px;">${escapeHtml(req.bidang)}</div>
+        </td>
+        <td>
+          <div class="fw-bold text-primary text-wrap" style="max-width: 180px;">${escapeHtml(req.namaKegiatan)}</div>
+          <div class="small text-secondary"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}</div>
+        </td>
+        <td>
+          <div class="text-wrap" style="max-width: 160px;">${escapeHtml(req.siapaTerlibat)}</div>
+        </td>
+        <td>
+          <div class="text-wrap small" style="max-width: 200px;">${escapeHtml(req.deskripsiKegiatan ? (req.deskripsiKegiatan.length > 80 ? req.deskripsiKegiatan.substring(0, 80) + '...' : req.deskripsiKegiatan) : '-')}</div>
+        </td>
+        <td>${linkBeritaHtml}</td>
+        <td>${statusBadge}</td>
+      `;
+
+      rilisTableBody.appendChild(tr);
+    });
+  }
+
+  // ── Upload Zone Click ──
   uploadZone.addEventListener('click', () => {
     fileInput.click();
   });
@@ -69,15 +222,22 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.value = '';
   });
 
-  // Add files to the selected list
+  // Add files to the selected list (Maksimal 5 Foto)
   function addFiles(newFiles) {
+    let attemptedOverLimit = false;
     newFiles.forEach(file => {
-      // Avoid duplicate file names
+      if (selectedFiles.length >= 5) {
+        attemptedOverLimit = true;
+        return;
+      }
       const alreadyExists = selectedFiles.some(f => f.name === file.name && f.size === file.size);
       if (!alreadyExists) {
         selectedFiles.push(file);
       }
     });
+    if (attemptedOverLimit) {
+      showToast('Peringatan', 'Maksimal 5 foto dokumentasi yang dapat diunggah.', false);
+    }
     renderPreviews();
   }
 
@@ -118,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Submit Form
+  // ── Submit Form ──
   rilisForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -136,13 +296,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create FormData payload
     const formData = new FormData();
     formData.append('tipePermohonan', 'Rilis Berita');
-    formData.append('namaPemohon', document.getElementById('namaPemohon').value.trim());
     formData.append('bidang', document.getElementById('bidang').value.trim());
     formData.append('namaKegiatan', document.getElementById('namaKegiatan').value.trim());
     formData.append('tanggalKegiatan', document.getElementById('tanggalKegiatan').value);
-    formData.append('tempatKegiatan', document.getElementById('tempatKegiatan').value.trim());
+    formData.append('tempatKegiatan', '-'); // not used in this form but required by server
+    formData.append('namaPemohon', document.getElementById('bidang').value.trim()); // use bidang as pemohon fallback
     formData.append('siapaTerlibat', document.getElementById('siapaTerlibat').value.trim());
     formData.append('deskripsiKegiatan', document.getElementById('deskripsiKegiatan').value.trim());
+
+    // Link Berita
+    const linkBerita = document.getElementById('hasilLinkBerita').value.trim();
+    if (linkBerita) {
+      formData.append('hasilLinkBerita', linkBerita);
+    }
     
     // Append all selected files
     selectedFiles.forEach(file => {
@@ -157,11 +323,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!response.ok) throw new Error('Gagal mengirim rilis berita.');
 
-      showToast('Berhasil!', 'Rilis berita berhasil dikirim. Menunggu persetujuan admin.');
+      showToast('Berhasil!', 'Rilis berita berhasil dikirim. Status: Menunggu ACC Admin.');
       rilisForm.reset();
       rilisForm.classList.remove('was-validated');
       selectedFiles = [];
       renderPreviews();
+      
+      // Reload table immediately
+      await loadRilisData();
     } catch (error) {
       console.error(error);
       showToast('Error', 'Terjadi kesalahan saat mengirim rilis berita.', false);
@@ -203,4 +372,12 @@ document.addEventListener('DOMContentLoaded', () => {
       behavior: 'smooth'
     });
   });
+
+  // ── Run initialization ──
+  loadRilisData();
+
+  // Interactive Live Connection: poll every 3.5 seconds silently
+  setInterval(() => {
+    loadRilisData(true);
+  }, 3500);
 });

@@ -237,12 +237,10 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
 
   const token = req.headers['authorization'] || req.headers['admin-token'];
   const isAdmin = (token === 'Bearer pln-admin-session-token-2026' || token === 'pln-admin-session-token-2026');
-  const finalStatus = (tipePermohonan === 'Rilis Berita') ? 'Disetujui' : (isAdmin ? (status || 'Disetujui') : 'Pending');
+  const finalStatus = isAdmin ? (status || 'Disetujui') : 'Pending';
 
-  // SECURITY: For Rilis Berita from non-admins — strip photos and deskripsiKegiatan.
-  // Only admin can upload photos and set the description for Rilis Berita.
-  const allowedFiles = (tipePermohonan === 'Rilis Berita' && !isAdmin) ? [] : req.files;
-  const finalDeskripsi = (tipePermohonan === 'Rilis Berita' && !isAdmin) ? '' : (deskripsiKegiatan || '');
+  const allowedFiles = req.files;
+  const finalDeskripsi = deskripsiKegiatan || '';
 
 
   if (supabase) {

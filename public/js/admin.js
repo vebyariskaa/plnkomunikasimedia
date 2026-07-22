@@ -546,7 +546,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const isRilisBerita = (tipePermohonanSelect.value === 'Rilis Berita');
     const isEdit = !!editRequestId.value;
 
-    // Admin has no validation constraints for file uploads
+    // Check Max 5 Photos constraint for Rilis Berita
+    if (isRilisBerita && fileInput.files.length > 5) {
+      showToast('Peringatan', 'Dokumentasi Rilis Berita maksimal 5 foto.', false);
+      fileInput.classList.add('is-invalid');
+      const errEl = document.getElementById('fileValidationError');
+      if (errEl) errEl.textContent = 'Maksimal 5 foto dokumentasi yang dapat diunggah.';
+      return;
+    } else {
+      fileInput.classList.remove('is-invalid');
+    }
+
+    // Auto-fill fallback fields if missing for Rilis Berita
+    if (isRilisBerita) {
+      if (!namaPemohonInput.value.trim()) namaPemohonInput.value = 'Humas PLN UP3 Kotamobagu';
+      if (!tempatKegiatanInput.value.trim()) tempatKegiatanInput.value = 'Kotamobagu';
+    }
 
     if (!adminForm.checkValidity()) {
       e.stopPropagation();

@@ -413,7 +413,9 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
     const token = req.headers['authorization'] || req.headers['admin-token'];
     const isAdmin = (token === 'Bearer pln-admin-session-token-2026' || token === 'pln-admin-session-token-2026');
 
-    const finalStatus = isAdmin ? (status || 'Disetujui') : 'Pending';
+    // Selalu paksa status awal menjadi 'Pending' (Menunggu ACC Admin) untuk semua permohonan baru
+    // Meskipun yang submit adalah admin, tetap harus lewat proses ACC di dashboard.
+    const finalStatus = 'Pending';
 
     const allowedFiles = req.files;
     const finalDeskripsi = deskripsiKegiatan || '';

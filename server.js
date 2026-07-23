@@ -35,12 +35,7 @@ const KV_ROW_ID = '9999999999999'; // Special ID for JSON blob storage fallback
 // Helper function to read requests (async)
 async function readRequests() {
   try {
-    if (fs.existsSync(DATA_FILE)) {
-      const data = fs.readFileSync(DATA_FILE, 'utf8');
-      return JSON.parse(data);
-    }
-    
-    // Sync from Supabase DB if local doesn't exist
+    // 1. ALWAYS Try to sync from Supabase DB first for absolute realtime permanence
     if (supabase) {
       try {
         const { data: dbData, error: dbError } = await supabase
@@ -51,6 +46,7 @@ async function readRequests() {
           
         if (!dbError && dbData && dbData.deskripsiKegiatan) {
           const parsed = JSON.parse(dbData.deskripsiKegiatan);
+          // Cache it locally
           fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
           fs.writeFileSync(DATA_FILE, JSON.stringify(parsed, null, 2));
           return parsed;
@@ -60,6 +56,13 @@ async function readRequests() {
       }
     }
 
+    // 2. Fallback to local /tmp/requests.json if Supabase fetch failed or isn't configured
+    if (fs.existsSync(DATA_FILE)) {
+      const data = fs.readFileSync(DATA_FILE, 'utf8');
+      return JSON.parse(data);
+    }
+    
+    // 3. Fallback to default public data
     const publicDataFile = path.join(__dirname, 'public', 'data', 'requests.json');
     fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
     if (fs.existsSync(publicDataFile)) {

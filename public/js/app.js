@@ -215,6 +215,19 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const rawData = await response.json();
       
+      // Calculate Stats
+      const rilisAcc = rawData.filter(item => item.tipePermohonan && item.tipePermohonan.toLowerCase().includes('rilis berita') && item.status === 'Disetujui').length;
+      const dokAcc = rawData.filter(item => (!item.tipePermohonan || !item.tipePermohonan.toLowerCase().includes('rilis berita')) && item.status === 'Disetujui').length;
+      const totalReq = rawData.length;
+
+      const statRilisAcc = document.getElementById('stat-rilis-acc');
+      const statDokAcc = document.getElementById('stat-dok-acc');
+      const statTotalReq = document.getElementById('stat-total-req');
+      
+      if (statRilisAcc) statRilisAcc.textContent = rilisAcc;
+      if (statDokAcc) statDokAcc.textContent = dokAcc;
+      if (statTotalReq) statTotalReq.textContent = totalReq;
+
       // Filter only approved Rilis Berita to display on portal
       allNews = rawData.filter(item => item.tipePermohonan && item.tipePermohonan.toLowerCase().includes('rilis berita') && item.status === 'Disetujui');
       
@@ -691,4 +704,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Run initialization
   fetchData();
+
+  // Run auto-refresh every 15 seconds to make it real-time
+  setInterval(() => {
+    if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+      fetchData();
+    }
+  }, 15000);
 });

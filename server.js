@@ -15,21 +15,9 @@ if (SUPABASE_URL && SUPABASE_KEY) {
   supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 }
 
-// Configure Multer storage for documentation photos (in-memory for Supabase, disk for fallback)
-const storage = supabase ? multer.memoryStorage() : multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadDir = isVercel ? path.join('/tmp', 'uploads') : path.join(__dirname, 'public', 'uploads');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  }
-});
-const upload = multer({ storage: storage });
+// Configure Multer storage for documentation photos (in-memory always for flexibility and Vercel compatibility)
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage, limits: { fileSize: 20 * 1024 * 1024 } });
 
 // Middleware for parsing JSON body
 app.use(express.json());
@@ -186,16 +174,45 @@ app.get('/api/debug-supabase', async (req, res) => {
       bucketStatus = bannersBucket ? (bannersBucket.public ? 'Found and Public' : 'Found but Private') : 'Not Found';
     }
 
-    // 3. Try to upload a tiny test file
-    let uploadStatus = 'Unknown';
-    const { error: uploadError } = await supabase.storage.from('banners').upload('test.txt', 'test', { upsert: true });
-    uploadStatus = uploadError ? `Error: ${uploadError.message}` : 'OK';
+    // 3. Test absolute permanence sync (Upsert & Read KV_ROW_ID)
+    let syncStatus = 'Unknown';
+    let syncError = null;
+    const testJson = JSON.stringify([{test: 'OK', time: Date.now()}]);
+    
+    const { error: upsertErr } = await supabase.from('requests').upsert({
+      id: '9999999999998', // Test ID
+      namaPemohon: 'SYSTEM_TEST',
+      bidang: 'SYSTEM',
+      namaKegiatan: 'SYSTEM',
+      tanggalKegiatan: '2099-12-31',
+      tempatKegiatan: 'SYSTEM',
+      deskripsiKegiatan: testJson
+    });
+    
+    if (upsertErr) {
+      syncStatus = 'Upsert Failed';
+      syncError = upsertErr;
+    } else {
+      const { data: readData, error: readErr } = await supabase
+        .from('requests')
+        .select('deskripsiKegiatan')
+        .eq('id', '9999999999998')
+        .single();
+        
+      if (readErr) {
+        syncStatus = 'Read Failed';
+        syncError = readErr;
+      } else {
+        syncStatus = readData.deskripsiKegiatan === testJson ? 'Success' : 'Mismatch';
+      }
+    }
 
     res.json({
       supabaseUrl: SUPABASE_URL ? 'Configured' : 'Missing',
       dbStatus,
       bucketStatus,
-      uploadStatus,
+      syncStatus,
+      syncError,
       buckets: buckets ? buckets.map(b => b.name) : []
     });
   } catch (e) {
@@ -323,8 +340,8 @@ app.post('/api/admin/login', (req, res) => {
 // Helper function to upload files to Supabase Storage bucket 'photos'
 async function uploadFilesToSupabase(files) {
   if (!supabase || !files || files.length === 0) return [];
-  const uploadedUrls = [];
-  for (const file of files) {
+  
+  const uploadPromises = files.map(async (file) => {
     const fileExt = path.extname(file.originalname);
     const fileName = `${Date.now()}-${Math.round(Math.random() * 1E9)}${fileExt}`;
     const { data, error } = await supabase.storage
@@ -336,18 +353,18 @@ async function uploadFilesToSupabase(files) {
 
     if (error) {
       console.error('Supabase upload error:', error);
-      continue;
+      return null;
     }
 
     const { data: publicUrlData } = supabase.storage
       .from('photos')
       .getPublicUrl(fileName);
 
-    if (publicUrlData && publicUrlData.publicUrl) {
-      uploadedUrls.push(publicUrlData.publicUrl);
-    }
-  }
-  return uploadedUrls;
+    return publicUrlData && publicUrlData.publicUrl ? publicUrlData.publicUrl : null;
+  });
+
+  const results = await Promise.all(uploadPromises);
+  return results.filter(url => url !== null);
 }
 
 // Get Requests List
@@ -358,88 +375,92 @@ app.get('/api/requests', async (req, res) => {
 
 // Submit New Request (Public or Admin)
 app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) => {
-  const {
-    tipePermohonan,
-    namaPemohon,
-    bidang,
-    namaKegiatan,
-    tanggalKegiatan,
-    tanggalSelesai,
-    tempatKegiatan,
-    permintaan,
-    siapaTerlibat,
-    deskripsiKegiatan,
-    hasilLinkDoc,
-    hasilLinkBerita,
-    status,
-    petugas,
-    alasanPending
-  } = req.body;
+  try {
+    const {
+      tipePermohonan,
+      namaPemohon,
+      bidang,
+      namaKegiatan,
+      tanggalKegiatan,
+      tanggalSelesai,
+      tempatKegiatan,
+      permintaan,
+      siapaTerlibat,
+      deskripsiKegiatan,
+      hasilLinkDoc,
+      hasilLinkBerita,
+      status,
+      petugas,
+      alasanPending
+    } = req.body;
 
-  const finalNamaPemohon = (namaPemohon && namaPemohon.trim()) ? namaPemohon.trim() : (bidang || 'Pemohon');
-  const finalBidang = (bidang && bidang.trim()) ? bidang.trim() : 'Keuangan / Umum';
-  const finalTempat = (tempatKegiatan && tempatKegiatan.trim()) ? tempatKegiatan.trim() : '-';
-  const finalTipe = tipePermohonan || 'Dokumentasi Kegiatan';
+    const finalNamaPemohon = (namaPemohon && namaPemohon.trim()) ? namaPemohon.trim() : (bidang || 'Pemohon');
+    const finalBidang = (bidang && bidang.trim()) ? bidang.trim() : 'Keuangan / Umum';
+    const finalTempat = (tempatKegiatan && tempatKegiatan.trim()) ? tempatKegiatan.trim() : '-';
+    const finalTipe = tipePermohonan || 'Dokumentasi Kegiatan';
 
-  if (!namaKegiatan || !tanggalKegiatan) {
-    return res.status(400).json({ error: 'Nama Kegiatan dan Tanggal Kegiatan wajib diisi.' });
-  }
-
-  const token = req.headers['authorization'] || req.headers['admin-token'];
-  const isAdmin = (token === 'Bearer pln-admin-session-token-2026' || token === 'pln-admin-session-token-2026');
-
-  const finalStatus = isAdmin ? (status || 'Disetujui') : 'Pending';
-
-  const allowedFiles = req.files;
-  const finalDeskripsi = deskripsiKegiatan || '';
-
-
-  let fotoPaths = [];
-  if (supabase && allowedFiles && allowedFiles.length > 0) {
-    try {
-      fotoPaths = await uploadFilesToSupabase(allowedFiles);
-    } catch (e) {
-      console.error('Error uploading files to Supabase:', e);
+    if (!namaKegiatan || !tanggalKegiatan) {
+      return res.status(400).json({ error: 'Nama Kegiatan dan Tanggal Kegiatan wajib diisi.' });
     }
+
+    const token = req.headers['authorization'] || req.headers['admin-token'];
+    const isAdmin = (token === 'Bearer pln-admin-session-token-2026' || token === 'pln-admin-session-token-2026');
+
+    const finalStatus = isAdmin ? (status || 'Disetujui') : 'Pending';
+
+    const allowedFiles = req.files;
+    const finalDeskripsi = deskripsiKegiatan || '';
+
+    let fotoPaths = [];
+    if (supabase && allowedFiles && allowedFiles.length > 0) {
+      try {
+        fotoPaths = await uploadFilesToSupabase(allowedFiles);
+      } catch (e) {
+        console.error('Error uploading files to Supabase:', e);
+      }
+    }
+
+    const requests = await readRequests();
+    const nextNo = requests.length > 0 ? Math.max(...requests.map(r => r.no || 0)) + 1 : 1;
+    const id = Date.now().toString();
+
+    if (fotoPaths.length === 0 && allowedFiles && allowedFiles.length > 0) {
+      fotoPaths = allowedFiles.map(f => {
+        const mime = f.mimetype || 'image/jpeg';
+        const base64Data = f.buffer ? f.buffer.toString('base64') : '';
+        return `data:${mime};base64,${base64Data}`;
+      });
+    }
+
+    const newRequest = {
+      id,
+      no: nextNo,
+      tipePermohonan: finalTipe,
+      namaPemohon: finalNamaPemohon,
+      bidang: finalBidang,
+      namaKegiatan,
+      tanggalKegiatan,
+      tanggalSelesai: tanggalSelesai || '',
+      tempatKegiatan: finalTempat,
+      permintaan: permintaan || '',
+      siapaTerlibat: siapaTerlibat || '',
+      deskripsiKegiatan: finalDeskripsi,
+      fotoPaths,
+      hasilLinkDoc: hasilLinkDoc || '',
+      hasilLinkBerita: hasilLinkBerita || '',
+      status: finalStatus,
+      petugas: petugas || '',
+      alasanPending: alasanPending || ''
+    };
+
+    requests.push(newRequest);
+    await writeRequests(requests);
+
+    res.status(201).json(newRequest);
+  } catch (err) {
+    console.error('Fatal error in POST /api/requests:', err);
+    res.status(500).json({ error: 'Terjadi kesalahan sistem saat memproses permintaan.' });
   }
-
-  const requests = await readRequests();
-  const nextNo = requests.length > 0 ? Math.max(...requests.map(r => r.no || 0)) + 1 : 1;
-  const id = Date.now().toString();
-
-  if (fotoPaths.length === 0 && allowedFiles && allowedFiles.length > 0) {
-    fotoPaths = allowedFiles.map(f => {
-      const mime = f.mimetype || 'image/jpeg';
-      const base64Data = f.buffer.toString('base64');
-      return `data:${mime};base64,${base64Data}`;
-    });
-  }
-
-  const newRequest = {
-    id,
-    no: nextNo,
-    tipePermohonan: finalTipe,
-    namaPemohon: finalNamaPemohon,
-    bidang: finalBidang,
-    namaKegiatan,
-    tanggalKegiatan,
-    tanggalSelesai: tanggalSelesai || '',
-    tempatKegiatan: finalTempat,
-    permintaan: permintaan || '',
-    siapaTerlibat: siapaTerlibat || '',
-    deskripsiKegiatan: finalDeskripsi,
-    fotoPaths,
-    hasilLinkDoc: hasilLinkDoc || '',
-    hasilLinkBerita: hasilLinkBerita || '',
-    status: finalStatus,
-    petugas: petugas || '',
-    alasanPending: alasanPending || ''
-  };
-
-  requests.push(newRequest);
-  await writeRequests(requests);
-
-  res.status(201).json(newRequest);
 });
 
 // Update Request (Admin only)

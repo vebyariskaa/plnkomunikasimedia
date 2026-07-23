@@ -314,20 +314,25 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Append all selected files with client-side compression to prevent 413 Payload Too Large (Vercel limit 4.5MB)
-    for (const file of selectedFiles) {
+    // Process and compress all selected files concurrently
+    const compressionPromises = selectedFiles.map(async (file) => {
       if (file.type.startsWith('image/')) {
         try {
           const compressed = await compressImage(file, 1200, 1200, 0.7);
-          // Directly append blob with the original filename (safer for older iOS/Android)
-          formData.append('fotoDokumentasi', compressed.blob, compressed.name);
+          return { blob: compressed.blob, name: compressed.name };
         } catch (err) {
           console.error("Compression failed for", file.name, err);
-          formData.append('fotoDokumentasi', file); // fallback to original if error
+          return { blob: file, name: file.name }; // fallback
         }
       } else {
-        formData.append('fotoDokumentasi', file);
+        return { blob: file, name: file.name };
       }
+    });
+
+    const processedFiles = await Promise.all(compressionPromises);
+    
+    for (const processed of processedFiles) {
+      formData.append('fotoDokumentasi', processed.blob, processed.name);
     }
 
     try {

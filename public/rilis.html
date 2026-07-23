@@ -169,8 +169,17 @@
     }
 
     @keyframes livePulse {
-      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
-      50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+
+      0%,
+      100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+      }
+
+      50% {
+        opacity: 0.6;
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+      }
     }
 
     /* ── Status Table Styles ── */
@@ -329,7 +338,7 @@
               <h6 class="fw-bold text-primary d-flex align-items-center mb-3">
                 <span class="step-number">2</span> Detail Kegiatan
               </h6>
-              
+
               <!-- Hidden field for type -->
               <input type="hidden" id="tipePermohonan" value="Rilis Berita">
 
@@ -340,14 +349,16 @@
                   <div class="invalid-feedback">Nama kegiatan wajib diisi.</div>
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label for="tempatKegiatan" class="form-label">Tempat Kegiatan <span class="text-danger">*</span></label>
+                  <label for="tempatKegiatan" class="form-label">Tempat Kegiatan <span
+                      class="text-danger">*</span></label>
                   <input type="text" class="form-control" id="tempatKegiatan" placeholder="Lokasi kegiatan" required>
                   <div class="invalid-feedback">Tempat kegiatan wajib diisi.</div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="tanggalKegiatan" class="form-label">Tanggal Kegiatan <span class="text-danger">*</span></label>
+                  <label for="tanggalKegiatan" class="form-label">Tanggal Kegiatan <span
+                      class="text-danger">*</span></label>
                   <input type="date" class="form-control" id="tanggalKegiatan" required>
                   <div class="invalid-feedback">Tanggal kegiatan wajib diisi.</div>
                 </div>
@@ -377,14 +388,16 @@
               <h6 class="fw-bold text-primary d-flex align-items-center mb-3">
                 <span class="step-number">3</span> Dokumentasi
               </h6>
-              <p class="small text-secondary mb-3">Unggah foto-foto dokumentasi kegiatan (Minimal 4 Foto). Orientasi landscape disarankan.</p>
+              <p class="small text-secondary mb-3">Unggah foto-foto dokumentasi kegiatan (Minimal 4 Foto). Orientasi
+                landscape disarankan.</p>
 
               <div class="upload-zone mb-3" id="uploadZone">
                 <i class="bi bi-cloud-arrow-up upload-icon d-block"></i>
                 <h6 class="fw-semibold">Klik untuk memilih foto atau drag & drop</h6>
                 <p class="text-secondary small mb-0">Format: JPG, PNG, WEBP — Maksimal 5 Foto</p>
               </div>
-              <input type="file" id="fotoDokumentasi" accept="image/*" multiple style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">
+              <input type="file" id="fotoDokumentasi" accept="image/*" multiple
+                style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">
 
               <!-- Preview Grid -->
               <div class="preview-grid mb-3" id="previewGrid"></div>
@@ -419,7 +432,9 @@
               <h5 class="fw-bold mb-0">
                 <i class="bi bi-list-check text-success me-2"></i>Status Permintaan Rilis Berita
               </h5>
-              <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill fw-bold" id="rilisCounter">0 Data</span>
+              <span
+                class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill fw-bold"
+                id="rilisCounter">0 Data</span>
             </div>
 
             <div class="table-responsive">

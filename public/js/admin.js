@@ -199,8 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
     adminDokumentasiTableBody.innerHTML = '';
     adminRilisTableBody.innerHTML = '';
 
-    const dokumentasiData = requestsData.filter(req => req.tipePermohonan !== 'Rilis Berita');
-    const rilisData = requestsData.filter(req => req.tipePermohonan === 'Rilis Berita');
+    const dokumentasiData = requestsData.filter(req => req.tipePermohonan && !req.tipePermohonan.toLowerCase().includes('rilis berita'));
+    const rilisData = requestsData.filter(req => req.tipePermohonan && req.tipePermohonan.toLowerCase().includes('rilis berita'));
 
     // ── Render Dokumentasi ──
     if (dokumentasiData.length === 0) {
@@ -472,13 +472,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      if (!response.ok) throw new Error('Gagal menyetujui data.');
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || 'Gagal menyetujui data.');
+      }
 
       showToast('Berhasil', 'Permintaan kegiatan berhasil disetujui (ACC) & dipublikasikan.');
       await loadRequests();
     } catch (error) {
       console.error(error);
-      showToast('Error', 'Gagal menyetujui data di server.', false);
+      showToast('Error', error.message || 'Gagal menyetujui data di server.', false);
     }
   }
 
@@ -492,13 +495,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      if (!response.ok) throw new Error('Gagal menghapus data.');
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || 'Gagal menghapus data.');
+      }
 
       showToast('Berhasil', 'Permintaan kegiatan berhasil dihapus.');
       await loadRequests();
     } catch (error) {
       console.error(error);
-      showToast('Error', 'Gagal menghapus data dari server.', false);
+      showToast('Error', error.message || 'Gagal menghapus data dari server.', false);
     }
   }
 

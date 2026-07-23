@@ -644,10 +644,17 @@
 
             <!-- TIPE 2: RILIS BERITA ONLY -->
             <div id="wrapperRilisBerita" class="d-none">
-              <div class="mb-3">
-                <label for="siapaTerlibat" class="form-label fw-bold">Siapa yang Terlibat (PLN & Stakeholder) <span class="text-danger">*</span></label>
-                <textarea class="form-control" id="siapaTerlibat" rows="3" placeholder="Contoh:&#10;1. Bapak Joko (Walikota)&#10;2. Bapak Budi (GM PLN)"></textarea>
-                <div class="invalid-feedback">Field ini wajib diisi.</div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="namaTerlibat" class="form-label fw-bold">Nama yang Terlibat <span class="text-danger">*</span></label>
+                  <textarea class="form-control" id="namaTerlibat" rows="3" placeholder="Contoh:&#10;1. Bapak Joko&#10;2. Bapak Budi"></textarea>
+                  <div class="invalid-feedback">Field ini wajib diisi.</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="jabatanTerlibat" class="form-label fw-bold">Jabatan <span class="text-danger">*</span></label>
+                  <textarea class="form-control" id="jabatanTerlibat" rows="3" placeholder="Contoh:&#10;1. Walikota&#10;2. GM PLN"></textarea>
+                  <div class="invalid-feedback">Field ini wajib diisi.</div>
+                </div>
               </div>
               <div class="mb-3">
                 <label for="deskripsiKegiatan" class="form-label fw-bold">Deskripsi Singkat <span class="text-danger">*</span></label>

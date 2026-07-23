@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const requestDetailsHtml = `
           <div class="mb-1 text-wrap" style="max-width: 200px;"><span class="text-secondary small fw-semibold">Deskripsi:</span> ${escapeHtml(req.deskripsiKegiatan)}</div>
-          <div class="text-wrap small text-secondary" style="max-width: 200px; white-space: pre-wrap;"><span class="fw-semibold">Terlibat:</span><br>${escapeHtml(req.siapaTerlibat)}</div>
+          <div class="text-wrap small text-secondary" style="max-width: 200px; white-space: pre-wrap;"><span class="fw-semibold">Terlibat:</span><br>${req.namaTerlibat ? `<b>Nama:</b><br>${escapeHtml(req.namaTerlibat)}<br><b>Jabatan:</b><br>${escapeHtml(req.jabatanTerlibat)}` : escapeHtml(req.siapaTerlibat)}</div>
           ${req.penyampaianStakeholder ? `<div class="mt-2 text-wrap small" style="max-width: 200px; white-space: pre-wrap; font-style: italic; border-left: 2px solid #0ea5e9; padding-left: 6px;">"${escapeHtml(req.penyampaianStakeholder)}"</div>` : ''}
         `;
         
@@ -436,7 +436,11 @@ document.addEventListener('DOMContentLoaded', () => {
     tempatKegiatanInput.value = req.tempatKegiatan;
     
     permintaanInput.value = req.permintaan || '';
-    siapaTerlibatInput.value = req.siapaTerlibat || '';
+    const namaTerlibatInput = document.getElementById('namaTerlibat');
+    const jabatanTerlibatInput = document.getElementById('jabatanTerlibat');
+    if (namaTerlibatInput) namaTerlibatInput.value = req.namaTerlibat || req.siapaTerlibat || '';
+    if (jabatanTerlibatInput) jabatanTerlibatInput.value = req.jabatanTerlibat || '';
+    
     deskripsiKegiatanInput.value = req.deskripsiKegiatan || '';
     
     const penyampaianStakeholderInput = document.getElementById('penyampaianStakeholder');
@@ -575,7 +579,11 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('tempatKegiatan', tempatKegiatanInput.value.trim());
     
     if (isRilisBerita) {
-      formData.append('siapaTerlibat', siapaTerlibatInput.value.trim());
+      const namaTerlibatInput = document.getElementById('namaTerlibat');
+      const jabatanTerlibatInput = document.getElementById('jabatanTerlibat');
+      if (namaTerlibatInput) formData.append('namaTerlibat', namaTerlibatInput.value.trim());
+      if (jabatanTerlibatInput) formData.append('jabatanTerlibat', jabatanTerlibatInput.value.trim());
+      
       formData.append('deskripsiKegiatan', deskripsiKegiatanInput.value.trim());
       
       const penyampaianStakeholderInput = document.getElementById('penyampaianStakeholder');

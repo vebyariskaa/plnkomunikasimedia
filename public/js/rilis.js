@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="small text-secondary"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}${req.tanggalSelesai ? ' - ' + formatDate(req.tanggalSelesai) : ''}</div>
         </td>
         <td>
-          <div class="text-wrap" style="max-width: 160px; white-space: pre-wrap; font-size: 0.85rem;">${escapeHtml(req.siapaTerlibat)}</div>
+          <div class="text-wrap" style="max-width: 160px; white-space: pre-wrap; font-size: 0.85rem;">${req.namaTerlibat ? `<b>Nama:</b>\n${escapeHtml(req.namaTerlibat)}\n<b>Jabatan:</b>\n${escapeHtml(req.jabatanTerlibat)}` : escapeHtml(req.siapaTerlibat)}</div>
         </td>
         <td>
           <div class="text-wrap small" style="max-width: 200px;">${escapeHtml(req.deskripsiKegiatan ? (req.deskripsiKegiatan.length > 80 ? req.deskripsiKegiatan.substring(0, 80) + '...' : req.deskripsiKegiatan) : '-')}</div>
@@ -303,7 +303,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('tanggalSelesai') && document.getElementById('tanggalSelesai').value) {
       formData.append('tanggalSelesai', document.getElementById('tanggalSelesai').value);
     }
-    formData.append('siapaTerlibat', document.getElementById('siapaTerlibat').value.trim());
+    formData.append('namaTerlibat', document.getElementById('namaTerlibat').value.trim());
+    formData.append('jabatanTerlibat', document.getElementById('jabatanTerlibat').value.trim());
     formData.append('deskripsiKegiatan', document.getElementById('deskripsiKegiatan').value.trim());
     if (document.getElementById('penyampaianStakeholder')) {
       formData.append('penyampaianStakeholder', document.getElementById('penyampaianStakeholder').value.trim());

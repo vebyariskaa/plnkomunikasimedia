@@ -367,12 +367,21 @@
                   <input type="date" class="form-control" id="tanggalSelesai">
                 </div>
               </div>
-              <div class="mb-3">
-                <label for="siapaTerlibat" class="form-label">Siapa yang Terlibat <span class="text-danger">*</span></label>
-                <textarea class="form-control" id="siapaTerlibat" rows="3"
-                  placeholder="Contoh:&#10;1. Bapak Joko (Walikota)&#10;2. Bapak Budi (GM PLN)" required></textarea>
-                <div class="form-text text-secondary small mb-2"><i class="bi bi-info-circle me-1"></i>Sebutkan nama & jabatan pihak yang terlibat (khususnya stakeholder) secara lengkap.</div>
-                <div class="invalid-feedback">Field ini wajib diisi.</div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="namaTerlibat" class="form-label">Nama yang Terlibat <span class="text-danger">*</span></label>
+                  <textarea class="form-control" id="namaTerlibat" rows="3"
+                    placeholder="Contoh:&#10;1. Bapak Joko&#10;2. Bapak Budi" required></textarea>
+                  <div class="form-text text-secondary small mb-2"><i class="bi bi-info-circle me-1"></i>Sebutkan nama-nama yang terlibat.</div>
+                  <div class="invalid-feedback">Nama yang terlibat wajib diisi.</div>
+                </div>
+                <div class="col-md-6">
+                  <label for="jabatanTerlibat" class="form-label">Jabatan (Stakeholder) <span class="text-danger">*</span></label>
+                  <textarea class="form-control" id="jabatanTerlibat" rows="3"
+                    placeholder="Contoh:&#10;1. Walikota&#10;2. GM PLN" required></textarea>
+                  <div class="form-text text-secondary small mb-2"><i class="bi bi-info-circle me-1"></i>Sebutkan jabatan masing-masing.</div>
+                  <div class="invalid-feedback">Jabatan wajib diisi.</div>
+                </div>
               </div>
               <div class="mb-3">
                 <label for="deskripsiKegiatan" class="form-label">Deskripsi Singkat mengenai Kegiatan <span class="text-danger">*</span></label>

@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (req.alasanPending) {
-        statusBadge += `<div class="small text-danger mt-1 text-wrap fw-semibold" style="max-width: 130px;"><i class="bi bi-info-circle me-1"></i>Catatan: ${escapeHtml(req.alasanPending)}</div>`;
+        statusBadge += `<div class="small text-danger mt-1 text-wrap fw-semibold" style="max-width: 130px;"><i class="bi bi-info-circle me-1"></i>Catatan: ${linkify(escapeHtml(req.alasanPending))}</div>`;
       }
 
       tr.innerHTML = `
@@ -213,6 +213,15 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
+  }
+
+  // Auto-link URLs
+  function linkify(text) {
+    if (!text) return '';
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, function(url) {
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-decoration-underline" style="color: inherit; word-break: break-all;">${url}</a>`;
+    });
   }
 
   // Submit Request Form

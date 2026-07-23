@@ -251,43 +251,48 @@
       </div>
     </div>
 
-    <!-- Data Table Section -->
-    <div class="row">
-      <div class="col-12">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3 border-bottom pb-2">
-          <div class="d-flex align-items-center gap-2">
-            <h4 class="fw-bold mb-0">Daftar Permintaan Layanan & Hasil</h4>
-            <span class="badge bg-primary fs-7" id="requestCounter">0 Data</span>
-          </div>
-          <div class="live-status-indicator">
-            <span class="pulse-dot-green"></span>
-            <span>Live System: Terkoneksi dengan Admin (Update Otomatis)</span>
-          </div>
+    <!-- ── Status Permintaan Dokumentasi ── -->
+    <div class="row justify-content-center">
+      <div class="col-lg-11">
+        <!-- Live Connection Bar -->
+        <div class="live-bar">
+          <span class="live-dot"></span>
+          <span>🟢 Sistem Live — Terkoneksi dengan Admin (Update Otomatis)</span>
         </div>
-        
-        <div class="table-container">
-          <div class="table-responsive">
-            <table class="table custom-table mb-0 text-nowrap" id="requestsTable">
-              <thead>
-                <tr>
-                  <th scope="col" style="width: 70px;">No</th>
-                  <th scope="col">Pemohon</th>
-                  <th scope="col">Detail Kegiatan</th>
-                  <th scope="col">Permintaan</th>
-                  <th scope="col">Link Drive</th>
-                  <th scope="col">Petugas</th>
-                  <th scope="col" style="width: 100px;">Status</th>
-                </tr>
-              </thead>
-              <tbody id="requestsTableBody" class="align-middle">
-                <tr>
-                  <td colspan="7" class="text-center py-4 text-secondary">
-                    <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
-                    Memuat data permintaan...
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+
+        <div class="status-table-card">
+          <div class="p-3 p-md-4">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+              <h5 class="fw-bold mb-0">
+                <i class="bi bi-list-check text-primary me-2"></i>Status Permintaan Dokumentasi
+              </h5>
+              <span
+                class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill fw-bold"
+                id="requestCounter">0 Data</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">No</th>
+                    <th>Pemohon</th>
+                    <th>Detail Kegiatan</th>
+                    <th>Permintaan</th>
+                    <th>Link Drive</th>
+                    <th>Petugas</th>
+                    <th style="width: 180px;">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="requestsTableBody">
+                  <tr>
+                    <td colspan="7" class="text-center py-4 text-secondary">
+                      Memuat data...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

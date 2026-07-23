@@ -216,9 +216,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const rawData = await response.json();
       
       // Filter only approved Rilis Berita to display on portal
-      allNews = rawData.filter(item => item.tipePermohonan === 'Rilis Berita' && item.status === 'Disetujui');
+      allNews = rawData.filter(item => item.tipePermohonan && item.tipePermohonan.toLowerCase().includes('rilis berita') && item.status === 'Disetujui');
+      
+      const reqDokumentasi = rawData.filter(item => !item.tipePermohonan || !item.tipePermohonan.toLowerCase().includes('rilis berita'));
       
       filterAndRenderCards();
+      renderPublicRequests(reqDokumentasi);
     } catch (error) {
       console.error('Error fetching data:', error);
       cardsContainer.innerHTML = `
@@ -231,6 +234,56 @@ document.addEventListener('DOMContentLoaded', () => {
     } finally {
       setTimeout(hideLoader, 600);
     }
+  }
+
+  function renderPublicRequests(reqData) {
+    const tableBody = document.getElementById('publicRequestsTableBody');
+    if (!tableBody) return;
+
+    tableBody.innerHTML = '';
+
+    if (reqData.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="6" class="text-center py-4 text-secondary">
+            Belum ada permohonan dokumentasi yang diajukan.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    reqData.forEach((req) => {
+      const tr = document.createElement('tr');
+      
+      // Interactive Status Badge
+      const status = req.status || 'Pending';
+      let statusBadge = '';
+      if (status === 'Disetujui') {
+        statusBadge = `<span class="badge badge-glass border border-primary-subtle text-primary px-3 py-1.5 rounded-pill d-inline-flex align-items-center gap-1.5 fw-bold"><i class="bi bi-check-circle-fill"></i> Selesai</span>`;
+      } else {
+        statusBadge = `<span class="badge border border-warning-subtle text-warning px-3 py-1.5 rounded-pill d-inline-flex align-items-center gap-1.5 fw-bold" style="background: rgba(245, 158, 11, 0.1);"><span class="spinner-grow spinner-grow-sm me-0.5" style="width:0.45rem;height:0.45rem;" role="status"></span> Proses / Pending</span>`;
+      }
+
+      tr.innerHTML = `
+        <td class="fw-bold">${req.no}</td>
+        <td>
+          <div class="fw-bold text-truncate" style="max-width: 140px;">${escapeHtml(req.namaPemohon)}</div>
+          <div class="small text-secondary text-truncate" style="max-width: 140px;">${escapeHtml(req.bidang)}</div>
+        </td>
+        <td>
+          <div class="fw-semibold text-wrap" style="max-width: 180px; color: var(--text-primary);">${escapeHtml(req.namaKegiatan)}</div>
+        </td>
+        <td>
+          <div class="small fw-medium"><i class="bi bi-calendar-event me-1 text-primary"></i>${formatDate(req.tanggalKegiatan)}</div>
+        </td>
+        <td>
+          <div class="small text-secondary text-wrap" style="max-width: 120px;"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(req.tempatKegiatan)}</div>
+        </td>
+        <td>${statusBadge}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
   }
 
   // Filter and render Rilis Berita cards

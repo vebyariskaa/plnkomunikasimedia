@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const tanggalSelesaiInput = document.getElementById('tanggalSelesai');
   const tempatKegiatanInput = document.getElementById('tempatKegiatan');
   const permintaanInput = document.getElementById('permintaan');
-  const siapaTerlibatInput = document.getElementById('siapaTerlibat');
+  // const siapaTerlibatInput = document.getElementById('siapaTerlibat'); // removed
   const deskripsiKegiatanInput = document.getElementById('deskripsiKegiatan');
   const fileInput = document.getElementById('fotoDokumentasi');
   
@@ -67,12 +67,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Toggle dynamic fields in modal
   function toggleInputs() {
     const tipe = tipePermohonanSelect.value;
+    const namaTerlibatInputModal = document.getElementById('namaTerlibat');
+    const jabatanTerlibatInputModal = document.getElementById('jabatanTerlibat');
+    
     if (tipe === 'Dokumentasi Kegiatan') {
       wrapperDokumentasi.classList.remove('d-none');
       permintaanInput.required = true;
       
       wrapperRilisBerita.classList.add('d-none');
-      siapaTerlibatInput.required = false;
+      if (namaTerlibatInputModal) namaTerlibatInputModal.required = false;
+      if (jabatanTerlibatInputModal) jabatanTerlibatInputModal.required = false;
       deskripsiKegiatanInput.required = false;
       fileInput.required = false;
     } else {
@@ -80,7 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
       permintaanInput.required = false;
       
       wrapperRilisBerita.classList.remove('d-none');
-      siapaTerlibatInput.required = true;
+      if (namaTerlibatInputModal) namaTerlibatInputModal.required = true;
+      if (jabatanTerlibatInputModal) jabatanTerlibatInputModal.required = true;
       deskripsiKegiatanInput.required = true;
       
       // Admin has no required file upload constraints

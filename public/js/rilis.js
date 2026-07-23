@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="small text-secondary"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}${req.tanggalSelesai ? ' - ' + formatDate(req.tanggalSelesai) : ''}</div>
         </td>
         <td>
-          <div class="text-wrap" style="max-width: 160px;">${escapeHtml(req.siapaTerlibat)}</div>
+          <div class="text-wrap" style="max-width: 160px; white-space: pre-wrap; font-size: 0.85rem;">${escapeHtml(req.siapaTerlibat)}</div>
         </td>
         <td>
           <div class="text-wrap small" style="max-width: 200px;">${escapeHtml(req.deskripsiKegiatan ? (req.deskripsiKegiatan.length > 80 ? req.deskripsiKegiatan.substring(0, 80) + '...' : req.deskripsiKegiatan) : '-')}</div>

@@ -267,7 +267,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const requestDetailsHtml = `
           <div class="mb-1 text-wrap" style="max-width: 200px;"><span class="text-secondary small fw-semibold">Deskripsi:</span> ${escapeHtml(req.deskripsiKegiatan)}</div>
-          <div class="text-wrap small text-secondary" style="max-width: 200px;"><span class="fw-semibold">Terlibat:</span> ${escapeHtml(req.siapaTerlibat)}</div>
+          <div class="text-wrap small text-secondary" style="max-width: 200px; white-space: pre-wrap;"><span class="fw-semibold">Terlibat:</span><br>${escapeHtml(req.siapaTerlibat)}</div>
+          ${req.penyampaianStakeholder ? `<div class="mt-2 text-wrap small" style="max-width: 200px; white-space: pre-wrap; font-style: italic; border-left: 2px solid #0ea5e9; padding-left: 6px;">"${escapeHtml(req.penyampaianStakeholder)}"</div>` : ''}
         `;
         
         let photosGridHtml = '';

@@ -217,11 +217,19 @@
 
             <div class="row">
               <div class="col-md-6 mb-3">
+                <label for="waktuKegiatan" class="form-label">Waktu Kegiatan <span class="text-danger">*</span></label>
+                <input type="time" class="form-control" id="waktuKegiatan" required>
+                <div class="invalid-feedback">Waktu kegiatan wajib diisi.</div>
+              </div>
+              <div class="col-md-6 mb-3">
                 <label for="tempatKegiatan" class="form-label">Tempat Kegiatan <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="tempatKegiatan" placeholder="Lokasi kegiatan" required>
                 <div class="invalid-feedback">Tempat kegiatan wajib diisi.</div>
               </div>
-              <div class="col-md-6 mb-3">
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 mb-3">
                 <label for="permintaan" class="form-label">Permintaan Kebutuhan Dokumentasi <span class="text-danger">*</span></label>
                 <select class="form-select" id="permintaan" required>
                   <option value="" selected disabled>-- Pilih Kebutuhan --</option>

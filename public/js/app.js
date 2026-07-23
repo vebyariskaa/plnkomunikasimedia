@@ -289,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </td>
         <td>
           <div class="small fw-medium"><i class="bi bi-calendar-event me-1 text-primary"></i>${formatDate(req.tanggalKegiatan)}</div>
+          ${req.waktuKegiatan ? `<div class="small text-secondary mt-1"><i class="bi bi-clock me-1"></i>${escapeHtml(req.waktuKegiatan)}</div>` : ''}
         </td>
         <td>
           <div class="small text-secondary text-wrap" style="max-width: 120px;"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(req.tempatKegiatan)}</div>

@@ -305,10 +305,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     formData.append('siapaTerlibat', document.getElementById('siapaTerlibat').value.trim());
     formData.append('deskripsiKegiatan', document.getElementById('deskripsiKegiatan').value.trim());
+    if (document.getElementById('penyampaianStakeholder')) {
+      formData.append('penyampaianStakeholder', document.getElementById('penyampaianStakeholder').value.trim());
+    }
     
     // Validate Photos
-    if (selectedFiles.length < 4) {
-      showToast('Peringatan', 'Harap unggah minimal 4 foto dokumentasi.', false);
+    if (selectedFiles.length < 5) {
+      showToast('Peringatan', 'Harap unggah minimal 5 foto dokumentasi.', false);
       btnSubmit.disabled = false;
       btnSubmit.innerHTML = originalBtnText;
       return;

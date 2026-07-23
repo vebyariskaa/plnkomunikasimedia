@@ -244,6 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
       bidang: (document.getElementById('bidang') ? document.getElementById('bidang').value : '').trim(),
       namaKegiatan: (document.getElementById('namaKegiatan') ? document.getElementById('namaKegiatan').value : '').trim(),
       tanggalKegiatan: document.getElementById('tanggalKegiatan') ? document.getElementById('tanggalKegiatan').value : '',
+      waktuKegiatan: document.getElementById('waktuKegiatan') ? document.getElementById('waktuKegiatan').value : '',
       tanggalSelesai: document.getElementById('tanggalSelesai') ? document.getElementById('tanggalSelesai').value : '',
       tempatKegiatan: (document.getElementById('tempatKegiatan') ? document.getElementById('tempatKegiatan').value : '').trim(),
       permintaan: (document.getElementById('permintaan') ? document.getElementById('permintaan').value : '').trim()

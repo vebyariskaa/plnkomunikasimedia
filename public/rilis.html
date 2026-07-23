@@ -368,18 +368,22 @@
                 </div>
               </div>
               <div class="mb-3">
-                <label for="siapaTerlibat" class="form-label">Siapa yang Terlibat <span
-                    class="text-danger">*</span></label>
+                <label for="siapaTerlibat" class="form-label">Siapa yang Terlibat <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="siapaTerlibat"
                   placeholder="Misal: GM PLN UID, Walikota, Ketua Bawaslu, dll." required>
+                <div class="form-text text-secondary small mb-2"><i class="bi bi-info-circle me-1"></i>Sebutkan nama & jabatan pihak yang terlibat (khususnya stakeholder) secara lengkap.</div>
                 <div class="invalid-feedback">Field ini wajib diisi.</div>
               </div>
               <div class="mb-3">
-                <label for="deskripsiKegiatan" class="form-label">Deskripsi Singkat mengenai Kegiatan <span
-                    class="text-danger">*</span></label>
+                <label for="deskripsiKegiatan" class="form-label">Deskripsi Singkat mengenai Kegiatan <span class="text-danger">*</span></label>
                 <textarea class="form-control" id="deskripsiKegiatan" rows="4"
                   placeholder="Uraikan jalannya acara secara singkat untuk bahan rilis berita..." required></textarea>
                 <div class="invalid-feedback">Deskripsi kegiatan wajib diisi.</div>
+              </div>
+              <div class="mb-3">
+                <label for="penyampaianStakeholder" class="form-label">Isi Penyampaian Stakeholder (Opsional)</label>
+                <textarea class="form-control" id="penyampaianStakeholder" rows="3"
+                  placeholder="Tuliskan kutipan atau penyampaian langsung dari stakeholder (cantumkan nama dan jabatan mereka)..."></textarea>
               </div>
             </div>
 
@@ -388,13 +392,12 @@
               <h6 class="fw-bold text-primary d-flex align-items-center mb-3">
                 <span class="step-number">3</span> Dokumentasi
               </h6>
-              <p class="small text-secondary mb-3">Unggah foto-foto dokumentasi kegiatan (Minimal 4 Foto). Orientasi
-                landscape disarankan.</p>
+              <p class="small text-secondary mb-3">Unggah foto-foto dokumentasi kegiatan (Minimal 5 Foto). Orientasi landscape disarankan.</p>
 
               <div class="upload-zone mb-3" id="uploadZone">
                 <i class="bi bi-cloud-arrow-up upload-icon d-block"></i>
                 <h6 class="fw-semibold">Klik untuk memilih foto atau drag & drop</h6>
-                <p class="text-secondary small mb-0">Format: JPG, PNG, WEBP — Maksimal 5 Foto</p>
+                <p class="text-secondary small mb-0">Format: JPG, PNG, WEBP — Minimal 5, Maksimal 15 Foto</p>
               </div>
               <input type="file" id="fotoDokumentasi" accept="image/*" multiple
                 style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">

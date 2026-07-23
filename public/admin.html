@@ -577,14 +577,17 @@
                 <label for="noUrut" class="form-label">Nomor Urut</label>
                 <input type="text" class="form-control" id="noUrut" readonly value="Memuat...">
               </div>
-              <div class="col-md-6 mb-3">
-                <label for="tanggalKegiatan" class="form-label">Tanggal Kegiatan <span class="text-danger">*</span></label>
+              <div class="col-md-4 mb-3">
+                <label for="tanggalKegiatan" class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
                 <input type="date" class="form-control" id="tanggalKegiatan" required>
-                <div class="invalid-feedback">Tanggal kegiatan wajib diisi.</div>
+                <div class="invalid-feedback">Tanggal wajib diisi.</div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6 mb-3 offset-md-6">
+              <div class="col-md-4 mb-3">
+                <label for="waktuKegiatan" class="form-label">Waktu Kegiatan <span class="text-danger">*</span></label>
+                <input type="time" class="form-control" id="waktuKegiatan" required>
+                <div class="invalid-feedback">Waktu wajib diisi.</div>
+              </div>
+              <div class="col-md-4 mb-3">
                 <label for="tanggalSelesai" class="form-label">Tanggal Selesai (Opsional)</label>
                 <input type="date" class="form-control" id="tanggalSelesai">
               </div>
@@ -652,12 +655,17 @@
                 <div class="invalid-feedback">Deskripsi kegiatan wajib diisi.</div>
               </div>
               
-              <!-- File Upload (Landscape - Max 5 Photos) -->
+              <div class="mb-3">
+                <label for="penyampaianStakeholder" class="form-label fw-bold">Isi Penyampaian Stakeholder (Opsional)</label>
+                <textarea class="form-control" id="penyampaianStakeholder" rows="2" placeholder="Tuliskan kutipan atau penyampaian dari stakeholder..."></textarea>
+              </div>
+              
+              <!-- File Upload (Landscape - Max 15 Photos) -->
               <div class="card p-3 mb-3 bg-light-subtle border-dashed">
-                <h6 class="fw-bold mb-1 text-primary"><i class="bi bi-images me-1"></i> Dokumentasi (Maksimal 5 Foto)</h6>
-                <p class="small text-secondary mb-2">Pilih maksimal 5 foto dokumentasi kegiatan (landscape disarankan).</p>
+                <h6 class="fw-bold mb-1 text-primary"><i class="bi bi-images me-1"></i> Dokumentasi (Minimal 5, Maksimal 15 Foto)</h6>
+                <p class="small text-secondary mb-2">Pilih minimal 5 dan maksimal 15 foto dokumentasi kegiatan.</p>
                 <input type="file" class="form-control" id="fotoDokumentasi" accept="image/*" multiple>
-                <div class="invalid-feedback" id="fileValidationError">Maksimal 5 foto yang dapat diunggah.</div>
+                <div class="invalid-feedback" id="fileValidationError">Format atau jumlah foto tidak sesuai.</div>
                 
                 <!-- Photos preview list in Edit modal -->
                 <div class="mt-3 d-none" id="currentPhotosWrapper">

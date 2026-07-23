@@ -240,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <td>
             <div class="fw-bold text-primary text-wrap" style="max-width: 180px;">${escapeHtml(req.namaKegiatan)}</div>
             <div class="small text-secondary mb-1"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}${req.tanggalSelesai ? ' - ' + formatDate(req.tanggalSelesai) : ''}</div>
+            ${req.waktuKegiatan ? `<div class="small text-secondary mb-1"><i class="bi bi-clock me-1"></i>${escapeHtml(req.waktuKegiatan)}</div>` : ''}
             <div class="small text-secondary"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(req.tempatKegiatan)}</div>
           </td>
           <td>${requestDetailsHtml}</td>
@@ -424,6 +425,10 @@ document.addEventListener('DOMContentLoaded', () => {
     bidangInput.value = req.bidang;
     namaKegiatanInput.value = req.namaKegiatan;
     tanggalKegiatanInput.value = req.tanggalKegiatan;
+    
+    const waktuKegiatanInput = document.getElementById('waktuKegiatan');
+    if (waktuKegiatanInput) waktuKegiatanInput.value = req.waktuKegiatan || '';
+
     if (tanggalSelesaiInput) {
       tanggalSelesaiInput.value = req.tanggalSelesai || '';
     }
@@ -432,6 +437,9 @@ document.addEventListener('DOMContentLoaded', () => {
     permintaanInput.value = req.permintaan || '';
     siapaTerlibatInput.value = req.siapaTerlibat || '';
     deskripsiKegiatanInput.value = req.deskripsiKegiatan || '';
+    
+    const penyampaianStakeholderInput = document.getElementById('penyampaianStakeholder');
+    if (penyampaianStakeholderInput) penyampaianStakeholderInput.value = req.penyampaianStakeholder || '';
     
     hasilLinkDocInput.value = req.hasilLinkDoc || '';
     hasilLinkBeritaInput.value = req.hasilLinkBerita || '';
@@ -515,12 +523,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const isRilisBerita = (tipePermohonanSelect.value === 'Rilis Berita');
     const isEdit = !!editRequestId.value;
 
-    // Check Max 5 Photos constraint for Rilis Berita
-    if (isRilisBerita && fileInput.files.length > 5) {
-      showToast('Peringatan', 'Dokumentasi Rilis Berita maksimal 5 foto.', false);
+    // Check Max 15 Photos constraint for Rilis Berita
+    if (isRilisBerita && fileInput.files.length > 15) {
+      showToast('Peringatan', 'Dokumentasi Rilis Berita maksimal 15 foto.', false);
       fileInput.classList.add('is-invalid');
       const errEl = document.getElementById('fileValidationError');
-      if (errEl) errEl.textContent = 'Maksimal 5 foto dokumentasi yang dapat diunggah.';
+      if (errEl) errEl.textContent = 'Maksimal 15 foto dokumentasi yang dapat diunggah.';
+      return;
+    } else if (isRilisBerita && !isEdit && fileInput.files.length > 0 && fileInput.files.length < 5) {
+      showToast('Peringatan', 'Dokumentasi Rilis Berita minimal 5 foto.', false);
+      fileInput.classList.add('is-invalid');
+      const errEl = document.getElementById('fileValidationError');
+      if (errEl) errEl.textContent = 'Minimal 5 foto dokumentasi yang dapat diunggah.';
       return;
     } else {
       fileInput.classList.remove('is-invalid');
@@ -550,6 +564,10 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('bidang', bidangInput.value.trim());
     formData.append('namaKegiatan', namaKegiatanInput.value.trim());
     formData.append('tanggalKegiatan', tanggalKegiatanInput.value);
+    
+    const waktuKegiatanInput = document.getElementById('waktuKegiatan');
+    if (waktuKegiatanInput) formData.append('waktuKegiatan', waktuKegiatanInput.value);
+
     if (tanggalSelesaiInput && tanggalSelesaiInput.value) {
       formData.append('tanggalSelesai', tanggalSelesaiInput.value);
     }
@@ -558,6 +576,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isRilisBerita) {
       formData.append('siapaTerlibat', siapaTerlibatInput.value.trim());
       formData.append('deskripsiKegiatan', deskripsiKegiatanInput.value.trim());
+      
+      const penyampaianStakeholderInput = document.getElementById('penyampaianStakeholder');
+      if (penyampaianStakeholderInput) {
+        formData.append('penyampaianStakeholder', penyampaianStakeholderInput.value.trim());
+      }
+      
       formData.append('keepExistingPhotos', keepExistingPhotosInput.checked ? 'true' : 'false');
     } else {
       formData.append('permintaan', permintaanInput.value.trim());

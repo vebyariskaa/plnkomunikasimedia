@@ -519,14 +519,20 @@ document.addEventListener('DOMContentLoaded', () => {
     currentPhotosList.innerHTML = '';
     if (req.fotoPaths && req.fotoPaths.length > 0) {
       req.fotoPaths.forEach((path) => {
-        const img = document.createElement('img');
-        img.src = path;
-        img.className = 'img-thumbnail-preview m-1';
-        img.addEventListener('click', () => {
-          modalPreviewImage.src = path;
-          imagePreviewModal.show();
-        });
-        currentPhotosList.appendChild(img);
+        const isVideo = path.toLowerCase().includes('.mp4') || path.toLowerCase().includes('.mov') || path.toLowerCase().includes('.webm');
+        const media = document.createElement(isVideo ? 'video' : 'img');
+        media.src = path;
+        media.className = 'img-thumbnail-preview m-1';
+        if (isVideo) {
+          media.controls = true;
+          media.controlsList = "nodownload";
+        } else {
+          media.addEventListener('click', () => {
+            modalPreviewImage.src = path;
+            imagePreviewModal.show();
+          });
+        }
+        currentPhotosList.appendChild(media);
       });
       currentPhotosWrapper.classList.remove('d-none');
     } else {

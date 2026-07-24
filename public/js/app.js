@@ -408,24 +408,34 @@ document.addEventListener('DOMContentLoaded', () => {
     let photosGalleryHtml = '';
     if (photos.length > 0) {
       const carouselId = 'docsCarousel';
-      const slides = photos.map((p, i) => `
+      const slides = photos.map((p, i) => {
+        const isVideo = p.toLowerCase().includes('.mp4') || p.toLowerCase().includes('.mov') || p.toLowerCase().includes('.webm');
+        return `
         <div class="carousel-item${i === 0 ? ' active' : ''}">
           <div class="docs-carousel-slide">
-            <img src="${p}" class="docs-carousel-img" alt="Foto Dokumentasi ${i+1}" data-src="${p}">
-            <div class="docs-carousel-zoom" title="Perbesar">
-              <i class="bi bi-zoom-in"></i>
-            </div>
+            ${isVideo 
+              ? `<video src="${p}" class="docs-carousel-img" controls controlsList="nodownload"></video>`
+              : `<img src="${p}" class="docs-carousel-img" alt="Media ${i+1}" data-src="${p}">
+                 <div class="docs-carousel-zoom" title="Perbesar"><i class="bi bi-zoom-in"></i></div>`
+            }
             <div class="docs-carousel-counter">${i+1} / ${photos.length}</div>
           </div>
         </div>
-      `).join('');
+        `;
+      }).join('');
 
-      const thumbs = photos.map((p, i) => `
+      const thumbs = photos.map((p, i) => {
+        const isVideo = p.toLowerCase().includes('.mp4') || p.toLowerCase().includes('.mov') || p.toLowerCase().includes('.webm');
+        return `
         <button type="button" data-bs-target="#${carouselId}" data-bs-slide-to="${i}"
-          class="docs-thumb${i === 0 ? ' active' : ''}" aria-label="Foto ${i+1}">
-          <img src="${p}" alt="Thumb ${i+1}">
+          class="docs-thumb${i === 0 ? ' active' : ''}" aria-label="Media ${i+1}">
+          ${isVideo 
+            ? `<div style="width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;color:#fff"><i class="bi bi-play-circle fs-3"></i></div>`
+            : `<img src="${p}" alt="Thumb ${i+1}">`
+          }
         </button>
-      `).join('');
+        `;
+      }).join('');
 
       photosGalleryHtml = `
         <div id="${carouselId}" class="carousel slide docs-carousel" data-bs-ride="carousel" data-bs-interval="3500">

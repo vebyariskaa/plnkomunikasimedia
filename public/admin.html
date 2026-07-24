@@ -646,13 +646,25 @@
             <div id="wrapperRilisBerita" class="d-none">
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="namaTerlibat" class="form-label fw-bold">Nama yang Terlibat <span class="text-danger">*</span></label>
-                  <textarea class="form-control" id="namaTerlibat" rows="3" placeholder="Contoh:&#10;1. Bapak Joko&#10;2. Bapak Budi"></textarea>
+                  <label for="namaTerlibatPln" class="form-label fw-bold">Nama (Pihak PLN) <span class="text-danger">*</span></label>
+                  <textarea class="form-control" id="namaTerlibatPln" rows="2" placeholder="Contoh:&#10;1. Bapak Joko"></textarea>
                   <div class="invalid-feedback">Field ini wajib diisi.</div>
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label for="jabatanTerlibat" class="form-label fw-bold">Jabatan <span class="text-danger">*</span></label>
-                  <textarea class="form-control" id="jabatanTerlibat" rows="3" placeholder="Contoh:&#10;1. Walikota&#10;2. GM PLN"></textarea>
+                  <label for="jabatanTerlibatPln" class="form-label fw-bold">Jabatan (Pihak PLN) <span class="text-danger">*</span></label>
+                  <textarea class="form-control" id="jabatanTerlibatPln" rows="2" placeholder="Contoh:&#10;1. Manager PLN"></textarea>
+                  <div class="invalid-feedback">Field ini wajib diisi.</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="namaTerlibatStakeholder" class="form-label fw-bold">Nama (Stakeholder) <span class="text-danger">*</span></label>
+                  <textarea class="form-control" id="namaTerlibatStakeholder" rows="2" placeholder="Contoh:&#10;1. Bapak Budi"></textarea>
+                  <div class="invalid-feedback">Field ini wajib diisi.</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="jabatanTerlibatStakeholder" class="form-label fw-bold">Jabatan (Stakeholder) <span class="text-danger">*</span></label>
+                  <textarea class="form-control" id="jabatanTerlibatStakeholder" rows="2" placeholder="Contoh:&#10;1. Walikota"></textarea>
                   <div class="invalid-feedback">Field ini wajib diisi.</div>
                 </div>
               </div>
@@ -691,6 +703,10 @@
             <!-- ADMIN OUTCOME FIELDS -->
             <div class="card p-3 mb-3 bg-primary-subtle border border-primary-subtle">
               <h6 class="fw-bold mb-3 text-primary"><i class="bi bi-check2-circle"></i> Hasil & Petugas (Diisi Oleh Admin)</h6>
+              <div class="mb-3" id="wrapperIsiRilisAdmin">
+                <label for="isiRilisAdmin" class="form-label small fw-bold text-primary">Teks Rilis Berita (Draft Admin yang akan tayang di portal publik)</label>
+                <textarea class="form-control form-control-sm" id="isiRilisAdmin" rows="5" placeholder="Tuliskan isi berita rilis lengkap di sini... Nanti akan ditampilkan paling atas pada portal publik."></textarea>
+              </div>
               <div class="row">
                 <div class="col-md-6 mb-3" id="wrapperHasilLinkBerita">
                   <label for="hasilLinkBerita" class="form-label small fw-bold text-success">Hasilnya = Link Berita (Wartawan / Media)</label>

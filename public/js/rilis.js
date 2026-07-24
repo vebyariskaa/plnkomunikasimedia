@@ -312,8 +312,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('tanggalSelesai') && document.getElementById('tanggalSelesai').value) {
       formData.append('tanggalSelesai', document.getElementById('tanggalSelesai').value);
     }
-    formData.append('namaTerlibat', document.getElementById('namaTerlibat').value.trim());
-    formData.append('jabatanTerlibat', document.getElementById('jabatanTerlibat').value.trim());
+    formData.append('namaTerlibatPln', document.getElementById('namaTerlibatPln').value.trim());
+    formData.append('jabatanTerlibatPln', document.getElementById('jabatanTerlibatPln').value.trim());
+    formData.append('namaTerlibatStakeholder', document.getElementById('namaTerlibatStakeholder').value.trim());
+    formData.append('jabatanTerlibatStakeholder', document.getElementById('jabatanTerlibatStakeholder').value.trim());
     formData.append('deskripsiKegiatan', document.getElementById('deskripsiKegiatan').value.trim());
     if (document.getElementById('penyampaianStakeholder')) {
       formData.append('penyampaianStakeholder', document.getElementById('penyampaianStakeholder').value.trim());

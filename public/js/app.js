@@ -495,6 +495,13 @@ document.addEventListener('DOMContentLoaded', () => {
           ${req.siapaTerlibat ? `<div class="p-3 mb-4 rounded-3 bg-warning-subtle border border-warning-subtle d-flex align-items-center gap-3"><i class="bi bi-people-fill text-warning fs-3"></i><div><div class="small text-uppercase fw-bold">Pihak yang Terlibat:</div><div class="fw-semibold">${escapeHtml(req.siapaTerlibat)}</div></div></div>` : ''}
           ${req.petugas ? `<div class="p-3 mb-4 rounded-3 bg-primary-subtle border border-primary-subtle d-flex align-items-center gap-3"><i class="bi bi-person-badge text-primary fs-3"></i><div><div class="small text-uppercase fw-bold text-primary">Petugas Pelaksana:</div><div class="fw-bold text-primary">${escapeHtml(req.petugas)}</div></div></div>` : ''}
 
+          ${req.isiRilisAdmin ? `
+          <div class="news-body-text mb-4 p-4 rounded-4 bg-white border shadow-sm">
+            <h4 class="fw-bold border-bottom pb-2 mb-3 text-dark"><i class="bi bi-megaphone-fill text-success me-2"></i>Teks Rilis Berita</h4>
+            <p class="fs-5 lh-lg text-dark fw-medium" style="white-space:pre-line">${escapeHtml(req.isiRilisAdmin)}</p>
+          </div>
+          ` : ''}
+
           <div class="news-body-text mb-5">
             <h4 class="fw-bold border-bottom pb-2 mb-3"><i class="bi bi-card-text text-primary me-2"></i>Rincian Berita & Kegiatan</h4>
             <p class="fs-5 lh-lg text-secondary" style="white-space:pre-line">${escapeHtml(req.deskripsiKegiatan||'Tidak ada deskripsi.')}</p>

@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const requestDetailsHtml = `
           <div class="mb-1 text-wrap" style="max-width: 200px;"><span class="text-secondary small fw-semibold">Deskripsi:</span> ${escapeHtml(req.deskripsiKegiatan)}</div>
-          <div class="text-wrap small text-secondary" style="max-width: 200px; white-space: pre-wrap;"><span class="fw-semibold">Terlibat:</span><br>${req.namaTerlibat ? `<b>Nama:</b><br>${escapeHtml(req.namaTerlibat)}<br><b>Jabatan:</b><br>${escapeHtml(req.jabatanTerlibat)}` : escapeHtml(req.siapaTerlibat)}</div>
+          <div class="text-wrap small text-secondary" style="max-width: 200px; white-space: pre-wrap;"><span class="fw-semibold">Terlibat:</span><br>${req.namaTerlibatPln ? `<b>PLN:</b><br>${escapeHtml(req.namaTerlibatPln)} (${escapeHtml(req.jabatanTerlibatPln)})<br><b>Stakeholder:</b><br>${escapeHtml(req.namaTerlibatStakeholder)} (${escapeHtml(req.jabatanTerlibatStakeholder)})` : (req.namaTerlibat ? `<b>Nama:</b><br>${escapeHtml(req.namaTerlibat)}<br><b>Jabatan:</b><br>${escapeHtml(req.jabatanTerlibat)}` : escapeHtml(req.siapaTerlibat))}</div>
           ${req.penyampaianStakeholder ? `<div class="mt-2 text-wrap small" style="max-width: 200px; white-space: pre-wrap; font-style: italic; border-left: 2px solid #0ea5e9; padding-left: 6px;">"${escapeHtml(req.penyampaianStakeholder)}"</div>` : ''}
         `;
         
@@ -488,10 +488,19 @@ document.addEventListener('DOMContentLoaded', () => {
     tempatKegiatanInput.value = req.tempatKegiatan;
     
     permintaanInput.value = req.permintaan || '';
-    const namaTerlibatInput = document.getElementById('namaTerlibat');
-    const jabatanTerlibatInput = document.getElementById('jabatanTerlibat');
-    if (namaTerlibatInput) namaTerlibatInput.value = req.namaTerlibat || req.siapaTerlibat || '';
-    if (jabatanTerlibatInput) jabatanTerlibatInput.value = req.jabatanTerlibat || '';
+    const namaTerlibatPlnInput = document.getElementById('namaTerlibatPln');
+    const jabatanTerlibatPlnInput = document.getElementById('jabatanTerlibatPln');
+    const namaTerlibatStakeholderInput = document.getElementById('namaTerlibatStakeholder');
+    const jabatanTerlibatStakeholderInput = document.getElementById('jabatanTerlibatStakeholder');
+    if (namaTerlibatPlnInput) namaTerlibatPlnInput.value = req.namaTerlibatPln || req.namaTerlibat || req.siapaTerlibat || '';
+    if (jabatanTerlibatPlnInput) jabatanTerlibatPlnInput.value = req.jabatanTerlibatPln || req.jabatanTerlibat || '';
+    if (namaTerlibatStakeholderInput) namaTerlibatStakeholderInput.value = req.namaTerlibatStakeholder || '';
+    if (jabatanTerlibatStakeholderInput) jabatanTerlibatStakeholderInput.value = req.jabatanTerlibatStakeholder || '';
+    
+    deskripsiKegiatanInput.value = req.deskripsiKegiatan || '';
+    
+    const isiRilisAdminInput = document.getElementById('isiRilisAdmin');
+    if (isiRilisAdminInput) isiRilisAdminInput.value = req.isiRilisAdmin || '';
     
     deskripsiKegiatanInput.value = req.deskripsiKegiatan || '';
     
@@ -631,10 +640,14 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('tempatKegiatan', tempatKegiatanInput.value.trim());
     
     if (isRilisBerita) {
-      const namaTerlibatInput = document.getElementById('namaTerlibat');
-      const jabatanTerlibatInput = document.getElementById('jabatanTerlibat');
-      if (namaTerlibatInput) formData.append('namaTerlibat', namaTerlibatInput.value.trim());
-      if (jabatanTerlibatInput) formData.append('jabatanTerlibat', jabatanTerlibatInput.value.trim());
+      const namaTerlibatPlnInput = document.getElementById('namaTerlibatPln');
+      const jabatanTerlibatPlnInput = document.getElementById('jabatanTerlibatPln');
+      const namaTerlibatStakeholderInput = document.getElementById('namaTerlibatStakeholder');
+      const jabatanTerlibatStakeholderInput = document.getElementById('jabatanTerlibatStakeholder');
+      if (namaTerlibatPlnInput) formData.append('namaTerlibatPln', namaTerlibatPlnInput.value.trim());
+      if (jabatanTerlibatPlnInput) formData.append('jabatanTerlibatPln', jabatanTerlibatPlnInput.value.trim());
+      if (namaTerlibatStakeholderInput) formData.append('namaTerlibatStakeholder', namaTerlibatStakeholderInput.value.trim());
+      if (jabatanTerlibatStakeholderInput) formData.append('jabatanTerlibatStakeholder', jabatanTerlibatStakeholderInput.value.trim());
       
       formData.append('deskripsiKegiatan', deskripsiKegiatanInput.value.trim());
       
@@ -648,11 +661,13 @@ document.addEventListener('DOMContentLoaded', () => {
       formData.append('permintaan', permintaanInput.value.trim());
     }
 
-    // Append admin outcomes & petugas & alasanPending
     formData.append('hasilLinkDoc', hasilLinkDocInput.value.trim());
     formData.append('hasilLinkBerita', hasilLinkBeritaInput.value.trim());
     formData.append('petugas', petugasInput.value.trim());
     formData.append('alasanPending', alasanPendingInput.value.trim());
+    
+    const isiRilisAdminInput = document.getElementById('isiRilisAdmin');
+    if (isiRilisAdminInput) formData.append('isiRilisAdmin', isiRilisAdminInput.value.trim());
 
     // Append files
     if (fileInput.files.length > 0) {

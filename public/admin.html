@@ -726,12 +726,15 @@
   <!-- Image Modal Preview -->
   <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-transparent border-0">
+      <div class="modal-content bg-transparent border-0 position-relative">
         <div class="modal-body text-center p-0">
           <img src="" id="modalPreviewImage" class="img-fluid rounded shadow-lg" alt="Preview" style="max-height: 85vh;">
           <button type="button" class="btn btn-light rounded-circle position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close">
             <i class="bi bi-x-lg"></i>
           </button>
+          <a href="#" id="modalDownloadBtn" class="btn btn-primary position-absolute bottom-0 start-50 translate-middle-x mb-4 rounded-pill shadow-lg" download="foto.jpg">
+            <i class="bi bi-download me-1"></i> Unduh Foto Ini
+          </a>
         </div>
       </div>
     </div>

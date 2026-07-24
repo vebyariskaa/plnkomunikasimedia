@@ -283,6 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
             photosGridHtml += `<img src="${path}" class="img-thumbnail-preview" alt="Foto" data-src="${path}">`;
           });
           photosGridHtml += '</div>';
+          photosGridHtml += `<button class="btn btn-outline-secondary btn-xs mt-2 py-1 px-2 rounded d-inline-flex align-items-center gap-1 btn-download-photos" style="font-size: 11px;"><i class="bi bi-download"></i> Unduh Foto</button>`;
         }
         if (!req.fotoPaths || req.fotoPaths.length === 0) {
           photosGridHtml = '<span class="text-secondary small">Belum ada foto</span>';
@@ -323,10 +324,56 @@ document.addEventListener('DOMContentLoaded', () => {
         // Zoom preview handler for thumbnail click
         tr.querySelectorAll('.img-thumbnail-preview').forEach((img) => {
           img.addEventListener('click', (e) => {
-            modalPreviewImage.src = e.target.getAttribute('data-src');
+            const src = e.target.getAttribute('data-src');
+            modalPreviewImage.src = src;
+            
+            const modalDownloadBtn = document.getElementById('modalDownloadBtn');
+            if (modalDownloadBtn) {
+              modalDownloadBtn.href = src;
+              const ext = src.split('.').pop() || 'jpg';
+              modalDownloadBtn.download = `Foto_Rilis_${req.id}.${ext}`;
+            }
+            
             imagePreviewModal.show();
           });
         });
+
+        // Download photos handler
+        const downloadBtn = tr.querySelector('.btn-download-photos');
+        if (downloadBtn) {
+          const downloadHandler = async (e) => {
+            if (e.type === 'touchstart') e.preventDefault();
+            const originalText = downloadBtn.innerHTML;
+            downloadBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Mengunduh...';
+            downloadBtn.disabled = true;
+            try {
+              for (let i = 0; i < req.fotoPaths.length; i++) {
+                const path = req.fotoPaths[i];
+                const response = await fetch(path);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                const ext = path.split('.').pop() || 'jpg';
+                a.download = `Foto_Rilis_${req.id}_${i + 1}.${ext}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                await new Promise(r => setTimeout(r, 300));
+              }
+            } catch (err) {
+              console.error('Error downloading photos:', err);
+              showToast('Error', 'Gagal mengunduh beberapa foto.', false);
+            } finally {
+              downloadBtn.innerHTML = originalText;
+              downloadBtn.disabled = false;
+            }
+          };
+          downloadBtn.addEventListener('click', downloadHandler);
+          downloadBtn.addEventListener('touchstart', downloadHandler);
+        }
         
         bindActionButtons(tr, req.id);
         adminRilisTableBody.appendChild(tr);

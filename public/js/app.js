@@ -459,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="position-absolute bottom-0 start-0 end-0 p-4 p-md-5" style="background:linear-gradient(to top,rgba(0,0,0,.75),transparent);">
             <div class="container" style="max-width:960px">
               <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                <span class="badge bg-warning text-dark">${escapeHtml(req.bidang||'PLN')}</span>
+                <span class="badge bg-warning text-dark">Rilis Berita</span>
                 ${statusBadgeHtml}
               </div>
               <h1 class="fw-bold text-white fs-2 mb-0">${escapeHtml(req.namaKegiatan)}</h1>
@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="bg-primary text-white py-5 px-4">
           <div class="container" style="max-width:960px">
             <div class="d-flex flex-wrap gap-2 mb-3">
-              <span class="badge bg-warning text-dark">${escapeHtml(req.bidang||'PLN')}</span>
+              <span class="badge bg-warning text-dark">Rilis Berita</span>
               ${statusBadgeHtml}
             </div>
             <h1 class="fw-bold text-white display-5 mb-0">${escapeHtml(req.namaKegiatan)}</h1>
@@ -488,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="col-sm-4 d-flex align-items-center gap-3">
               <div class="bg-primary-subtle text-primary rounded-circle p-3" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><i class="bi bi-building fs-5"></i></div>
-              <div><div class="small text-secondary text-uppercase fw-semibold">Bidang</div><div class="fw-bold">${escapeHtml(req.bidang)} (${escapeHtml(req.namaPemohon)})</div></div>
+              <div><div class="small text-secondary text-uppercase fw-semibold">Instansi</div><div class="fw-bold">PLN UP3 Kotamobagu</div></div>
             </div>
           </div>
 

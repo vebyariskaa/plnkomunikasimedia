@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    rilisData.forEach((req) => {
+    rilisData.forEach((req, index) => {
       const tr = document.createElement('tr');
 
       // Link Berita column
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       tr.innerHTML = `
-        <td class="fw-bold">${req.no}</td>
+        <td class="fw-bold">${index + 1}</td>
         <td>
           <div class="fw-semibold text-truncate" style="max-width: 120px;">${escapeHtml(req.bidang)}</div>
         </td>

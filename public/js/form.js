@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    requestsData.forEach((req) => {
+    requestsData.forEach((req, index) => {
       const tr = document.createElement('tr');
 
       // Link Drive column
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       tr.innerHTML = `
-        <td class="fw-bold">${req.no}</td>
+        <td class="fw-bold">${index + 1}</td>
         <td>
           <div class="fw-bold text-truncate" style="max-width: 150px;">${escapeHtml(req.namaPemohon)}</div>
           <div class="small text-secondary text-truncate" style="max-width: 150px;">${escapeHtml(req.bidang)}</div>

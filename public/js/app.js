@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    reqData.forEach((req) => {
+    reqData.forEach((req, index) => {
       const tr = document.createElement('tr');
       
       // Interactive Status Badge
@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       tr.innerHTML = `
-        <td class="fw-bold">${req.no}</td>
+        <td class="fw-bold">${index + 1}</td>
         <td>
           <div class="fw-bold text-truncate text-secondary" style="max-width: 140px;"><i class="bi bi-person-circle me-1"></i>Pihak Internal</div>
           <div class="small text-secondary text-truncate" style="max-width: 140px;">PLN UP3 Kotamobagu</div>

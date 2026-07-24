@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dokumentasiData.length === 0) {
       adminDokumentasiTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-5 text-secondary">Belum ada data permintaan dokumentasi.</td></tr>`;
     } else {
-      dokumentasiData.forEach((req) => {
+      dokumentasiData.forEach((req, index) => {
         const tr = document.createElement('tr');
         const typeBadge = '<span class="card-info-badge bg-primary-subtle text-primary border border-primary-subtle">Dokumentasi</span>';
         const requestDetailsHtml = `<div class="text-wrap" style="max-width: 200px;"><span class="text-secondary small fw-semibold">Permintaan:</span> ${escapeHtml(req.permintaan)}</div>`;
@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const approveBtn = status === 'Pending' ? `<button class="btn btn-outline-success btn-sm rounded me-1 btn-approve" data-id="${req.id}" title="ACC"><i class="bi bi-check-lg"></i> ACC</button>` : '';
 
         tr.innerHTML = `
-          <td class="fw-bold">${req.no}</td>
+          <td class="fw-bold">${index + 1}</td>
           <td>
             ${typeBadge}
             <div class="fw-bold mt-1 text-truncate" style="max-width: 150px;">${escapeHtml(req.namaPemohon)}</div>
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (rilisData.length === 0) {
       adminRilisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-5 text-secondary">Belum ada data rilis berita.</td></tr>`;
     } else {
-      rilisData.forEach((req) => {
+      rilisData.forEach((req, index) => {
         const tr = document.createElement('tr');
         
         const requestDetailsHtml = `
@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const approveBtn = status === 'Pending' ? `<button class="btn btn-outline-success btn-sm rounded me-1 btn-approve" data-id="${req.id}" title="ACC"><i class="bi bi-check-lg"></i> ACC</button>` : '';
 
         tr.innerHTML = `
-          <td class="fw-bold">${req.no}</td>
+          <td class="fw-bold">${index + 1}</td>
           <td>
             <div class="fw-bold mt-1 text-truncate" style="max-width: 150px;">${escapeHtml(req.namaPemohon)}</div>
             <div class="small text-secondary text-truncate" style="max-width: 150px;">${escapeHtml(req.bidang)}</div>

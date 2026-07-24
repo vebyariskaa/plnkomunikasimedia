@@ -497,15 +497,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
           ${req.isiRilisAdmin ? `
           <div class="news-body-text mb-4 p-4 rounded-4 bg-white border shadow-sm">
-            <h4 class="fw-bold border-bottom pb-2 mb-3 text-dark"><i class="bi bi-megaphone-fill text-success me-2"></i>Teks Rilis Berita</h4>
+            <h4 class="fw-bold border-bottom pb-2 mb-3 text-dark"><i class="bi bi-megaphone-fill text-success me-2"></i>Rilis Berita</h4>
             <p class="fs-5 lh-lg text-dark fw-medium" style="white-space:pre-line">${escapeHtml(req.isiRilisAdmin)}</p>
           </div>
           ` : ''}
 
+          ${req.deskripsiKegiatan ? `
           <div class="news-body-text mb-5">
-            <h4 class="fw-bold border-bottom pb-2 mb-3"><i class="bi bi-card-text text-primary me-2"></i>Rincian Berita & Kegiatan</h4>
-            <p class="fs-5 lh-lg text-secondary" style="white-space:pre-line">${escapeHtml(req.deskripsiKegiatan||'Tidak ada deskripsi.')}</p>
+            <h4 class="fw-bold border-bottom pb-2 mb-3"><i class="bi bi-card-text text-primary me-2"></i>Deskripsi Awal Kegiatan</h4>
+            <p class="fs-5 lh-lg text-secondary" style="white-space:pre-line">${escapeHtml(req.deskripsiKegiatan)}</p>
           </div>
+          ` : ''}
 
           <div class="mb-5">
             <h4 class="fw-bold border-bottom pb-2 mb-4">

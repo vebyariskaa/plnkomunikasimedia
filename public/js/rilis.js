@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('tipePermohonan', 'Rilis Berita');
     formData.append('namaPemohon', document.getElementById('namaPemohon').value.trim());
     formData.append('bidang', document.getElementById('bidang').value.trim());
-    formData.append('namaKegiatan', 'Menunggu Judul dari Admin');
+    formData.append('namaKegiatan', document.getElementById('namaKegiatan').value.trim());
     formData.append('tempatKegiatan', document.getElementById('tempatKegiatan').value.trim());
     formData.append('tanggalKegiatan', document.getElementById('tanggalKegiatan').value);
     if (document.getElementById('tanggalSelesai') && document.getElementById('tanggalSelesai').value) {

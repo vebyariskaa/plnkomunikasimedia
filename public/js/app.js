@@ -369,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             
             <h4 class="fw-bolder text-dark mb-2 text-truncate-2" style="font-family: 'Inter', system-ui, sans-serif; letter-spacing: -0.5px; line-height: 1.35;">
-              ${escapeHtml(req.namaKegiatan)}
+              ${escapeHtml(req.judulBeritaAdmin || 'Judul Rilis Berita (Draft Admin)')}
             </h4>
             
             <p class="card-text-custom text-truncate-3 text-secondary mb-3" style="font-size: 0.95rem; line-height: 1.6;">
@@ -463,14 +463,14 @@ document.addEventListener('DOMContentLoaded', () => {
       <article class="news-fullscreen-article">
         ${mainCover ? `
         <div class="position-relative w-100 bg-dark text-white overflow-hidden news-hero-banner">
-          <img src="${mainCover}" class="w-100 h-100 object-fit-cover" alt="${escapeHtml(req.namaKegiatan)}" style="filter: brightness(0.55);">
+          <img src="${mainCover}" class="w-100 h-100 object-fit-cover" alt="${escapeHtml(req.judulBeritaAdmin || 'Rilis Berita')}" style="filter: brightness(0.55);">
           <div class="position-absolute bottom-0 start-0 end-0 p-4 p-md-5" style="background:linear-gradient(to top,rgba(0,0,0,.75),transparent);">
             <div class="container" style="max-width:960px">
               <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
                 <span class="badge bg-warning text-dark">Rilis Berita</span>
                 ${statusBadgeHtml}
               </div>
-              <h1 class="fw-bold text-white fs-2 mb-0">${escapeHtml(req.namaKegiatan)}</h1>
+              <h1 class="fw-bold text-white fs-2 mb-0">${escapeHtml(req.judulBeritaAdmin || 'Judul Rilis Berita (Draft Admin)')}</h1>
             </div>
           </div>
         </div>` : `
@@ -480,7 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="badge bg-warning text-dark">Rilis Berita</span>
               ${statusBadgeHtml}
             </div>
-            <h1 class="fw-bold text-white display-5 mb-0">${escapeHtml(req.namaKegiatan)}</h1>
+            <h1 class="fw-bold text-white display-5 mb-0">${escapeHtml(req.judulBeritaAdmin || 'Judul Rilis Berita (Draft Admin)')}</h1>
           </div>
         </div>`}
 

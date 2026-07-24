@@ -501,6 +501,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const isiRilisAdminInput = document.getElementById('isiRilisAdmin');
     if (isiRilisAdminInput) isiRilisAdminInput.value = req.isiRilisAdmin || '';
+
+    const judulBeritaAdminInput = document.getElementById('judulBeritaAdmin');
+    if (judulBeritaAdminInput) judulBeritaAdminInput.value = req.judulBeritaAdmin || '';
     
     deskripsiKegiatanInput.value = req.deskripsiKegiatan || '';
     
@@ -644,12 +647,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const jabatanTerlibatPlnInput = document.getElementById('jabatanTerlibatPln');
       const namaTerlibatStakeholderInput = document.getElementById('namaTerlibatStakeholder');
       const jabatanTerlibatStakeholderInput = document.getElementById('jabatanTerlibatStakeholder');
+      
+      formData.append('judulBeritaAdmin', document.getElementById('judulBeritaAdmin') ? document.getElementById('judulBeritaAdmin').value.trim() : '');
+      
       if (namaTerlibatPlnInput) formData.append('namaTerlibatPln', namaTerlibatPlnInput.value.trim());
       if (jabatanTerlibatPlnInput) formData.append('jabatanTerlibatPln', jabatanTerlibatPlnInput.value.trim());
       if (namaTerlibatStakeholderInput) formData.append('namaTerlibatStakeholder', namaTerlibatStakeholderInput.value.trim());
       if (jabatanTerlibatStakeholderInput) formData.append('jabatanTerlibatStakeholder', jabatanTerlibatStakeholderInput.value.trim());
       
       formData.append('deskripsiKegiatan', deskripsiKegiatanInput.value.trim());
+      formData.append('isiRilisAdmin', document.getElementById('isiRilisAdmin') ? document.getElementById('isiRilisAdmin').value.trim() : '');
       
       const penyampaianStakeholderInput = document.getElementById('penyampaianStakeholder');
       if (penyampaianStakeholderInput) {

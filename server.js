@@ -403,7 +403,8 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
       jabatanTerlibatPln,
       namaTerlibatStakeholder,
       jabatanTerlibatStakeholder,
-      isiRilisAdmin
+      isiRilisAdmin,
+      judulBeritaAdmin
     } = req.body;
 
     const finalNamaPemohon = (namaPemohon && namaPemohon.trim()) ? namaPemohon.trim() : (bidang || 'Pemohon');
@@ -473,7 +474,8 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
       jabatanTerlibatPln: jabatanTerlibatPln || '',
       namaTerlibatStakeholder: namaTerlibatStakeholder || '',
       jabatanTerlibatStakeholder: jabatanTerlibatStakeholder || '',
-      isiRilisAdmin: isiRilisAdmin || ''
+      isiRilisAdmin: isiRilisAdmin || '',
+      judulBeritaAdmin: judulBeritaAdmin || ''
     };
 
     requests.push(newRequest);
@@ -514,7 +516,8 @@ app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), 
     jabatanTerlibatPln,
     namaTerlibatStakeholder,
     jabatanTerlibatStakeholder,
-    isiRilisAdmin
+    isiRilisAdmin,
+    judulBeritaAdmin
   } = req.body;
 
   if (!tipePermohonan || !namaPemohon || !bidang || !namaKegiatan || !tanggalKegiatan || !tempatKegiatan) {
@@ -587,7 +590,8 @@ app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), 
     jabatanTerlibatPln: jabatanTerlibatPln || '',
     namaTerlibatStakeholder: namaTerlibatStakeholder || '',
     jabatanTerlibatStakeholder: jabatanTerlibatStakeholder || '',
-    isiRilisAdmin: isiRilisAdmin || ''
+    isiRilisAdmin: isiRilisAdmin || '',
+    judulBeritaAdmin: judulBeritaAdmin || ''
   };
 
   await writeRequests(requests);

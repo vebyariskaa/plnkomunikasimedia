@@ -617,9 +617,9 @@
 
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label for="namaKegiatan" class="form-label">Judul Rilis Berita <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="namaKegiatan" placeholder="Judul rilis berita" required>
-                <div class="invalid-feedback">Judul rilis berita wajib diisi.</div>
+                <label for="namaKegiatan" class="form-label">Nama Kegiatan (Internal) <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="namaKegiatan" placeholder="Nama internal kegiatan" required>
+                <div class="invalid-feedback">Nama kegiatan wajib diisi.</div>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="tempatKegiatan" class="form-label">Tempat Kegiatan <span class="text-danger">*</span></label>
@@ -644,6 +644,11 @@
 
             <!-- TIPE 2: RILIS BERITA ONLY -->
             <div id="wrapperRilisBerita" class="d-none">
+              <div class="mb-4 p-3 border rounded bg-light">
+                <label for="judulBeritaAdmin" class="form-label fw-bold text-primary">Judul Rilis Berita (Untuk Publik) <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg border-primary" id="judulBeritaAdmin" placeholder="Masukkan Judul Rilis Berita Resmi">
+                <div class="form-text">Judul ini akan ditampilkan di halaman depan portal.</div>
+              </div>
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label for="namaTerlibatPln" class="form-label fw-bold">Nama (Pihak PLN) <span class="text-danger">*</span></label>

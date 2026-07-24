@@ -479,15 +479,15 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="container py-4 py-md-5" style="max-width:960px">
           <div class="row g-3 mb-5 p-3 p-md-4 rounded-4 bg-light-subtle border shadow-sm align-items-center">
             <div class="col-sm-4 d-flex align-items-center gap-3">
-              <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><i class="bi bi-calendar3 fs-5"></i></div>
+              <div class="bg-primary-subtle text-primary rounded-circle p-3" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><i class="bi bi-calendar3 fs-5"></i></div>
               <div><div class="small text-secondary text-uppercase fw-semibold">Tanggal</div><div class="fw-bold">${formatDate(req.tanggalKegiatan)}</div></div>
             </div>
             <div class="col-sm-4 d-flex align-items-center gap-3">
-              <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><i class="bi bi-geo-alt fs-5"></i></div>
+              <div class="bg-primary-subtle text-primary rounded-circle p-3" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><i class="bi bi-geo-alt fs-5"></i></div>
               <div><div class="small text-secondary text-uppercase fw-semibold">Tempat</div><div class="fw-bold">${escapeHtml(req.tempatKegiatan)}</div></div>
             </div>
             <div class="col-sm-4 d-flex align-items-center gap-3">
-              <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><i class="bi bi-building fs-5"></i></div>
+              <div class="bg-primary-subtle text-primary rounded-circle p-3" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><i class="bi bi-building fs-5"></i></div>
               <div><div class="small text-secondary text-uppercase fw-semibold">Bidang</div><div class="fw-bold">${escapeHtml(req.bidang)} (${escapeHtml(req.namaPemohon)})</div></div>
             </div>
           </div>

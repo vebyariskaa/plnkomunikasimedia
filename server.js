@@ -398,7 +398,12 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
       hasilLinkBerita,
       status,
       petugas,
-      alasanPending
+      alasanPending,
+      namaTerlibatPln,
+      jabatanTerlibatPln,
+      namaTerlibatStakeholder,
+      jabatanTerlibatStakeholder,
+      isiRilisAdmin
     } = req.body;
 
     const finalNamaPemohon = (namaPemohon && namaPemohon.trim()) ? namaPemohon.trim() : (bidang || 'Pemohon');
@@ -463,7 +468,12 @@ app.post('/api/requests', upload.array('fotoDokumentasi', 50), async (req, res) 
       hasilLinkBerita: hasilLinkBerita || '',
       status: finalStatus,
       petugas: petugas || '',
-      alasanPending: alasanPending || ''
+      alasanPending: alasanPending || '',
+      namaTerlibatPln: namaTerlibatPln || '',
+      jabatanTerlibatPln: jabatanTerlibatPln || '',
+      namaTerlibatStakeholder: namaTerlibatStakeholder || '',
+      jabatanTerlibatStakeholder: jabatanTerlibatStakeholder || '',
+      isiRilisAdmin: isiRilisAdmin || ''
     };
 
     requests.push(newRequest);
@@ -499,7 +509,12 @@ app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), 
     status,
     petugas,
     alasanPending,
-    keepExistingPhotos
+    keepExistingPhotos,
+    namaTerlibatPln,
+    jabatanTerlibatPln,
+    namaTerlibatStakeholder,
+    jabatanTerlibatStakeholder,
+    isiRilisAdmin
   } = req.body;
 
   if (!tipePermohonan || !namaPemohon || !bidang || !namaKegiatan || !tanggalKegiatan || !tempatKegiatan) {
@@ -567,7 +582,12 @@ app.put('/api/requests/:id', requireAdmin, upload.array('fotoDokumentasi', 50), 
     hasilLinkBerita: hasilLinkBerita || '',
     status: status || requests[idx].status || 'Disetujui',
     petugas: petugas || '',
-    alasanPending: alasanPending || ''
+    alasanPending: alasanPending || '',
+    namaTerlibatPln: namaTerlibatPln || '',
+    jabatanTerlibatPln: jabatanTerlibatPln || '',
+    namaTerlibatStakeholder: namaTerlibatStakeholder || '',
+    jabatanTerlibatStakeholder: jabatanTerlibatStakeholder || '',
+    isiRilisAdmin: isiRilisAdmin || ''
   };
 
   await writeRequests(requests);

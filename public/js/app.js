@@ -514,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           <div class="mb-5">
             <h4 class="fw-bold border-bottom pb-2 mb-4">
-              <i class="bi bi-images text-primary me-2"></i>Dokumentasi Kegiatan
+              <i class="bi bi-images text-primary me-2"></i>Lampiran Dokumentasi Visual
               <span class="badge bg-primary ms-2">${photos.length} Foto</span>
             </h4>
             ${photosGalleryHtml}

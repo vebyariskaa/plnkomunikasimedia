@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Load requests
-  async function loadRequests() {
+  async function loadRequests(isSilent = false) {
     try {
       const response = await fetch('/api/requests');
       if (!response.ok) throw new Error('Gagal mengambil data permintaan.');
@@ -149,15 +149,19 @@ document.addEventListener('DOMContentLoaded', () => {
       updateNextNoUrut();
     } catch (error) {
       console.error(error);
-      adminRequestsTableBody.innerHTML = `
-        <tr>
-          <td colspan="8" class="text-center py-5 text-danger">
-            <i class="bi bi-x-circle-fill me-2"></i> Gagal memuat data dari server.
-          </td>
-        </tr>
-      `;
+      if (!isSilent) {
+        adminRequestsTableBody.innerHTML = `
+          <tr>
+            <td colspan="8" class="text-center py-5 text-danger">
+              <i class="bi bi-x-circle-fill me-2"></i> Gagal memuat data dari server.
+            </td>
+          </tr>
+        `;
+      }
     } finally {
-      setTimeout(hideLoader, 500);
+      if (!isSilent) {
+        setTimeout(hideLoader, 500);
+      }
     }
   }
 
@@ -924,5 +928,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Run initialization
   loadRequests();
   loadBannerPreviews();
+
+  // Interactive Live Connection: poll every 3.5 seconds silently
+  setInterval(() => {
+    loadRequests(true);
+  }, 3500);
 });
 

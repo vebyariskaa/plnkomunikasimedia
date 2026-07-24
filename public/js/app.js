@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Fetch all Rilis Berita from API
-  async function fetchData() {
+  async function fetchData(isSilent = false) {
     try {
       const response = await fetch('/api/requests');
       if (!response.ok) {
@@ -237,15 +237,19 @@ document.addEventListener('DOMContentLoaded', () => {
       renderPublicRequests(reqDokumentasi);
     } catch (error) {
       console.error('Error fetching data:', error);
-      cardsContainer.innerHTML = `
-        <div class="col-12 text-center py-5">
-          <i class="bi bi-exclamation-triangle-fill text-danger fs-1"></i>
-          <h5 class="mt-3">Gagal Memuat Rilis Berita</h5>
-          <p class="text-secondary">Terjadi kesalahan koneksi server atau data bermasalah.</p>
-        </div>
-      `;
+      if (!isSilent) {
+        cardsContainer.innerHTML = `
+          <div class="col-12 text-center py-5">
+            <i class="bi bi-exclamation-triangle-fill text-danger fs-1"></i>
+            <h5 class="mt-3">Gagal Memuat Rilis Berita</h5>
+            <p class="text-secondary">Terjadi kesalahan koneksi server atau data bermasalah.</p>
+          </div>
+        `;
+      }
     } finally {
-      setTimeout(hideLoader, 600);
+      if (!isSilent) {
+        setTimeout(hideLoader, 600);
+      }
     }
   }
 

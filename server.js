@@ -373,6 +373,8 @@ async function uploadFilesToSupabase(files) {
 // Get Requests List
 app.get('/api/requests', async (req, res) => {
   const requests = await readRequests();
+  // Sort descending by id (timestamp) so newest is always first
+  requests.sort((a, b) => Number(b.id) - Number(a.id));
   res.json(requests);
 });
 

@@ -281,8 +281,8 @@ document.addEventListener('DOMContentLoaded', () => {
       tr.innerHTML = `
         <td class="fw-bold">${req.no}</td>
         <td>
-          <div class="fw-bold text-truncate" style="max-width: 140px;">${escapeHtml(req.namaPemohon)}</div>
-          <div class="small text-secondary text-truncate" style="max-width: 140px;">${escapeHtml(req.bidang)}</div>
+          <div class="fw-bold text-truncate text-secondary" style="max-width: 140px;"><i class="bi bi-person-circle me-1"></i>Pihak Internal</div>
+          <div class="small text-secondary text-truncate" style="max-width: 140px;">PLN UP3 Kotamobagu</div>
         </td>
         <td>
           <div class="fw-semibold text-wrap" style="max-width: 180px; color: var(--text-primary);">${escapeHtml(req.namaKegiatan)}</div>
@@ -363,18 +363,26 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             ${photoCountHtml}
           </div>
-          <div class="card-body-custom">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="card-info-badge bg-primary-subtle text-primary border border-primary-subtle">PLN UP3 Kotamobagu</span>
+          <div class="card-body-custom d-flex flex-column">
+            <div class="d-flex justify-content-end mb-2">
               ${statusBadgeHtml}
             </div>
-            <h5 class="card-title-custom text-truncate-2">${escapeHtml(req.namaKegiatan)}</h5>
-            <p class="card-text-custom text-truncate-3">${escapeHtml(desc)}</p>
-            <div class="small text-secondary mb-1"><i class="bi bi-calendar3 me-1"></i> ${formatDate(req.tanggalKegiatan)}</div>
-            <div class="small text-secondary mb-3"><i class="bi bi-geo-alt me-1"></i> ${escapeHtml(req.tempatKegiatan)}</div>
             
-            <button class="btn btn-primary btn-sm w-100 mt-auto rounded-3 d-flex align-items-center justify-content-center gap-1 shadow-sm fw-semibold">
-              <i class="bi bi-arrows-fullscreen"></i> Baca Rilis Selengkapnya
+            <h4 class="fw-bolder text-dark mb-2 text-truncate-2" style="font-family: 'Inter', system-ui, sans-serif; letter-spacing: -0.5px; line-height: 1.35;">
+              ${escapeHtml(req.namaKegiatan)}
+            </h4>
+            
+            <p class="card-text-custom text-truncate-3 text-secondary mb-3" style="font-size: 0.95rem; line-height: 1.6;">
+              ${escapeHtml(desc)}
+            </p>
+            
+            <div class="mt-auto pt-3 border-top border-light d-flex flex-column gap-2">
+              <div class="small fw-semibold text-secondary d-flex align-items-center"><i class="bi bi-calendar3 me-2 text-primary fs-6"></i>${formatDate(req.tanggalKegiatan)}</div>
+              <div class="small fw-semibold text-secondary d-flex align-items-center"><i class="bi bi-geo-alt me-2 text-primary fs-6"></i><span class="text-truncate">${escapeHtml(req.tempatKegiatan)}</span></div>
+            </div>
+            
+            <button class="btn btn-primary btn-sm w-100 mt-3 rounded-3 d-flex align-items-center justify-content-center gap-2 shadow-sm fw-bold" style="padding: 10px 0;">
+              <i class="bi bi-book"></i> Baca Rilis Selengkapnya
             </button>
           </div>
         </div>

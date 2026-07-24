@@ -339,8 +339,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const thumbnail = (req.fotoPaths && req.fotoPaths.length > 0) ? req.fotoPaths[0] : '';
       const photoCount = (req.fotoPaths && req.fotoPaths.length > 0) ? req.fotoPaths.length : 0;
       
-      // Description
-      const desc = req.deskripsiKegiatan || 'Rilis berita resmi Komunikasi PLN UP3 Kotamobagu';
+      // Description (Show Admin Text Snippet)
+      const desc = req.isiRilisAdmin || 'Rilis berita resmi Komunikasi PLN UP3 Kotamobagu';
 
       // Clean Badge
       const statusBadgeHtml = '<span class="badge bg-primary-subtle text-primary border border-primary-subtle shadow-sm"><i class="bi bi-newspaper me-1"></i>Rilis Berita</span>';
@@ -365,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <div class="card-body-custom">
             <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="card-info-badge bg-primary-subtle text-primary border border-primary-subtle">${escapeHtml(req.bidang || 'PLN')}</span>
+              <span class="card-info-badge bg-primary-subtle text-primary border border-primary-subtle">PLN UP3 Kotamobagu</span>
               ${statusBadgeHtml}
             </div>
             <h5 class="card-title-custom text-truncate-2">${escapeHtml(req.namaKegiatan)}</h5>

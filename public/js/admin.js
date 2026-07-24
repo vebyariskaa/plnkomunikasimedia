@@ -168,8 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Update Next No Urut field
   function updateNextNoUrut() {
     if (!editRequestId.value) {
-      const nextNo = requestsData.length > 0 ? Math.max(...requestsData.map(r => r.no || 0)) + 1 : 1;
-      noUrutInput.value = nextNo;
+      noUrutInput.value = "Otomatis (No. 1)";
     }
   }
 

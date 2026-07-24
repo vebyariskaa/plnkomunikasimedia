@@ -98,8 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Update Next No Urut field (based on ALL requests, not just filtered)
   function updateNextNoUrut(allData) {
     const data = allData || requestsData;
-    const nextNo = data.length > 0 ? Math.max(...data.map(r => r.no || 0)) + 1 : 1;
-    noUrutInput.value = nextNo;
+    noUrutInput.value = "Otomatis (No. 1)";
   }
 
   // Format Date to Local String

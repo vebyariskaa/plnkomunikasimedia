@@ -502,12 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           ` : ''}
 
-          ${req.deskripsiKegiatan ? `
-          <div class="news-body-text mb-5">
-            <h4 class="fw-bold border-bottom pb-2 mb-3"><i class="bi bi-card-text text-primary me-2"></i>Deskripsi Awal Kegiatan</h4>
-            <p class="fs-5 lh-lg text-secondary" style="white-space:pre-line">${escapeHtml(req.deskripsiKegiatan)}</p>
-          </div>
-          ` : ''}
+
 
           <div class="mb-5">
             <h4 class="fw-bold border-bottom pb-2 mb-4">

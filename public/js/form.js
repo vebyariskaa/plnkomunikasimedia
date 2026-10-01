@@ -188,8 +188,15 @@ document.addEventListener('DOMContentLoaded', () => {
         </td>
         <td>
           <div class="fw-bold text-primary text-wrap" style="max-width: 180px;">${escapeHtml(req.namaKegiatan)}</div>
-          <div class="small text-secondary mb-1"><i class="bi bi-calendar-event me-1"></i>${formatDate(req.tanggalKegiatan)}${req.tanggalSelesai ? ' - ' + formatDate(req.tanggalSelesai) : ''}</div>
-          <div class="small text-secondary"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(req.tempatKegiatan)}</div>
+          <div class="d-flex flex-column gap-1 mt-1">
+            <span style="display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(var(--primary-rgb),0.1) 0%,rgba(var(--primary-rgb),0.18) 100%);border:1px solid rgba(var(--primary-rgb),0.25);border-radius:20px;padding:2px 10px;font-size:0.73rem;color:var(--primary-color);font-weight:600;width:fit-content">
+              <i class="bi bi-calendar-check" style="font-size:0.72rem"></i>${formatDate(req.tanggalKegiatan)}
+            </span>
+            ${req.tanggalSelesai ? `<span style="display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(16,185,129,0.1) 0%,rgba(5,150,105,0.18) 100%);border:1px solid rgba(16,185,129,0.25);border-radius:20px;padding:2px 10px;font-size:0.73rem;color:#059669;font-weight:600;width:fit-content">
+              <i class="bi bi-calendar2-check" style="font-size:0.72rem"></i>s/d ${formatDate(req.tanggalSelesai)}
+            </span>` : ''}
+          </div>
+          <div class="small text-secondary mt-1"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(req.tempatKegiatan)}</div>
         </td>
         <td>
           <div class="text-wrap" style="max-width: 230px;">${escapeHtml(req.permintaan)}</div>

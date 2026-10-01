@@ -29,239 +29,292 @@
 
 
   <style>
+    /* ── ELEGANT FORM CARD ── */
     .form-card {
-      background-color: var(--bg-secondary);
+      background: var(--bg-secondary);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
-      box-shadow: var(--shadow-md);
-      transition: all 0.3s ease;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 123, 153, 0.10), 0 4px 16px rgba(0,0,0,0.04);
+      transition: box-shadow 0.35s ease;
+      overflow: hidden;
+    }
+    .form-card:hover {
+      box-shadow: 0 28px 72px rgba(0, 123, 153, 0.14), 0 6px 24px rgba(0,0,0,0.06);
     }
 
+    /* ── FORM HEADER ── */
+    .form-header-banner {
+      background: linear-gradient(135deg, #03192e 0%, #007B99 55%, #00A2E9 100%);
+      padding: 2.5rem 2rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .form-header-banner::before {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+      top: -100px; right: -80px;
+      pointer-events: none;
+    }
+    .form-header-banner::after {
+      content: '';
+      position: absolute;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(242,169,0,0.15) 0%, transparent 70%);
+      bottom: -60px; left: -40px;
+      pointer-events: none;
+    }
+    .form-icon-ring {
+      width: 72px; height: 72px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      display: inline-flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      position: relative; z-index: 2;
+    }
+    .form-header-title {
+      color: #fff;
+      font-size: 1.6rem; font-weight: 800;
+      letter-spacing: -0.4px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      position: relative; z-index: 2;
+    }
+    .form-header-subtitle {
+      color: rgba(241,245,249,0.82);
+      font-size: 0.9rem; font-weight: 500;
+      position: relative; z-index: 2;
+    }
+
+    /* ── STEP SECTION ── */
+    .form-step-section {
+      padding: 0 2rem 1.5rem;
+    }
+    .form-step-section:first-of-type { padding-top: 2rem; }
+
+    .step-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .step-badge {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 800;
+      box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.35);
+      flex-shrink: 0;
+    }
+    .step-title {
+      font-size: 0.95rem; font-weight: 700;
+      color: var(--primary-color); margin: 0;
+      letter-spacing: 0.1px;
+    }
+
+    /* ── FORM CONTROLS (ELEGANT) ── */
     .form-label {
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 0.84rem;
       color: var(--text-primary);
+      margin-bottom: 0.45rem;
+      letter-spacing: 0.1px;
     }
-
     .form-control,
     .form-select {
       background-color: var(--bg-primary);
-      border: 1px solid var(--border-color);
+      border: 1.5px solid var(--border-color);
       color: var(--text-primary);
-      border-radius: 8px;
+      border-radius: 12px;
       padding: 10px 14px;
-      transition: all 0.3s ease;
+      font-size: 0.88rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
     }
-
     .form-control:focus,
     .form-select:focus {
-      background-color: var(--bg-primary);
+      background-color: var(--bg-secondary);
       color: var(--text-primary);
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 0.25rem rgba(var(--primary-rgb), 0.25);
+      box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15), 0 2px 8px rgba(var(--primary-rgb),0.08);
+      outline: none;
     }
-
+    .form-control:hover:not(:focus),
+    .form-select:hover:not(:focus) {
+      border-color: rgba(var(--primary-rgb), 0.4);
+    }
     .form-control[readonly] {
       background-color: var(--bg-tertiary);
-      opacity: 0.8;
+      opacity: 0.7;
       cursor: not-allowed;
     }
+    textarea.form-control { resize: vertical; min-height: 80px; }
 
-    .toast-container {
-      z-index: 1055;
-    }
-
+    /* ── UPLOAD ZONE (ELEGANT) ── */
     .upload-zone {
-      border: 2px dashed var(--border-color);
-      border-radius: 12px;
-      padding: 2rem;
+      border: 2px dashed rgba(var(--primary-rgb), 0.35);
+      border-radius: 16px;
+      padding: 2.5rem 1.5rem;
       text-align: center;
-      background-color: var(--bg-primary);
+      background: linear-gradient(135deg, rgba(var(--primary-rgb),0.03) 0%, rgba(var(--primary-rgb),0.06) 100%);
       transition: all 0.3s ease;
       cursor: pointer;
     }
-
     .upload-zone:hover,
     .upload-zone.drag-over {
       border-color: var(--primary-color);
-      background-color: rgba(var(--primary-rgb), 0.05);
+      background: linear-gradient(135deg, rgba(var(--primary-rgb),0.07) 0%, rgba(var(--primary-rgb),0.12) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(var(--primary-rgb),0.1);
     }
-
-    .upload-zone .upload-icon {
-      font-size: 2.5rem;
+    .upload-icon {
+      font-size: 2.8rem;
       color: var(--primary-color);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+      display: block;
+      filter: drop-shadow(0 4px 8px rgba(var(--primary-rgb),0.25));
     }
+    .upload-zone h6 {
+      color: var(--text-primary);
+      font-weight: 700; font-size: 0.95rem;
+    }
+    .upload-zone p { color: var(--text-secondary); font-size: 0.82rem; }
 
+    /* ── PREVIEW GRID ── */
     .preview-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 8px;
       margin-top: 1rem;
     }
-
     .preview-item {
       position: relative;
-      border-radius: 8px;
+      border-radius: 10px;
       overflow: hidden;
       aspect-ratio: 4/3;
-      border: 1px solid var(--border-color);
+      border: 2px solid var(--border-color);
+      transition: border-color 0.2s;
     }
-
-    .preview-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
+    .preview-item:hover { border-color: var(--primary-color); }
+    .preview-item img { width: 100%; height: 100%; object-fit: cover; }
     .preview-item .remove-btn {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      background: rgba(220, 53, 69, 0.9);
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 22px;
-      height: 22px;
-      font-size: 0.7rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: absolute; top: 4px; right: 4px;
+      background: rgba(220,53,69,0.92);
+      color: #fff; border: none;
+      border-radius: 50%; width: 22px; height: 22px;
+      font-size: 0.7rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
       transition: transform 0.2s;
+      backdrop-filter: blur(4px);
     }
+    .preview-item .remove-btn:hover { transform: scale(1.2); }
 
-    .preview-item .remove-btn:hover {
-      transform: scale(1.2);
+    /* ── SUBMIT BUTTON ── */
+    .btn-submit-rilis {
+      background: linear-gradient(135deg, #007B99 0%, #00A2E9 100%);
+      color: #fff; border: none;
+      border-radius: 14px; padding: 0.85rem 1.5rem;
+      font-weight: 700; font-size: 0.95rem;
+      transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+      box-shadow: 0 6px 20px rgba(0, 123, 153, 0.35);
+      letter-spacing: 0.2px;
     }
+    .btn-submit-rilis:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(0, 123, 153, 0.45);
+      opacity: 0.96; color: #fff;
+    }
+    .btn-submit-rilis:active { transform: translateY(0); }
 
+    /* ── TOAST ── */
+    .toast-container { z-index: 1055; }
+
+    /* ── STEP NUMBER (fallback compatibility) ── */
     .step-number {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background-color: var(--primary-color);
-      color: #fff;
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-right: 8px;
-      flex-shrink: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: #fff; font-size: 0.8rem; font-weight: 700;
+      margin-right: 8px; flex-shrink: 0;
     }
 
-    /* ── Live Connection Bar ── */
+    /* ── LIVE CONNECTION BAR ── */
     .live-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-radius: 12px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(5, 150, 105, 0.12) 100%);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      color: #059669;
-      margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 16px; border-radius: 12px;
+      font-size: 0.82rem; font-weight: 600;
+      background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(5,150,105,0.12) 100%);
+      border: 1px solid rgba(16,185,129,0.25);
+      color: #059669; margin-bottom: 1rem;
     }
-
     [data-theme="dark"] .live-bar {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.18) 100%);
-      border-color: rgba(16, 185, 129, 0.3);
-      color: #34d399;
+      background: linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(5,150,105,0.18) 100%);
+      border-color: rgba(16,185,129,0.3); color: #34d399;
     }
-
     .live-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
+      width: 8px; height: 8px; border-radius: 50%;
       background: #10b981;
-      animation: livePulse 1.5s ease-in-out infinite;
-      flex-shrink: 0;
+      animation: livePulse 1.5s ease-in-out infinite; flex-shrink: 0;
     }
-
     @keyframes livePulse {
-
-      0%,
-      100% {
-        opacity: 1;
-        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
-      }
-
-      50% {
-        opacity: 0.6;
-        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
-      }
+      0%, 100% { opacity:1; box-shadow: 0 0 0 0 rgba(16,185,129,0.6); }
+      50%       { opacity:0.6; box-shadow: 0 0 0 6px rgba(16,185,129,0); }
     }
 
-    /* ── Status Table Styles ── */
+    /* ── STATUS TABLE ── */
     .status-table-card {
       background-color: var(--bg-secondary);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
+      border-radius: 20px;
       box-shadow: var(--shadow-md);
       overflow: hidden;
     }
-
-    .status-table-card .table {
-      margin-bottom: 0;
-      color: var(--text-primary);
-    }
-
+    .status-table-card .table { margin-bottom: 0; color: var(--text-primary); }
     .status-table-card .table thead th {
       background-color: var(--bg-tertiary);
       border-bottom: 2px solid var(--border-color);
-      font-weight: 700;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-secondary);
-      padding: 12px 14px;
-      white-space: nowrap;
+      font-weight: 700; font-size: 0.78rem;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--text-secondary); padding: 12px 14px; white-space: nowrap;
     }
-
     .status-table-card .table td {
-      padding: 12px 14px;
-      vertical-align: middle;
+      padding: 12px 14px; vertical-align: middle;
       border-bottom: 1px solid var(--border-color);
     }
-
     .status-table-card .table tbody tr:hover {
       background-color: rgba(var(--primary-rgb), 0.04);
     }
 
-    /* ── Status Badges ── */
+    /* ── STATUS BADGES ── */
     .status-badge-pending {
-      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-      color: #92400e;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      font-size: 0.75rem;
+      background: linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);
+      color: #92400e; border: 1px solid rgba(245,158,11,0.3); font-size: 0.75rem;
     }
-
     [data-theme="dark"] .status-badge-pending {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.25) 100%);
-      color: #fbbf24;
-      border-color: rgba(245, 158, 11, 0.3);
+      background: linear-gradient(135deg,rgba(245,158,11,0.2) 0%,rgba(217,119,6,0.25) 100%);
+      color: #fbbf24; border-color: rgba(245,158,11,0.3);
     }
-
     .status-badge-acc {
-      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-      color: #065f46;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      font-size: 0.75rem;
+      background: linear-gradient(135deg,#d1fae5 0%,#a7f3d0 100%);
+      color: #065f46; border: 1px solid rgba(16,185,129,0.3); font-size: 0.75rem;
     }
-
     [data-theme="dark"] .status-badge-acc {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.25) 100%);
-      color: #34d399;
-      border-color: rgba(16, 185, 129, 0.3);
+      background: linear-gradient(135deg,rgba(16,185,129,0.2) 0%,rgba(5,150,105,0.25) 100%);
+      color: #34d399; border-color: rgba(16,185,129,0.3);
     }
 
-    /* ── Mobile responsive table ── */
     @media (max-width: 768px) {
-      .status-table-card .table-responsive {
-        font-size: 0.85rem;
-      }
+      .status-table-card .table-responsive { font-size: 0.85rem; }
+      .form-step-section { padding: 0 1.25rem 1.25rem; }
+      .form-header-banner { padding: 2rem 1.25rem 1.5rem; }
     }
   </style>
 </head>
@@ -303,32 +356,33 @@
   <main class="container my-5 flex-grow-1">
     <div class="row justify-content-center mb-5">
       <div class="col-lg-9">
-        <div class="form-card p-4 p-md-5">
-          <div class="text-center mb-4">
-            <div
-              class="d-inline-flex align-items-center justify-content-center bg-success text-white rounded-circle mb-3"
-              style="width: 60px; height: 60px;">
-              <i class="bi bi-newspaper fs-3"></i>
+        <div class="form-card">
+
+          <!-- ── Elegant Header Banner ── -->
+          <div class="form-header-banner">
+            <div class="form-icon-ring">
+              <i class="bi bi-newspaper text-white fs-3"></i>
             </div>
-            <h3 class="fw-bold">Form Rilis Berita</h3>
-            <p class="text-secondary">Lengkapi formulir di bawah ini untuk mengajukan rilis berita kegiatan PLN.</p>
+            <h1 class="form-header-title mb-1">Form Rilis Berita</h1>
+            <p class="form-header-subtitle mb-0">Lengkapi formulir di bawah ini untuk mengajukan rilis berita kegiatan <strong style="color:#fbbf24;">PLN</strong>.</p>
           </div>
 
           <form id="rilisForm" class="needs-validation" novalidate enctype="multipart/form-data">
+            <input type="hidden" id="tipePermohonan" value="Rilis Berita">
 
-            <!-- Step 1: Identitas & Bidang -->
-            <div class="mb-4">
-              <h6 class="fw-bold text-primary d-flex align-items-center mb-3">
-                <span class="step-number">1</span> Identitas & Bidang
-              </h6>
-              
-              <div class="row">
-                <div class="col-md-6 mb-3">
+            <!-- ── Step 1: Identitas & Bidang ── -->
+            <div class="form-step-section pt-4">
+              <div class="step-header">
+                <span class="step-badge">1</span>
+                <h6 class="step-title"><i class="bi bi-person-badge me-1"></i>Identitas &amp; Bidang</h6>
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6">
                   <label for="namaPemohon" class="form-label">Nama <span class="text-danger">*</span></label>
                   <input type="text" class="form-control" id="namaPemohon" placeholder="Nama lengkap Anda" required>
                   <div class="invalid-feedback">Nama wajib diisi.</div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6">
                   <label for="bidang" class="form-label">Bidang <span class="text-danger">*</span></label>
                   <select class="form-select" id="bidang" required>
                     <option value="" selected disabled>-- Pilih Bidang --</option>
@@ -345,41 +399,46 @@
               </div>
             </div>
 
-            <!-- Step 2: Detail Kegiatan -->
-            <div class="mb-4">
-              <h6 class="fw-bold text-primary d-flex align-items-center mb-3">
-                <span class="step-number">2</span> Detail Kegiatan
-              </h6>
-
-              <!-- Hidden field for type -->
-              <input type="hidden" id="tipePermohonan" value="Rilis Berita">
-
-              <div class="row">
-                <div class="col-md-12 mb-3">
+            <!-- ── Step 2: Detail Kegiatan ── -->
+            <div class="form-step-section">
+              <div class="step-header">
+                <span class="step-badge">2</span>
+                <h6 class="step-title"><i class="bi bi-calendar-event me-1"></i>Detail Kegiatan</h6>
+              </div>
+              <div class="row g-3">
+                <div class="col-md-12">
                   <label for="namaKegiatan" class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="namaKegiatan" placeholder="Contoh: Rapat Koordinasi..." required>
+                  <input type="text" class="form-control" id="namaKegiatan" placeholder="Contoh: Rapat Koordinasi Perencanaan..." required>
                   <div class="invalid-feedback">Nama kegiatan wajib diisi.</div>
                 </div>
-                <div class="col-md-12 mb-3">
-                  <label for="tempatKegiatan" class="form-label">Tempat Kegiatan <span
-                      class="text-danger">*</span></label>
+                <div class="col-md-12">
+                  <label for="tempatKegiatan" class="form-label">Tempat Kegiatan <span class="text-danger">*</span></label>
                   <input type="text" class="form-control" id="tempatKegiatan" placeholder="Lokasi kegiatan" required>
                   <div class="invalid-feedback">Tempat kegiatan wajib diisi.</div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="tanggalKegiatan" class="form-label">Tanggal Kegiatan <span
-                      class="text-danger">*</span></label>
+                <div class="col-md-6">
+                  <label for="tanggalKegiatan" class="form-label">
+                    <i class="bi bi-calendar-check me-1 text-primary" style="font-size:0.85rem;"></i>Tanggal Kegiatan <span class="text-danger">*</span>
+                  </label>
                   <input type="date" class="form-control" id="tanggalKegiatan" required>
                   <div class="invalid-feedback">Tanggal kegiatan wajib diisi.</div>
                 </div>
-                <div class="col-md-6 mb-3">
-                  <label for="tanggalSelesai" class="form-label">Tanggal Selesai (Opsional)</label>
+                <div class="col-md-6">
+                  <label for="tanggalSelesai" class="form-label">
+                    <i class="bi bi-calendar2-check me-1 text-success" style="font-size:0.85rem;"></i>Tanggal Selesai <span class="text-secondary fw-normal">(Opsional)</span>
+                  </label>
                   <input type="date" class="form-control" id="tanggalSelesai">
                 </div>
               </div>
-              <div class="row mb-3">
+            </div>
+
+            <!-- ── Step 3: Pihak yang Terlibat ── -->
+            <div class="form-step-section">
+              <div class="step-header">
+                <span class="step-badge">3</span>
+                <h6 class="step-title"><i class="bi bi-people me-1"></i>Pihak yang Terlibat</h6>
+              </div>
+              <div class="row g-3 mb-3">
                 <div class="col-md-6">
                   <label for="namaTerlibatPln" class="form-label">Nama (Pihak PLN) <span class="text-danger">*</span></label>
                   <textarea class="form-control" id="namaTerlibatPln" rows="2"
@@ -392,8 +451,6 @@
                     placeholder="Contoh:&#10;1. Manager UP3&#10;2. Asisten Manager Jaringan" required></textarea>
                   <div class="invalid-feedback">Jabatan pihak PLN wajib diisi.</div>
                 </div>
-              </div>
-              <div class="row mb-3">
                 <div class="col-md-6">
                   <label for="namaTerlibatStakeholder" class="form-label">Nama (Stakeholder) <span class="text-danger">*</span></label>
                   <textarea class="form-control" id="namaTerlibatStakeholder" rows="2"
@@ -406,48 +463,50 @@
                     placeholder="Contoh:&#10;1. Kepala Dinas PUPR" required></textarea>
                   <div class="invalid-feedback">Jabatan stakeholder wajib diisi.</div>
                 </div>
-              </div>
-              <div class="mb-3">
-                <label for="deskripsiKegiatan" class="form-label">Deskripsi Singkat mengenai Kegiatan <span class="text-danger">*</span></label>
-                <textarea class="form-control" id="deskripsiKegiatan" rows="4"
-                  placeholder="Uraikan jalannya acara secara singkat untuk bahan rilis berita..." required></textarea>
-                <div class="invalid-feedback">Deskripsi kegiatan wajib diisi.</div>
-              </div>
-              <div class="mb-3">
-                <label for="penyampaianStakeholder" class="form-label">Isi Penyampaian Stakeholder (Opsional)</label>
-                <textarea class="form-control" id="penyampaianStakeholder" rows="3"
-                  placeholder="Tuliskan kutipan atau penyampaian langsung dari stakeholder (cantumkan nama dan jabatan mereka)..."></textarea>
+                <div class="col-12">
+                  <label for="deskripsiKegiatan" class="form-label">Deskripsi Singkat Kegiatan <span class="text-danger">*</span></label>
+                  <textarea class="form-control" id="deskripsiKegiatan" rows="4"
+                    placeholder="Uraikan jalannya acara secara singkat untuk bahan rilis berita..." required></textarea>
+                  <div class="invalid-feedback">Deskripsi kegiatan wajib diisi.</div>
+                </div>
+                <div class="col-12">
+                  <label for="penyampaianStakeholder" class="form-label">Isi Penyampaian Stakeholder <span class="text-secondary fw-normal">(Opsional)</span></label>
+                  <textarea class="form-control" id="penyampaianStakeholder" rows="3"
+                    placeholder="Tuliskan kutipan atau penyampaian langsung dari stakeholder (cantumkan nama dan jabatan)..."></textarea>
+                </div>
               </div>
             </div>
 
-            <!-- Step 3: Dokumentasi -->
-            <div class="mb-4">
-              <h6 class="fw-bold text-primary d-flex align-items-center mb-3">
-                <span class="step-number">3</span> Dokumentasi
-              </h6>
-              <p class="small text-secondary mb-3">Unggah foto-foto dokumentasi kegiatan (Minimal 5 Foto). Orientasi landscape disarankan.</p>
+            <!-- ── Step 4: Dokumentasi ── -->
+            <div class="form-step-section">
+              <div class="step-header">
+                <span class="step-badge">4</span>
+                <h6 class="step-title"><i class="bi bi-images me-1"></i>Dokumentasi Foto</h6>
+              </div>
+              <p class="small text-secondary mb-3" style="margin-top:-0.5rem;">
+                <i class="bi bi-info-circle me-1 text-primary"></i>Unggah foto dokumentasi kegiatan <strong>minimal 5 foto</strong>. Orientasi <em>landscape</em> disarankan.
+              </p>
 
               <div class="upload-zone mb-3" id="uploadZone">
-                <i class="bi bi-cloud-arrow-up upload-icon d-block"></i>
-                <h6 class="fw-semibold">Klik untuk memilih foto atau drag & drop</h6>
-                <p class="text-secondary small mb-0">Format: JPG, PNG, WEBP — Minimal 5, Maksimal 15 Foto</p>
+                <i class="bi bi-cloud-arrow-up upload-icon"></i>
+                <h6>Klik untuk memilih foto atau <em>drag &amp; drop</em></h6>
+                <p class="mb-0">Format: JPG, PNG, WEBP &mdash; Minimal 5, Maksimal 15 Foto</p>
               </div>
               <input type="file" id="fotoDokumentasi" accept="image/*" multiple
-                style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">
+                style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">
 
-              <!-- Preview Grid -->
-              <div class="preview-grid mb-3" id="previewGrid"></div>
-              <div class="mt-1 small text-secondary mb-4" id="fileCountInfo"></div>
-
+              <div class="preview-grid mb-2" id="previewGrid"></div>
+              <div class="small text-secondary mb-3" id="fileCountInfo"></div>
             </div>
 
-            <div class="d-grid gap-2">
-              <button
-                class="btn btn-success py-2.5 fw-semibold rounded-3 d-flex align-items-center justify-content-center gap-2"
-                type="submit" id="btnSubmit">
-                <i class="bi bi-send-fill"></i> Kirim Rilis Berita
+            <!-- ── Submit Button ── -->
+            <div class="px-4 pb-4 pt-2">
+              <button class="btn-submit-rilis w-100 d-flex align-items-center justify-content-center gap-2" type="submit" id="btnSubmit">
+                <i class="bi bi-send-fill fs-5"></i>
+                <span>Kirim Rilis Berita</span>
               </button>
             </div>
+
           </form>
         </div>
       </div>

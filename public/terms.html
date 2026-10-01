@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <script>
+    (function() {
+      try {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Syarat dan Ketentuan penggunaan Portal Komunikasi Digital PLN UP3 Kotamobagu. Aturan dan panduan penggunaan layanan portal secara resmi.">
+  <title>Syarat &amp; Ketentuan - Komunikasi PLN UP3 KOTAMOBAGU</title>
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    .policy-hero {
+      background: linear-gradient(135deg, #03192e 0%, #1a4a6e 45%, #007B99 100%);
+      padding: 4rem 0 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .policy-hero::before {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+      top: -150px; left: -100px; pointer-events: none;
+    }
+    .policy-hero::after {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(242,169,0,0.12) 0%, transparent 70%);
+      bottom: -80px; right: -60px; pointer-events: none;
+    }
+    .policy-hero-icon {
+      width: 80px; height: 80px; border-radius: 22px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      display: inline-flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .policy-hero-title {
+      color: #fff; font-size: 2.2rem; font-weight: 800;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .policy-hero-subtitle {
+      color: rgba(241,245,249,0.82); font-size: 0.95rem; font-weight: 500;
+    }
+    .policy-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,162,233,0.2); color: #7dd3fc;
+      border: 1px solid rgba(56,189,248,0.35);
+      padding: 4px 16px; border-radius: 30px;
+      font-size: 0.78rem; font-weight: 700;
+      backdrop-filter: blur(8px);
+      margin-bottom: 1rem;
+    }
+
+    .policy-content-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(0,123,153,0.08);
+      padding: 2.5rem;
+      margin-bottom: 1.5rem;
+      transition: box-shadow 0.3s ease;
+    }
+    .policy-content-card:hover {
+      box-shadow: 0 16px 48px rgba(0,123,153,0.12);
+    }
+
+    .section-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0,123,153,0.15), rgba(0,162,233,0.2));
+      border: 1px solid rgba(0,123,153,0.2);
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--primary-color); font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .policy-section-title {
+      font-size: 1.05rem; font-weight: 800;
+      color: var(--text-primary); margin: 0;
+      letter-spacing: -0.2px;
+    }
+
+    .policy-body {
+      color: var(--text-secondary);
+      font-size: 0.9rem; line-height: 1.75;
+    }
+    .policy-body p { margin-bottom: 0.85rem; }
+    .policy-body ul {
+      padding-left: 1.25rem; margin-bottom: 0.85rem;
+    }
+    .policy-body ul li { margin-bottom: 0.4rem; }
+    .policy-body strong { color: var(--text-primary); }
+
+    .last-updated-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 30px; padding: 4px 14px;
+      font-size: 0.78rem; color: var(--text-secondary); font-weight: 600;
+    }
+
+    .toc-card {
+      background: linear-gradient(135deg, rgba(0,123,153,0.06) 0%, rgba(0,162,233,0.08) 100%);
+      border: 1px solid rgba(0,123,153,0.18);
+      border-radius: 16px; padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .toc-card h6 {
+      font-weight: 800; color: var(--primary-color);
+      font-size: 0.88rem; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 0.85rem;
+    }
+    .toc-link {
+      display: flex; align-items: center; gap: 8px;
+      color: var(--text-secondary); text-decoration: none;
+      font-size: 0.85rem; font-weight: 500;
+      padding: 0.3rem 0; transition: color 0.2s;
+    }
+    .toc-link:hover { color: var(--primary-color); }
+    .toc-link i { font-size: 0.75rem; color: var(--primary-color); }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(242,169,0,0.08) 0%, rgba(242,169,0,0.12) 100%);
+      border: 1px solid rgba(242,169,0,0.3);
+      border-radius: 12px; padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .highlight-box p { margin: 0; font-size: 0.88rem; color: var(--text-secondary); }
+    .highlight-box strong { color: #b45309; }
+    [data-theme="dark"] .highlight-box strong { color: #fbbf24; }
+  </style>
+</head>
+
+<body>
+  <!-- Loading Overlay -->
+  <div id="loading-overlay">
+    <div class="custom-spinner"></div>
+    <h5 class="text-secondary fw-semibold">Memuat halaman...</h5>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="portal-nav sticky-top">
+    <div class="container d-flex align-items-center py-2 gap-3">
+      <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
+        <img src="img/logo.svg" alt="Logo PLN" height="38"
+          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
+        <div>
+          <div class="portal-brand-text">UP3 Kotamobagu</div>
+          <div class="portal-brand-sub">Portal Komunikasi Digital</div>
+        </div>
+      </a>
+      <div class="d-flex align-items-center ms-auto gap-2">
+        <a href="index.html" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-1 fw-semibold">
+          <i class="bi bi-arrow-left"></i>
+          <span>Kembali</span>
+        </a>
+        <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+          <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="policy-hero text-center">
+    <div class="container" style="position:relative;z-index:2;">
+      <div class="policy-hero-icon mx-auto">
+        <i class="bi bi-file-earmark-text-fill text-white fs-2"></i>
+      </div>
+      <div class="policy-badge mb-2">
+        <i class="bi bi-patch-check-fill"></i> Dokumen Resmi Portal
+      </div>
+      <h1 class="policy-hero-title">Syarat &amp; Ketentuan</h1>
+      <p class="policy-hero-subtitle mt-2">Portal Informasi &amp; Komunikasi Digital PLN UP3 Kotamobagu</p>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="container py-5 flex-grow-1">
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+
+        <!-- Last Updated -->
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+          <span class="last-updated-badge">
+            <i class="bi bi-calendar-check text-primary"></i>
+            Berlaku sejak: 1 Oktober 2026
+          </span>
+          <span class="last-updated-badge">
+            <i class="bi bi-building text-primary"></i>
+            PLN UP3 Kotamobagu
+          </span>
+        </div>
+
+        <!-- Disclaimer Box -->
+        <div class="highlight-box mb-4">
+          <p><strong>⚠️ Penting:</strong> Dengan mengakses dan menggunakan Portal Komunikasi Digital PLN UP3 Kotamobagu, Anda dianggap telah membaca, memahami, dan menyetujui seluruh Syarat &amp; Ketentuan yang berlaku berikut ini. Jika Anda tidak menyetujui syarat ini, harap hentikan penggunaan portal.</p>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="toc-card">
+          <h6><i class="bi bi-list-ul me-2"></i>Daftar Isi</h6>
+          <div class="row g-1">
+            <div class="col-md-6">
+              <a href="#t1" class="toc-link"><i class="bi bi-chevron-right"></i> 1. Definisi &amp; Ruang Lingkup</a>
+              <a href="#t2" class="toc-link"><i class="bi bi-chevron-right"></i> 2. Penggunaan Portal</a>
+              <a href="#t3" class="toc-link"><i class="bi bi-chevron-right"></i> 3. Layanan Permintaan Dokumentasi</a>
+              <a href="#t4" class="toc-link"><i class="bi bi-chevron-right"></i> 4. Layanan Rilis Berita</a>
+              <a href="#t5" class="toc-link"><i class="bi bi-chevron-right"></i> 5. Kewajiban Pengguna</a>
+            </div>
+            <div class="col-md-6">
+              <a href="#t6" class="toc-link"><i class="bi bi-chevron-right"></i> 6. Hak Kekayaan Intelektual</a>
+              <a href="#t7" class="toc-link"><i class="bi bi-chevron-right"></i> 7. Pembatasan Tanggung Jawab</a>
+              <a href="#t8" class="toc-link"><i class="bi bi-chevron-right"></i> 8. Penangguhan Akses</a>
+              <a href="#t9" class="toc-link"><i class="bi bi-chevron-right"></i> 9. Perubahan Ketentuan</a>
+              <a href="#t10" class="toc-link"><i class="bi bi-chevron-right"></i> 10. Hubungi Kami</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1 -->
+        <div class="policy-content-card" id="t1">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-book-fill"></i></div>
+            <h2 class="policy-section-title">1. Definisi &amp; Ruang Lingkup</h2>
+          </div>
+          <div class="policy-body">
+            <p>Dalam Syarat &amp; Ketentuan ini, istilah-istilah berikut memiliki arti sebagai berikut:</p>
+            <ul>
+              <li><strong>"Portal"</strong> merujuk pada Portal Informasi &amp; Komunikasi Digital PLN UP3 Kotamobagu yang dapat diakses melalui situs web ini.</li>
+              <li><strong>"Pengelola"</strong> merujuk pada Unit Pelaksana Pelayanan Pelanggan (UP3) Kotamobagu, PT PLN (Persero).</li>
+              <li><strong>"Pengguna"</strong> merujuk pada setiap individu atau pihak yang mengakses dan/atau menggunakan portal ini.</li>
+              <li><strong>"Admin"</strong> merujuk pada personel resmi PLN UP3 Kotamobagu yang berwenang mengelola konten portal.</li>
+              <li><strong>"Konten"</strong> merujuk pada semua informasi, teks, gambar, rilis berita, dokumentasi, dan materi lain yang tersedia di portal.</li>
+            </ul>
+            <p>Syarat &amp; Ketentuan ini berlaku untuk seluruh akses dan penggunaan portal, termasuk namun tidak terbatas pada pengajuan formulir dan pengunduhan konten.</p>
+          </div>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="policy-content-card" id="t2">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-laptop-fill"></i></div>
+            <h2 class="policy-section-title">2. Penggunaan Portal</h2>
+          </div>
+          <div class="policy-body">
+            <p>Portal ini disediakan untuk:</p>
+            <ul>
+              <li>Mengakses informasi dan rilis berita resmi kegiatan PLN UP3 Kotamobagu.</li>
+              <li>Mengajukan permintaan layanan dokumentasi kegiatan oleh karyawan/mitra PLN UP3 Kotamobagu.</li>
+              <li>Mengajukan formulir rilis berita untuk keperluan publikasi kegiatan resmi PLN.</li>
+            </ul>
+            <p>Pengguna dilarang menggunakan portal ini untuk tujuan yang:</p>
+            <ul>
+              <li>Melanggar hukum dan peraturan yang berlaku di Republik Indonesia.</li>
+              <li>Merugikan, mengancam, atau melecehkan pihak lain.</li>
+              <li>Menyebarkan informasi palsu, menyesatkan, atau tidak berdasarkan fakta.</li>
+              <li>Mengganggu atau merusak infrastruktur dan keamanan sistem portal.</li>
+              <li>Melakukan akses tidak sah ke panel admin atau data pengguna lain.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="policy-content-card" id="t3">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-camera-fill"></i></div>
+            <h2 class="policy-section-title">3. Layanan Permintaan Dokumentasi</h2>
+          </div>
+          <div class="policy-body">
+            <p>Layanan permintaan dokumentasi kegiatan berlaku dengan ketentuan berikut:</p>
+            <ul>
+              <li>Permintaan hanya dapat diajukan oleh karyawan dan mitra resmi PLN UP3 Kotamobagu.</li>
+              <li>Setiap permintaan wajib diisi dengan data yang <strong>akurat, lengkap, dan dapat dipertanggungjawabkan</strong>.</li>
+              <li>Permintaan yang diajukan akan ditinjau dan diproses oleh admin sesuai kapasitas dan jadwal yang tersedia.</li>
+              <li>Pengelola berhak menolak permintaan yang tidak memenuhi persyaratan, tidak sesuai kebutuhan operasional, atau dinilai tidak layak.</li>
+              <li>Hasil dokumentasi (foto/video) yang dihasilkan merupakan aset resmi PLN UP3 Kotamobagu.</li>
+              <li>Pemohon <strong>tidak berhak</strong> mendistribusikan atau mempublikasikan hasil dokumentasi tanpa izin dari pengelola.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Section 4 -->
+        <div class="policy-content-card" id="t4">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-newspaper"></i></div>
+            <h2 class="policy-section-title">4. Layanan Rilis Berita</h2>
+          </div>
+          <div class="policy-body">
+            <p>Pengajuan formulir rilis berita kegiatan tunduk pada ketentuan berikut:</p>
+            <ul>
+              <li>Rilis berita hanya dapat diajukan untuk kegiatan resmi yang berkaitan dengan operasional PLN UP3 Kotamobagu.</li>
+              <li>Seluruh informasi yang disampaikan dalam formulir rilis berita harus <strong>faktual dan dapat diverifikasi</strong>.</li>
+              <li>Foto dokumentasi yang diunggah harus merupakan dokumentasi asli kegiatan terkait, bebas dari manipulasi digital yang menyesatkan.</li>
+              <li>Pengelola berhak menyunting, mengubah, atau menolak konten rilis berita yang dinilai tidak sesuai standar komunikasi PLN.</li>
+              <li>Rilis berita yang telah disetujui dan dipublikasikan menjadi <strong>milik dan tanggung jawab PLN UP3 Kotamobagu</strong>.</li>
+              <li>Pemohon menjamin bahwa konten yang diajukan tidak melanggar hak kekayaan intelektual pihak manapun.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Section 5 -->
+        <div class="policy-content-card" id="t5">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-person-fill-check"></i></div>
+            <h2 class="policy-section-title">5. Kewajiban Pengguna</h2>
+          </div>
+          <div class="policy-body">
+            <p>Sebagai pengguna portal ini, Anda berkewajiban untuk:</p>
+            <ul>
+              <li>Memberikan informasi yang <strong>benar, akurat, terkini, dan lengkap</strong> saat mengisi formulir.</li>
+              <li>Menjaga kerahasiaan kredensial akses admin jika Anda memiliki akun admin.</li>
+              <li>Segera melaporkan kepada pengelola jika mengetahui adanya akses tidak sah atau penyalahgunaan sistem.</li>
+              <li>Menggunakan portal hanya untuk tujuan yang sah dan sesuai dengan ketentuan ini.</li>
+              <li>Menghormati hak pengguna lain dan tidak mengganggu penggunaan layanan oleh pihak lain.</li>
+              <li>Mematuhi semua peraturan perundang-undangan yang berlaku di Indonesia.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Section 6 -->
+        <div class="policy-content-card" id="t6">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-c-circle-fill"></i></div>
+            <h2 class="policy-section-title">6. Hak Kekayaan Intelektual</h2>
+          </div>
+          <div class="policy-body">
+            <p>Seluruh konten yang terdapat di portal ini, termasuk namun tidak terbatas pada teks, gambar, logo, desain, dan rilis berita, merupakan milik <strong>PT PLN (Persero) UP3 Kotamobagu</strong> atau pihak yang telah memberikan lisensi kepada PLN.</p>
+            <ul>
+              <li>Pengguna <strong>tidak diperkenankan</strong> menyalin, mereproduksi, mendistribusikan, atau menggunakan konten portal untuk keperluan komersial tanpa izin tertulis dari pengelola.</li>
+              <li>Logo PLN dan semua merek dagang terkait adalah milik eksklusif PT PLN (Persero).</li>
+              <li>Kutipan atau penggunaan konten untuk keperluan jurnalistik atau pendidikan diperbolehkan dengan menyertakan atribusi yang jelas kepada sumber.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Section 7 -->
+        <div class="policy-content-card" id="t7">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <h2 class="policy-section-title">7. Pembatasan Tanggung Jawab</h2>
+          </div>
+          <div class="policy-body">
+            <p>Pengelola portal tidak bertanggung jawab atas:</p>
+            <ul>
+              <li>Kerugian yang timbul akibat ketidakakuratan informasi yang diberikan oleh pengguna dalam formulir.</li>
+              <li>Gangguan layanan yang disebabkan oleh masalah teknis, pemeliharaan sistem, atau kejadian di luar kendali pengelola (<em>force majeure</em>).</li>
+              <li>Konten atau tautan dari situs web pihak ketiga yang mungkin direferensikan dalam portal.</li>
+              <li>Kerugian tidak langsung, insidental, atau konsekuensial yang timbul dari penggunaan portal.</li>
+            </ul>
+            <p>Portal ini disediakan "sebagaimana adanya" (<em>as is</em>) tanpa jaminan apapun, baik tersurat maupun tersirat, mengenai ketersediaan, keandalan, atau kesesuaian untuk tujuan tertentu.</p>
+          </div>
+        </div>
+
+        <!-- Section 8 -->
+        <div class="policy-content-card" id="t8">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-slash-circle-fill"></i></div>
+            <h2 class="policy-section-title">8. Penangguhan &amp; Penghentian Akses</h2>
+          </div>
+          <div class="policy-body">
+            <p>Pengelola berhak untuk menangguhkan atau menghentikan akses pengguna ke portal, termasuk akun admin, jika:</p>
+            <ul>
+              <li>Pengguna terbukti melanggar Syarat &amp; Ketentuan ini.</li>
+              <li>Pengguna menggunakan portal untuk tujuan yang melanggar hukum atau merugikan PLN.</li>
+              <li>Terdapat aktivitas yang mencurigakan atau mengancam keamanan sistem.</li>
+              <li>Ada keputusan internal PLN untuk menonaktifkan akses pengguna tertentu.</li>
+            </ul>
+            <p>Penghentian akses dapat dilakukan tanpa pemberitahuan terlebih dahulu dalam kasus pelanggaran serius.</p>
+          </div>
+        </div>
+
+        <!-- Section 9 -->
+        <div class="policy-content-card" id="t9">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-arrow-repeat"></i></div>
+            <h2 class="policy-section-title">9. Perubahan Syarat &amp; Ketentuan</h2>
+          </div>
+          <div class="policy-body">
+            <p>Pengelola berhak mengubah atau memperbarui Syarat &amp; Ketentuan ini kapan saja sesuai kebutuhan operasional, perubahan kebijakan PLN, atau perubahan regulasi yang berlaku.</p>
+            <ul>
+              <li>Perubahan akan dipublikasikan di halaman ini dengan tanggal berlaku yang baru.</li>
+              <li>Pengguna bertanggung jawab untuk meninjau syarat ini secara berkala.</li>
+              <li>Penggunaan portal setelah perubahan dipublikasikan dianggap sebagai penerimaan atas syarat yang diperbarui.</li>
+            </ul>
+            <p>Versi terkini dari Syarat &amp; Ketentuan selalu tersedia di halaman ini.</p>
+          </div>
+        </div>
+
+        <!-- Section 10 -->
+        <div class="policy-content-card" id="t10">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-telephone-fill"></i></div>
+            <h2 class="policy-section-title">10. Hubungi Kami</h2>
+          </div>
+          <div class="policy-body">
+            <p>Untuk pertanyaan, keluhan, atau klarifikasi mengenai Syarat &amp; Ketentuan ini, silakan hubungi pengelola portal:</p>
+            <ul>
+              <li><strong>Unit:</strong> Komunikasi PLN UP3 Kotamobagu</li>
+              <li><strong>Email:</strong> <a href="mailto:info@pln.co.id" style="color: var(--primary-color);">info@pln.co.id</a></li>
+              <li><strong>Telepon:</strong> <a href="tel:123" style="color: var(--primary-color);">123</a> (PLN Contact Center, 24 jam)</li>
+              <li><strong>Instagram:</strong> <a href="https://www.instagram.com/plnup3kotamobagu_" target="_blank" rel="noopener" style="color: var(--primary-color);">@plnup3kotamobagu_</a></li>
+            </ul>
+            <p>Syarat &amp; Ketentuan ini tunduk pada hukum yang berlaku di <strong>Negara Kesatuan Republik Indonesia</strong>. Segala sengketa yang timbul akan diselesaikan melalui musyawarah mufakat, atau jika diperlukan, melalui jalur hukum yang berlaku.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-5 col-md-12">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <img src="img/logo.svg" alt="PLN" height="32"
+              onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
+            <div class="footer-brand-title">UP3 KOTAMOBAGU</div>
+          </div>
+          <p class="footer-copyright pe-lg-4">Portal Informasi &amp; Komunikasi Digital resmi. Satu pintu untuk mengakses seluruh layanan informasi, formulir, dan platform digital terintegrasi PLN UP3 Kotamobagu.</p>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+          <h6 class="fw-bold mb-3">Hubungi Kami</h6>
+          <a href="mailto:info@pln.co.id" class="footer-link"><i class="bi bi-envelope-fill me-2 text-primary"></i>info@pln.co.id</a>
+          <a href="tel:123" class="footer-link"><i class="bi bi-telephone-fill me-2 text-primary"></i>123 (PLN Contact Center)</a>
+          <a href="form.html" class="footer-link"><i class="bi bi-journal-plus me-2 text-primary"></i>Ajukan Permintaan</a>
+        </div>
+        <div class="col-lg-4 col-sm-6">
+          <h6 class="fw-bold mb-3">Media Sosial</h6>
+          <div class="d-flex gap-2 mb-3">
+            <a href="https://www.instagram.com/plnup3kotamobagu_" target="_blank" rel="noopener" class="footer-social-btn" title="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="https://www.facebook.com/share/1BvqjLiMC1/" target="_blank" rel="noopener" class="footer-social-btn" title="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://www.tiktok.com/@plnup3kotamobagu_" target="_blank" rel="noopener" class="footer-social-btn" title="TikTok"><i class="bi bi-tiktok"></i></a>
+          </div>
+          <p class="footer-copyright">Ikuti media sosial kami untuk update informasi terbaru kegiatan PLN UP3 Kotamobagu.</p>
+        </div>
+      </div>
+      <div class="footer-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div>
+          <p class="footer-copyright mb-0">© 2026 Komunikasi PLN UP3 KOTAMOBAGU. Hak Cipta Dilindungi.</p>
+          <p class="footer-copyright mb-0 mt-1" style="font-size:0.8rem; color: var(--text-secondary);">
+            <i class="bi bi-code-slash text-primary me-1"></i>Pengembang Web: <strong>Veby Ariska</strong> (23024183) &bull; Politeknik Negeri Manado
+          </p>
+        </div>
+        <div class="d-flex gap-3">
+          <a href="privacy.html" class="footer-link mb-0" style="font-size:0.78rem;">Kebijakan Privasi</a>
+          <a href="terms.html" class="footer-link mb-0" style="font-size:0.78rem;">Syarat &amp; Ketentuan</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button id="scroll-to-top" title="Kembali ke atas">
+    <i class="bi bi-arrow-up-short fs-4"></i>
+  </button>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      const overlay = document.getElementById('loading-overlay');
+      if (overlay) { overlay.classList.add('fade-out'); }
+    });
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        themeIcon.className = newTheme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+      });
+      const t = document.documentElement.getAttribute('data-theme');
+      themeIcon.className = t === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+    }
+    const scrollBtn = document.getElementById('scroll-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) scrollBtn.classList.add('show');
+      else scrollBtn.classList.remove('show');
+    });
+    scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+</body>
+</html>

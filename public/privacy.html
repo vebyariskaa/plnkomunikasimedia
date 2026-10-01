@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <script>
+    (function() {
+      try {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kebijakan Privasi Portal Komunikasi Digital PLN UP3 Kotamobagu. Informasi mengenai pengumpulan, penggunaan, dan perlindungan data pribadi pengguna.">
+  <title>Kebijakan Privasi - Komunikasi PLN UP3 KOTAMOBAGU</title>
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    .policy-hero {
+      background: linear-gradient(135deg, #03192e 0%, #007B99 55%, #00A2E9 100%);
+      padding: 4rem 0 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .policy-hero::before {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
+      top: -150px; right: -100px; pointer-events: none;
+    }
+    .policy-hero::after {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(242,169,0,0.12) 0%, transparent 70%);
+      bottom: -100px; left: -50px; pointer-events: none;
+    }
+    .policy-hero-icon {
+      width: 80px; height: 80px; border-radius: 22px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      display: inline-flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .policy-hero-title {
+      color: #fff; font-size: 2.2rem; font-weight: 800;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .policy-hero-subtitle {
+      color: rgba(241,245,249,0.82); font-size: 0.95rem; font-weight: 500;
+    }
+    .policy-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,162,233,0.2); color: #7dd3fc;
+      border: 1px solid rgba(56,189,248,0.35);
+      padding: 4px 16px; border-radius: 30px;
+      font-size: 0.78rem; font-weight: 700;
+      backdrop-filter: blur(8px);
+      margin-bottom: 1rem;
+    }
+
+    .policy-content-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(0,123,153,0.08);
+      padding: 2.5rem;
+      margin-bottom: 1.5rem;
+      transition: box-shadow 0.3s ease;
+    }
+    .policy-content-card:hover {
+      box-shadow: 0 16px 48px rgba(0,123,153,0.12);
+    }
+
+    .section-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0,123,153,0.15), rgba(0,162,233,0.2));
+      border: 1px solid rgba(0,123,153,0.2);
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--primary-color); font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .policy-section-title {
+      font-size: 1.05rem; font-weight: 800;
+      color: var(--text-primary); margin: 0;
+      letter-spacing: -0.2px;
+    }
+
+    .policy-body {
+      color: var(--text-secondary);
+      font-size: 0.9rem; line-height: 1.75;
+    }
+    .policy-body p { margin-bottom: 0.85rem; }
+    .policy-body ul {
+      padding-left: 1.25rem; margin-bottom: 0.85rem;
+    }
+    .policy-body ul li {
+      margin-bottom: 0.4rem;
+    }
+    .policy-body strong { color: var(--text-primary); }
+
+    .last-updated-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 30px; padding: 4px 14px;
+      font-size: 0.78rem; color: var(--text-secondary); font-weight: 600;
+    }
+
+    .toc-card {
+      background: linear-gradient(135deg, rgba(0,123,153,0.06) 0%, rgba(0,162,233,0.08) 100%);
+      border: 1px solid rgba(0,123,153,0.18);
+      border-radius: 16px; padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .toc-card h6 {
+      font-weight: 800; color: var(--primary-color);
+      font-size: 0.88rem; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 0.85rem;
+    }
+    .toc-link {
+      display: flex; align-items: center; gap: 8px;
+      color: var(--text-secondary); text-decoration: none;
+      font-size: 0.85rem; font-weight: 500;
+      padding: 0.3rem 0;
+      transition: color 0.2s;
+    }
+    .toc-link:hover { color: var(--primary-color); }
+    .toc-link i { font-size: 0.75rem; color: var(--primary-color); }
+  </style>
+</head>
+
+<body>
+  <!-- Loading Overlay -->
+  <div id="loading-overlay">
+    <div class="custom-spinner"></div>
+    <h5 class="text-secondary fw-semibold">Memuat halaman...</h5>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="portal-nav sticky-top">
+    <div class="container d-flex align-items-center py-2 gap-3">
+      <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
+        <img src="img/logo.svg" alt="Logo PLN" height="38"
+          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
+        <div>
+          <div class="portal-brand-text">UP3 Kotamobagu</div>
+          <div class="portal-brand-sub">Portal Komunikasi Digital</div>
+        </div>
+      </a>
+      <div class="d-flex align-items-center ms-auto gap-2">
+        <a href="index.html" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-1 fw-semibold">
+          <i class="bi bi-arrow-left"></i>
+          <span>Kembali</span>
+        </a>
+        <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+          <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="policy-hero text-center">
+    <div class="container" style="position:relative;z-index:2;">
+      <div class="policy-hero-icon mx-auto">
+        <i class="bi bi-shield-check text-white fs-2"></i>
+      </div>
+      <div class="policy-badge mb-2">
+        <i class="bi bi-lock-fill"></i> Privasi &amp; Keamanan Data
+      </div>
+      <h1 class="policy-hero-title">Kebijakan Privasi</h1>
+      <p class="policy-hero-subtitle mt-2">Portal Informasi &amp; Komunikasi Digital PLN UP3 Kotamobagu</p>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="container py-5 flex-grow-1">
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+
+        <!-- Last Updated -->
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+          <span class="last-updated-badge">
+            <i class="bi bi-calendar-check text-primary"></i>
+            Terakhir diperbarui: 1 Oktober 2026
+          </span>
+          <span class="last-updated-badge">
+            <i class="bi bi-building text-primary"></i>
+            PLN UP3 Kotamobagu
+          </span>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="toc-card">
+          <h6><i class="bi bi-list-ul me-2"></i>Daftar Isi</h6>
+          <div class="row g-1">
+            <div class="col-md-6">
+              <a href="#s1" class="toc-link"><i class="bi bi-chevron-right"></i> 1. Informasi yang Kami Kumpulkan</a>
+              <a href="#s2" class="toc-link"><i class="bi bi-chevron-right"></i> 2. Penggunaan Informasi</a>
+              <a href="#s3" class="toc-link"><i class="bi bi-chevron-right"></i> 3. Penyimpanan &amp; Keamanan Data</a>
+              <a href="#s4" class="toc-link"><i class="bi bi-chevron-right"></i> 4. Berbagi Informasi</a>
+            </div>
+            <div class="col-md-6">
+              <a href="#s5" class="toc-link"><i class="bi bi-chevron-right"></i> 5. Hak Pengguna</a>
+              <a href="#s6" class="toc-link"><i class="bi bi-chevron-right"></i> 6. Cookie &amp; Teknologi Lacak</a>
+              <a href="#s7" class="toc-link"><i class="bi bi-chevron-right"></i> 7. Perubahan Kebijakan</a>
+              <a href="#s8" class="toc-link"><i class="bi bi-chevron-right"></i> 8. Hubungi Kami</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Intro Card -->
+        <div class="policy-content-card">
+          <div class="policy-body">
+            <p>Selamat datang di Portal Informasi &amp; Komunikasi Digital <strong>PLN UP3 Kotamobagu</strong>. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, menyimpan, dan melindungi informasi Anda saat menggunakan layanan portal ini.</p>
+            <p>Dengan menggunakan portal ini, Anda menyetujui praktik yang dijelaskan dalam kebijakan ini. Harap baca dengan seksama sebelum menggunakan layanan kami.</p>
+          </div>
+        </div>
+
+        <!-- Section 1 -->
+        <div class="policy-content-card" id="s1">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-database-fill"></i></div>
+            <h2 class="policy-section-title">1. Informasi yang Kami Kumpulkan</h2>
+          </div>
+          <div class="policy-body">
+            <p>Kami dapat mengumpulkan informasi berikut saat Anda menggunakan portal ini:</p>
+            <ul>
+              <li><strong>Informasi Identitas:</strong> Nama lengkap yang Anda masukkan pada formulir permintaan dokumentasi atau rilis berita.</li>
+              <li><strong>Informasi Organisasi:</strong> Nama bidang/unit kerja di lingkungan PLN UP3 Kotamobagu.</li>
+              <li><strong>Detail Kegiatan:</strong> Informasi mengenai kegiatan yang Anda ajukan, termasuk nama kegiatan, tempat, tanggal, waktu, dan deskripsi kegiatan.</li>
+              <li><strong>Berkas Unggahan:</strong> Foto dokumentasi kegiatan yang diunggah melalui formulir rilis berita.</li>
+              <li><strong>Data Teknis:</strong> Informasi teknis seperti alamat IP, jenis browser, dan waktu akses yang dikumpulkan secara otomatis untuk keperluan keamanan sistem.</li>
+            </ul>
+            <p>Kami <strong>tidak</strong> mengumpulkan informasi sensitif seperti nomor KTP, informasi keuangan pribadi, atau data biometrik.</p>
+          </div>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="policy-content-card" id="s2">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-gear-fill"></i></div>
+            <h2 class="policy-section-title">2. Penggunaan Informasi</h2>
+          </div>
+          <div class="policy-body">
+            <p>Informasi yang dikumpulkan digunakan semata-mata untuk:</p>
+            <ul>
+              <li>Memproses dan mengelola permintaan dokumentasi kegiatan yang Anda ajukan.</li>
+              <li>Memproses dan mempublikasikan rilis berita kegiatan PLN UP3 Kotamobagu.</li>
+              <li>Memberikan notifikasi status permohonan kepada pemohon.</li>
+              <li>Meningkatkan kualitas layanan dan fitur portal.</li>
+              <li>Keperluan administrasi dan pelaporan internal PLN UP3 Kotamobagu.</li>
+              <li>Menjaga keamanan sistem dan mencegah penyalahgunaan layanan.</li>
+            </ul>
+            <p>Kami <strong>tidak</strong> menggunakan informasi Anda untuk keperluan pemasaran komersial kepada pihak ketiga.</p>
+          </div>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="policy-content-card" id="s3">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-shield-lock-fill"></i></div>
+            <h2 class="policy-section-title">3. Penyimpanan &amp; Keamanan Data</h2>
+          </div>
+          <div class="policy-body">
+            <p>Kami berkomitmen untuk melindungi informasi Anda dengan langkah-langkah keamanan yang wajar, termasuk:</p>
+            <ul>
+              <li><strong>Enkripsi Data:</strong> Transmisi data antara browser Anda dan server kami dilindungi menggunakan protokol HTTPS/TLS.</li>
+              <li><strong>Akses Terbatas:</strong> Hanya personel admin yang terotorisasi yang dapat mengakses data permintaan melalui panel dashboard admin yang dilindungi kata sandi.</li>
+              <li><strong>Penyimpanan Aman:</strong> Data disimpan pada server yang aman dan dilindungi dari akses tidak sah.</li>
+              <li><strong>Retensi Data:</strong> Data permintaan disimpan selama diperlukan untuk keperluan operasional dan pelaporan PLN UP3 Kotamobagu.</li>
+            </ul>
+            <p>Meskipun kami mengambil langkah-langkah untuk melindungi data Anda, tidak ada metode transmisi melalui internet yang 100% aman. Kami tidak dapat menjamin keamanan absolut.</p>
+          </div>
+        </div>
+
+        <!-- Section 4 -->
+        <div class="policy-content-card" id="s4">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-share-fill"></i></div>
+            <h2 class="policy-section-title">4. Berbagi Informasi</h2>
+          </div>
+          <div class="policy-body">
+            <p>Kami <strong>tidak menjual, menyewakan, atau memperdagangkan</strong> informasi pribadi Anda kepada pihak ketiga. Informasi dapat dibagikan hanya dalam situasi berikut:</p>
+            <ul>
+              <li><strong>Internal PLN:</strong> Informasi kegiatan dapat dibagikan kepada unit terkait di lingkungan PLN untuk keperluan koordinasi dan pelaporan.</li>
+              <li><strong>Media/Wartawan:</strong> Informasi rilis berita yang telah disetujui dapat disebarluaskan kepada media massa untuk keperluan publikasi kegiatan PLN.</li>
+              <li><strong>Kewajiban Hukum:</strong> Kami dapat mengungkapkan informasi jika diwajibkan oleh hukum atau peraturan yang berlaku di Indonesia.</li>
+              <li><strong>Layanan Teknis:</strong> Penyedia layanan infrastruktur teknis (hosting/cloud) yang membantu operasional portal, terikat perjanjian kerahasiaan.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Section 5 -->
+        <div class="policy-content-card" id="s5">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-person-check-fill"></i></div>
+            <h2 class="policy-section-title">5. Hak Pengguna</h2>
+          </div>
+          <div class="policy-body">
+            <p>Sebagai pengguna portal, Anda memiliki hak untuk:</p>
+            <ul>
+              <li><strong>Akses:</strong> Meminta informasi mengenai data pribadi yang kami miliki tentang Anda.</li>
+              <li><strong>Koreksi:</strong> Meminta koreksi atas data yang tidak akurat atau tidak lengkap.</li>
+              <li><strong>Penghapusan:</strong> Meminta penghapusan data pribadi Anda, dengan ketentuan kewajiban hukum atau operasional yang berlaku.</li>
+              <li><strong>Keberatan:</strong> Mengajukan keberatan atas pemrosesan data Anda dalam kondisi tertentu.</li>
+            </ul>
+            <p>Untuk menggunakan hak-hak di atas, silakan hubungi kami melalui informasi kontak yang tersedia di bagian 8.</p>
+          </div>
+        </div>
+
+        <!-- Section 6 -->
+        <div class="policy-content-card" id="s6">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-cookie"></i></div>
+            <h2 class="policy-section-title">6. Cookie &amp; Teknologi Pelacak</h2>
+          </div>
+          <div class="policy-body">
+            <p>Portal ini menggunakan mekanisme penyimpanan browser (<em>localStorage</em>) secara terbatas untuk:</p>
+            <ul>
+              <li><strong>Preferensi Tema:</strong> Menyimpan pilihan tema tampilan (terang/gelap) agar konsisten di setiap kunjungan.</li>
+              <li><strong>Sesi Admin:</strong> Menyimpan token sesi admin yang sah untuk keperluan autentikasi panel admin.</li>
+            </ul>
+            <p>Kami <strong>tidak</strong> menggunakan cookie pelacak pihak ketiga untuk keperluan periklanan atau analitik eksternal. Data yang tersimpan di <em>localStorage</em> hanya berada di perangkat Anda dan tidak dikirimkan ke server kami kecuali diperlukan untuk verifikasi autentikasi.</p>
+          </div>
+        </div>
+
+        <!-- Section 7 -->
+        <div class="policy-content-card" id="s7">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-arrow-repeat"></i></div>
+            <h2 class="policy-section-title">7. Perubahan Kebijakan Privasi</h2>
+          </div>
+          <div class="policy-body">
+            <p>Kami berhak memperbarui Kebijakan Privasi ini dari waktu ke waktu sesuai kebutuhan operasional atau perubahan regulasi yang berlaku. Setiap perubahan akan:</p>
+            <ul>
+              <li>Dicantumkan pada halaman ini dengan tanggal pembaruan terbaru.</li>
+              <li>Berlaku efektif sejak tanggal publikasi, kecuali disebutkan lain.</li>
+            </ul>
+            <p>Kami mendorong Anda untuk meninjau halaman ini secara berkala. Penggunaan berkelanjutan portal setelah perubahan dianggap sebagai persetujuan Anda terhadap kebijakan yang diperbarui.</p>
+          </div>
+        </div>
+
+        <!-- Section 8 -->
+        <div class="policy-content-card" id="s8">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="section-icon"><i class="bi bi-envelope-fill"></i></div>
+            <h2 class="policy-section-title">8. Hubungi Kami</h2>
+          </div>
+          <div class="policy-body">
+            <p>Jika Anda memiliki pertanyaan, kekhawatiran, atau permintaan terkait Kebijakan Privasi ini, silakan hubungi kami:</p>
+            <ul>
+              <li><strong>Unit:</strong> Komunikasi PLN UP3 Kotamobagu</li>
+              <li><strong>Email:</strong> <a href="mailto:info@pln.co.id" style="color: var(--primary-color);">info@pln.co.id</a></li>
+              <li><strong>Telepon:</strong> <a href="tel:123" style="color: var(--primary-color);">123</a> (PLN Contact Center)</li>
+              <li><strong>Alamat:</strong> Kotamobagu, Sulawesi Utara</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-5 col-md-12">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <img src="img/logo.svg" alt="PLN" height="32"
+              onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
+            <div class="footer-brand-title">UP3 KOTAMOBAGU</div>
+          </div>
+          <p class="footer-copyright pe-lg-4">Portal Informasi &amp; Komunikasi Digital resmi. Satu pintu untuk mengakses seluruh layanan informasi, formulir, dan platform digital terintegrasi PLN UP3 Kotamobagu.</p>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+          <h6 class="fw-bold mb-3">Hubungi Kami</h6>
+          <a href="mailto:info@pln.co.id" class="footer-link"><i class="bi bi-envelope-fill me-2 text-primary"></i>info@pln.co.id</a>
+          <a href="tel:123" class="footer-link"><i class="bi bi-telephone-fill me-2 text-primary"></i>123 (PLN Contact Center)</a>
+          <a href="form.html" class="footer-link"><i class="bi bi-journal-plus me-2 text-primary"></i>Ajukan Permintaan</a>
+        </div>
+        <div class="col-lg-4 col-sm-6">
+          <h6 class="fw-bold mb-3">Media Sosial</h6>
+          <div class="d-flex gap-2 mb-3">
+            <a href="https://www.instagram.com/plnup3kotamobagu_" target="_blank" rel="noopener" class="footer-social-btn" title="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="https://www.facebook.com/share/1BvqjLiMC1/" target="_blank" rel="noopener" class="footer-social-btn" title="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://www.tiktok.com/@plnup3kotamobagu_" target="_blank" rel="noopener" class="footer-social-btn" title="TikTok"><i class="bi bi-tiktok"></i></a>
+          </div>
+          <p class="footer-copyright">Ikuti media sosial kami untuk update informasi terbaru kegiatan PLN UP3 Kotamobagu.</p>
+        </div>
+      </div>
+      <div class="footer-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div>
+          <p class="footer-copyright mb-0">© 2026 Komunikasi PLN UP3 KOTAMOBAGU. Hak Cipta Dilindungi.</p>
+          <p class="footer-copyright mb-0 mt-1" style="font-size:0.8rem; color: var(--text-secondary);">
+            <i class="bi bi-code-slash text-primary me-1"></i>Pengembang Web: <strong>Veby Ariska</strong> (23024183) &bull; Politeknik Negeri Manado
+          </p>
+        </div>
+        <div class="d-flex gap-3">
+          <a href="privacy.html" class="footer-link mb-0" style="font-size:0.78rem;">Kebijakan Privasi</a>
+          <a href="terms.html" class="footer-link mb-0" style="font-size:0.78rem;">Syarat &amp; Ketentuan</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button id="scroll-to-top" title="Kembali ke atas">
+    <i class="bi bi-arrow-up-short fs-4"></i>
+  </button>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Hide loader
+    window.addEventListener('load', () => {
+      const overlay = document.getElementById('loading-overlay');
+      if (overlay) { overlay.classList.add('fade-out'); }
+    });
+
+    // Theme toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        themeIcon.className = newTheme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+      });
+      const t = document.documentElement.getAttribute('data-theme');
+      themeIcon.className = t === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+    }
+
+    // Scroll to top
+    const scrollBtn = document.getElementById('scroll-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) scrollBtn.classList.add('show');
+      else scrollBtn.classList.remove('show');
+    });
+    scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+</body>
+</html>

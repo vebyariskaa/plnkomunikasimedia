@@ -38,111 +38,142 @@
   <link rel="stylesheet" href="css/style.css">
 
   <style>
-    /* ===== WELCOME SCREEN ===== */
+    /* ===== WELCOME SCREEN (ELEGANT & PREMIUM) ===== */
     #welcome-screen {
-      background: linear-gradient(135deg, #005B8F 0%, #007B99 50%, #00A2E9 100%);
+      background: radial-gradient(circle at 20% 20%, #0369a1 0%, #0c4a6e 45%, #03192e 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       overflow: hidden;
-      transition: background 0.4s ease;
-    }
-    [data-theme="dark"] #welcome-screen {
-      background: linear-gradient(135deg, #030712 0%, #0a1324 50%, #0f172a 100%);
     }
     #welcome-screen::before {
       content: '';
-      position: absolute; inset: 0;
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M0 0h80v80H0z'/%3E%3Cpath d='M40 40m-20 0a20 20 0 1 0 40 0a20 20 0 1 0 -40 0' fill='none' stroke='%23fff' stroke-opacity='0.1' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E") repeat;
+      position: absolute;
+      width: 450px; height: 450px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(0,0,0,0) 70%);
+      top: -100px; right: -100px;
       pointer-events: none;
+      filter: blur(40px);
+    }
+    #welcome-screen::after {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, rgba(0,0,0,0) 70%);
+      bottom: -150px; left: -100px;
+      pointer-events: none;
+      filter: blur(50px);
     }
     .welcome-glass-card {
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 28px;
-      padding: 3rem 2.5rem;
-      max-width: 500px;
+      padding: 3.2rem 2.5rem 2.5rem;
+      max-width: 460px;
       width: 100%;
-      margin: 1rem;
-      box-shadow: 0 32px 80px rgba(0,0,0,0.3);
+      margin: 1.25rem;
+      box-shadow: 0 32px 80px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
       animation: welcomeFadeIn 0.8s cubic-bezier(0.16,1,0.3,1);
+      position: relative; z-index: 2;
     }
     @keyframes welcomeFadeIn {
-      from { opacity: 0; transform: translateY(30px) scale(0.96); }
+      from { opacity: 0; transform: translateY(24px) scale(0.97); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
     .welcome-logo-ring {
-      width: 96px; height: 96px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-      border: 2px solid rgba(255,255,255,0.3);
+      width: 104px; height: 104px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 1.5rem;
-      animation: logoPulse 3s ease-in-out infinite;
+      margin: 0 auto 1.75rem;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.3);
+      backdrop-filter: blur(12px);
+      transition: transform 0.4s ease;
     }
-    @keyframes logoPulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.2); }
-      50% { box-shadow: 0 0 0 16px rgba(255,255,255,0); }
+    .welcome-glass-card:hover .welcome-logo-ring {
+      transform: translateY(-3px) scale(1.03);
     }
     .welcome-title-main {
-      font-size: 2rem; font-weight: 900; color: #fff;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+      font-size: 2.1rem; font-weight: 800; color: #ffffff;
       letter-spacing: -0.5px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.25);
     }
     .welcome-subtitle-main {
-      color: rgba(255,255,255,0.8); font-weight: 500; font-size: 1rem;
+      color: rgba(241, 245, 249, 0.82); font-weight: 500; font-size: 0.95rem;
+      line-height: 1.5;
     }
     .btn-welcome-user {
-      background: #F2A900; color: #ffffff; border: none;
-      border-radius: 14px; padding: 0.9rem 1.5rem;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #ffffff; border: none;
+      border-radius: 16px; padding: 1rem 1.5rem;
       font-weight: 700; font-size: 1rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+      box-shadow: 0 8px 25px rgba(217, 119, 6, 0.35);
+      letter-spacing: 0.2px;
     }
-    .btn-welcome-user:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.25); background: #FFCC00; color: #0f172a; }
+    .btn-welcome-user:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(245, 158, 11, 0.45);
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      color: #ffffff;
+    }
     .btn-welcome-admin {
-      background: transparent; color: #fff;
-      border: 2px solid rgba(255,255,255,0.8); border-radius: 14px;
-      padding: 0.9rem 1.5rem; font-weight: 700; font-size: 1rem;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 16px;
+      padding: 0.95rem 1.5rem; font-weight: 600; font-size: 0.98rem;
       transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
     }
-    .btn-welcome-admin:hover { background: rgba(255,255,255,0.15); border-color: #fff; transform: translateY(-2px); }
+    .btn-welcome-admin:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.45);
+      color: #ffffff; transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
     .welcome-form-box {
-      background: rgba(255,255,255,0.08);
+      background: rgba(15, 23, 42, 0.5);
       border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 16px; padding: 1.5rem;
+      border-radius: 20px; padding: 1.75rem;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
     }
     .welcome-form-box .form-control {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: #fff; border-radius: 10px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff; border-radius: 12px;
+      padding: 0.75rem 1rem;
     }
-    .welcome-form-box .form-control::placeholder { color: rgba(255,255,255,0.6); }
+    .welcome-form-box .form-control::placeholder { color: rgba(255,255,255,0.55); }
     .welcome-form-box .form-control:focus {
-      background: rgba(255,255,255,0.25);
-      border-color: rgba(255,255,255,0.6);
-      box-shadow: 0 0 0 3px rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.2);
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);
       color: #fff;
     }
-    .welcome-form-box .form-label { color: rgba(255,255,255,0.85); font-weight: 600; }
+    .welcome-form-box .form-label { color: rgba(241,245,249,0.9); font-weight: 600; }
     .welcome-form-box .btn-outline-secondary {
-      border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.8);
+      border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.85);
       background: rgba(255,255,255,0.1);
     }
-    .welcome-form-box .alert-danger { border-radius: 10px; }
+    .welcome-form-box .alert-danger { border-radius: 12px; }
     .btn-welcome-login {
-      background: linear-gradient(135deg, #fff 0%, #e0f2fe 100%);
-      color: #0c4a6e; border: none; font-weight: 700; border-radius: 10px;
-      padding: 0.75rem; transition: all 0.3s;
+      background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+      color: #ffffff; border: none; font-weight: 700; border-radius: 12px;
+      padding: 0.8rem; transition: all 0.3s;
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
     }
-    .btn-welcome-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .btn-welcome-login:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(56, 189, 248, 0.45); color: #fff; }
     .btn-welcome-back {
-      background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8);
-      border: 1px solid rgba(255,255,255,0.25); border-radius: 10px; padding: 0.75rem;
+      background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85);
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 0.8rem;
     }
 
     /* ===== MAIN NAVBAR ===== */
@@ -524,11 +555,8 @@
 
       <!-- Footer tag -->
       <div class="text-center mt-4">
-        <p class="mb-0" style="color:rgba(255,255,255,0.5); font-size:0.72rem;">
-          © 2026 PLN UP3 Kotamobagu · Portal Resmi
-        </p>
-        <p class="mb-0 mt-1" style="color:rgba(255,255,255,0.85); font-size:0.78rem;">
-          <i class="bi bi-code-slash me-1 text-warning"></i>Pengembang Web: <strong>Veby Ariska</strong> (23024183) &bull; Politeknik Negeri Manado
+        <p class="mb-0" style="color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.3px;">
+          © 2026 PLN UP3 Kotamobagu &bull; Portal Resmi
         </p>
       </div>
     </div>

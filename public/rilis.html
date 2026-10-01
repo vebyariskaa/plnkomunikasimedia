@@ -1,7 +1,19 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="light">
+<html lang="id">
 
 <head>
+  <script>
+    (function() {
+      try {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Form Rilis Berita - Komunikasi PLN UP3 KOTAMOBAGU</title>
@@ -552,10 +564,16 @@
       <hr class="my-4 text-secondary">
 
       <div class="row align-items-center">
-        <div class="col-md-6 text-center text-md-start">
+        <div class="col-md-7 text-center text-md-start">
           <p class="text-secondary mb-0">&copy; 2026 Komunikasi PLN UP3 KOTAMOBAGU. Hak Cipta Dilindungi.</p>
+          <p class="text-secondary small mb-0 mt-1 d-flex align-items-center gap-2 flex-wrap">
+            <span><i class="bi bi-code-slash text-primary me-1"></i>Pengembang Web: <strong>Veby Ariska</strong> (23024183) &bull; Politeknik Negeri Manado</span>
+            <a href="https://github.com/vebyariskaa" target="_blank" rel="noopener noreferrer" class="badge bg-dark text-white text-decoration-none px-2 py-1 rounded-pill d-inline-flex align-items-center gap-1 border border-secondary shadow-sm" title="Lihat Profil GitHub Pengembang">
+              <i class="bi bi-github"></i> <span>GitHub Portfolio</span>
+            </a>
+          </p>
         </div>
-        <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
+        <div class="col-md-5 text-center text-md-end mt-2 mt-md-0">
           <a href="#" class="text-decoration-none text-secondary me-3">Kebijakan Privasi</a>
           <a href="#" class="text-decoration-none text-secondary">Syarat & Ketentuan</a>
         </div>

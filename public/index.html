@@ -1,7 +1,19 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="light">
+<html lang="id">
 
 <head>
+  <script>
+    (function() {
+      try {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <meta name="description" content="Portal Informasi Digital resmi Komunikasi PLN UP3 Kotamobagu. Akses rilis berita, dokumentasi kegiatan, dan layanan komunikasi terintegrasi.">
@@ -35,6 +47,10 @@
       justify-content: center;
       position: relative;
       overflow: hidden;
+      transition: background 0.4s ease;
+    }
+    [data-theme="dark"] #welcome-screen {
+      background: linear-gradient(135deg, #030712 0%, #0a1324 50%, #0f172a 100%);
     }
     #welcome-screen::before {
       content: '';
@@ -511,6 +527,12 @@
         <p class="mb-0" style="color:rgba(255,255,255,0.5); font-size:0.72rem;">
           © 2026 PLN UP3 Kotamobagu · Portal Resmi
         </p>
+        <p class="mb-0 mt-2 d-flex align-items-center justify-content-center gap-2 flex-wrap" style="color:rgba(255,255,255,0.85); font-size:0.78rem;">
+          <span><i class="bi bi-code-slash me-1 text-warning"></i>Pengembang Web: <strong>Veby Ariska</strong> (23024183) &bull; Politeknik Negeri Manado</span>
+          <a href="https://github.com/vebyariskaa" target="_blank" rel="noopener noreferrer" class="badge bg-black bg-opacity-50 text-white text-decoration-none px-2 py-1 rounded-pill d-inline-flex align-items-center gap-1 border border-white border-opacity-25" title="Profil GitHub Pengembang">
+            <i class="bi bi-github text-white"></i> GitHub
+          </a>
+        </p>
       </div>
     </div>
   </div>
@@ -704,7 +726,15 @@
           </div>
         </div>
         <div class="footer-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
-          <p class="footer-copyright mb-0">© 2026 Komunikasi PLN UP3 KOTAMOBAGU. Hak Cipta Dilindungi.</p>
+          <div>
+            <p class="footer-copyright mb-0">© 2026 Komunikasi PLN UP3 KOTAMOBAGU. Hak Cipta Dilindungi.</p>
+            <p class="footer-copyright mb-0 mt-1 d-flex align-items-center gap-2 flex-wrap" style="font-size:0.8rem; color: var(--text-secondary);">
+              <span><i class="bi bi-code-slash text-primary me-1"></i>Pengembang Web: <strong>Veby Ariska</strong> (23024183) &bull; Politeknik Negeri Manado</span>
+              <a href="https://github.com/vebyariskaa" target="_blank" rel="noopener noreferrer" class="badge bg-dark text-white text-decoration-none px-2 py-1 rounded-pill d-inline-flex align-items-center gap-1 border border-secondary shadow-sm" title="Lihat Profil GitHub Pengembang">
+                <i class="bi bi-github"></i> <span>GitHub Portfolio</span>
+              </a>
+            </p>
+          </div>
           <div class="d-flex gap-3">
             <a href="#" class="footer-link mb-0" style="font-size:0.78rem;">Kebijakan Privasi</a>
             <a href="#" class="footer-link mb-0" style="font-size:0.78rem;">Syarat & Ketentuan</a>

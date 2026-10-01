@@ -275,24 +275,23 @@
   </div>
 
   <!-- Sticky Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-3">
-    <div class="container">
-      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
-        <img src="img/logo.svg" alt="Logo PLN" height="40" class="d-inline-block align-top"
+  <nav class="portal-nav sticky-top">
+    <div class="container d-flex align-items-center py-2 gap-3">
+      <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
+        <img src="img/logo.svg" alt="Logo PLN" height="38"
           onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
-        <span class="fw-bold fs-5 text-primary text-uppercase tracking-wider">UP3 KOTAMOBAGU</span>
+        <div>
+          <div class="portal-brand-text">UP3 Kotamobagu</div>
+          <div class="portal-brand-sub">Portal Komunikasi Digital</div>
+        </div>
       </a>
 
-      <!-- Theme & Action Buttons (aligned right) -->
+      <!-- Actions -->
       <div class="d-flex align-items-center ms-auto gap-2 gap-md-3">
-        <!-- Back to Home Button -->
-        <a href="index.html"
-          class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-1.5 fw-semibold border-2">
+        <a href="index.html" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-1.5 fw-semibold border-2">
           <i class="bi bi-arrow-left"></i>
           <span>Kembali</span>
         </a>
-
-        <!-- Theme Toggle -->
         <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
           <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
         </button>
@@ -523,54 +522,43 @@
   </div>
 
   <!-- Footer -->
-  <footer class="py-5 mt-5">
+  <footer class="site-footer">
     <div class="container">
-      <div class="row g-4 mb-4">
+      <div class="row g-4">
         <div class="col-lg-5 col-md-12">
           <div class="d-flex align-items-center gap-2 mb-3">
-            <img src="img/logo.svg" alt="Logo PLN" height="35"
+            <img src="img/logo.svg" alt="PLN" height="32"
               onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
-            <span class="fw-bold fs-5 text-primary text-uppercase">Portal Digital</span>
+            <div class="footer-brand-title">UP3 KOTAMOBAGU</div>
           </div>
-          <p class="text-secondary mb-0 pe-lg-5">Komunikasi PLN UP3 KOTAMOBAGU - Portal Layanan Permintaan Dokumentasi &
-            Rilis Berita Resmi.</p>
+          <p class="footer-copyright pe-lg-4">Portal Informasi & Komunikasi Digital resmi. Satu pintu untuk mengakses seluruh layanan informasi, formulir, dan platform digital terintegrasi PLN UP3 Kotamobagu.</p>
         </div>
-
-        <div class="col-lg-3 col-md-6">
-          <h5 class="fw-bold mb-3">Hubungi Kami</h5>
-          <ul class="list-unstyled text-secondary">
-            <li class="mb-2"><i class="bi bi-envelope-fill me-2 text-primary"></i> <a href="mailto:info@pln.co.id"
-                class="text-decoration-none text-secondary">info@pln.co.id</a></li>
-            <li class="mb-2"><i class="bi bi-telephone-fill me-2 text-primary"></i> 123</li>
-          </ul>
+        <div class="col-lg-3 col-sm-6">
+          <h6 class="fw-bold mb-3">Hubungi Kami</h6>
+          <a href="mailto:info@pln.co.id" class="footer-link"><i class="bi bi-envelope-fill me-2 text-primary"></i>info@pln.co.id</a>
+          <a href="tel:123" class="footer-link"><i class="bi bi-telephone-fill me-2 text-primary"></i>123 (PLN Contact Center)</a>
+          <a href="form.html" class="footer-link"><i class="bi bi-journal-plus me-2 text-primary"></i>Ajukan Permintaan</a>
         </div>
-
-        <div class="col-lg-4 col-md-6">
-          <h5 class="fw-bold mb-3">Media Sosial</h5>
-          <div class="d-flex gap-2">
-            <a href="https://www.instagram.com/plnup3kotamobagu_?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
-              target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Instagram"
-              title="Instagram PLN UP3 Kotamobagu"><i class="bi bi-instagram"></i></a>
-            <a href="https://www.facebook.com/share/1BvqjLiMC1/?mibextid=wwXIfr" target="_blank"
-              rel="noopener noreferrer" class="footer-social-icon" aria-label="Facebook"
-              title="Facebook PLN UP3 Kotamobagu"><i class="bi bi-facebook"></i></a>
-            <a href="https://www.tiktok.com/@plnup3kotamobagu_?_r=1&_t=ZS-98EZsid2oYm" target="_blank"
-              rel="noopener noreferrer" class="footer-social-icon" aria-label="TikTok"
-              title="TikTok PLN UP3 Kotamobagu"><i class="bi bi-tiktok"></i></a>
+        <div class="col-lg-4 col-sm-6">
+          <h6 class="fw-bold mb-3">Media Sosial</h6>
+          <div class="d-flex gap-2 mb-3">
+            <a href="https://www.instagram.com/plnup3kotamobagu_" target="_blank" rel="noopener" class="footer-social-btn" title="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="https://www.facebook.com/share/1BvqjLiMC1/" target="_blank" rel="noopener" class="footer-social-btn" title="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://www.tiktok.com/@plnup3kotamobagu_" target="_blank" rel="noopener" class="footer-social-btn" title="TikTok"><i class="bi bi-tiktok"></i></a>
           </div>
+          <p class="footer-copyright">Ikuti media sosial kami untuk update informasi terbaru kegiatan PLN UP3 Kotamobagu.</p>
         </div>
       </div>
-
-      <hr class="my-4 text-secondary">
-
-      <div class="row align-items-center">
-        <div class="col-md-7 text-center text-md-start">
-          <p class="text-secondary mb-0">&copy; 2026 Komunikasi PLN UP3 KOTAMOBAGU. Hak Cipta Dilindungi.</p>
-          <p class="text-secondary small mb-0 mt-1"><i class="bi bi-code-slash text-primary me-1"></i>Pengembang Web: <strong>Veby Ariska</strong> (23024183) &bull; Politeknik Negeri Manado</p>
+      <div class="footer-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div>
+          <p class="footer-copyright mb-0">© 2026 Komunikasi PLN UP3 KOTAMOBAGU. Hak Cipta Dilindungi.</p>
+          <p class="footer-copyright mb-0 mt-1" style="font-size:0.8rem; color: var(--text-secondary);">
+            <i class="bi bi-code-slash text-primary me-1"></i>Pengembang Web: <strong>Veby Ariska</strong> (23024183) &bull; Politeknik Negeri Manado
+          </p>
         </div>
-        <div class="col-md-5 text-center text-md-end mt-2 mt-md-0">
-          <a href="#" class="text-decoration-none text-secondary me-3">Kebijakan Privasi</a>
-          <a href="#" class="text-decoration-none text-secondary">Syarat & Ketentuan</a>
+        <div class="d-flex gap-3">
+          <a href="#" class="footer-link mb-0" style="font-size:0.78rem;">Kebijakan Privasi</a>
+          <a href="#" class="footer-link mb-0" style="font-size:0.78rem;">Syarat & Ketentuan</a>
         </div>
       </div>
     </div>

@@ -216,30 +216,31 @@
   </div>
 
   <!-- Sticky Navbar -->
-  <nav class="navbar navbar-expand-lg glass-nav sticky-top py-3">
-    <div class="container">
-      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
-        <img src="img/logo.svg" alt="Logo PLN" height="40" class="d-inline-block align-top"
+  <nav class="portal-nav sticky-top">
+    <div class="container d-flex align-items-center py-2 gap-3">
+      <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
+        <img src="img/logo.svg" alt="Logo PLN" height="38"
           onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
-        <span class="fw-bold fs-5 text-gradient text-uppercase tracking-wider">UP3 KOTAMOBAGU <span class="badge bg-danger ms-1 fs-8 text-white rounded-pill shadow-sm">ADMIN</span></span>
+        <div>
+          <div class="portal-brand-text d-flex align-items-center gap-1.5">
+            <span>UP3 Kotamobagu</span>
+            <span class="badge bg-danger fs-8 text-white rounded-pill px-2">ADMIN</span>
+          </div>
+          <div class="portal-brand-sub">Dashboard Pengelolaan Portal</div>
+        </div>
       </a>
 
-      <!-- Navbar Action buttons -->
+      <!-- Actions -->
       <div class="d-flex align-items-center ms-auto gap-2 gap-md-3">
-        <!-- Lihat Web Portal -->
         <a href="index.html" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-1.5 fw-semibold border-2">
           <i class="bi bi-globe"></i>
           <span class="d-none d-md-inline">Buka Portal</span>
         </a>
-
-        <!-- Logout Button -->
         <button id="btnLogout" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-1.5 fw-semibold border-2">
           <i class="bi bi-box-arrow-left"></i>
           <span>Keluar</span>
         </button>
-
-        <!-- Theme Toggle -->
-        <button class="theme-toggle-btn shadow-sm" id="theme-toggle" aria-label="Toggle Theme" style="background:var(--bg-tertiary);border-color:var(--border-color);">
+        <button class="theme-toggle-btn shadow-sm" id="theme-toggle" aria-label="Toggle Theme">
           <i class="bi bi-moon-stars-fill text-primary" id="theme-icon"></i>
         </button>
       </div>

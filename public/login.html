@@ -62,22 +62,23 @@
 <body class="d-flex flex-column min-vh-100">
 
   <!-- Sticky Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-3">
-    <div class="container">
-      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
-        <img src="img/logo.svg" alt="Logo PLN" height="40" class="d-inline-block align-top"
+  <nav class="portal-nav sticky-top">
+    <div class="container d-flex align-items-center py-2 gap-3">
+      <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
+        <img src="img/logo.svg" alt="Logo PLN" height="38"
           onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/20/Logo_PLN.svg'">
-        <span class="fw-bold fs-5 text-primary text-uppercase tracking-wider">UP3 KOTAMOBAGU</span>
+        <div>
+          <div class="portal-brand-text">UP3 Kotamobagu</div>
+          <div class="portal-brand-sub">Portal Komunikasi Digital</div>
+        </div>
       </a>
 
-      <div class="d-flex align-items-center ms-auto gap-3">
-        <!-- Back to Home Button -->
+      <!-- Actions -->
+      <div class="d-flex align-items-center ms-auto gap-2 gap-md-3">
         <a href="index.html" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-1.5 fw-semibold border-2">
           <i class="bi bi-arrow-left"></i>
           <span>Kembali</span>
         </a>
-
-        <!-- Theme Toggle -->
         <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
           <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
         </button>
